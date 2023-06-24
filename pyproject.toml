@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "fir"
+version = "0.1.0"
+description = ""
+authors = ["weavc <chrisweaver1@pm.me>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fir"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.scripts]
+fir = 'fir.cmd:cmd'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
