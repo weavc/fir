@@ -1,60 +1,73 @@
+from collections import defaultdict
+import datetime
 import os
 
-from fir.cfg.env_dev import DATA_DIR
-from fir.helpers import write_json_file, read_json_file
+from fir.config import DATA_DIR
+from fir.data.defaults import default_profile_struct, default_task_struct
+from fir.helpers import generate_id, write_json_file, read_json_file
 
 class Data:
 
     profiles_path = os.path.join(DATA_DIR, "profiles.json")
-    data = {
-        "profiles": {
-        }
-    }
+    __data : dict = defaultdict(profiles={
+        "default": default_profile_struct(
+            name="default",
+            description="Default profile", 
+            tasks=[default_task_struct("Example task", tags=["example"], status="TODO")])
+    }, scope = "default")
 
     def __init__(self):
-        self.read()
+        self.__read()
+
+    @property
+    def scope(self) -> str:
+        return self.__data.get("scope")
+    
+    @scope.setter
+    def scope(self, value: str):
+        self.__data["scope"] = value
+        self.__save()
 
     def get_profiles(self) -> dict:
-        return self.data.get("profiles")
+        return self.__data.get("profiles")
 
     def get_profile(self, name: str) -> dict:
         self.get_profiles()
         return self.get_profiles().get(name)
 
-    def add_profile(self, name: str) -> dict:
-        profile = self.get_profile(name)
-        if profile is None:
-            profile = self.__default_profile_struct()
-            self.data.get("profiles").update({name: profile})
-        self.save()
+    def add_profile(self, name: str, profile: dict) -> dict:
+        exists = self.get_profile(name)
+        if exists is None:
+            self.__data.get("profiles").update({name: profile})
+        self.__save()
         return profile
     
     def update_profile(self, name: str, profile: dict) -> dict:
         profile = self.get_profile(name)
         if profile is None:
             return None
-        self.data.get("profiles").update({name: profile})
-        self.save()
+        
+        self.__data.get("profiles").update({name: profile})
+        self.__save()
         return profile
 
     def remove_profile(self, name: str) -> dict:
         profile = self.get_profile(name)
         if profile is not None:
-            self.data.get("profiles").pop(name)
+            self.__data.get("profiles").pop(name)
 
-        self.save()
+        self.__save()
         return profile
     
-    def read(self):
+    def __read(self):
         self.__check_dir()
         if not os.path.exists(self.profiles_path):
-            self.save()
-        self.data = read_json_file(self.profiles_path)
+            self.__save()
+        self.__data = read_json_file(self.profiles_path)
 
-
-    def save(self):
+    def __save(self):
         self.__check_dir()
-        write_json_file(self.profiles_path, self.data)
+        write_json_file(self.profiles_path, self.__data)
     
     
     def __check_dir(self):
@@ -64,20 +77,3 @@ class Data:
             except PermissionError:
                 print(f'ERROR!\nNo permission to write to "{DATA_DIR}" directory!')
                 raise SystemExit(1)
-
-
-    def __default_profile_struct(self):
-        return {
-                "description": "",
-                "tasks": [],
-                "config": {}
-            }
-
-    def __default_task_struct(self, name: str):
-        return { 
-                "name": name,
-                "tags": [],
-                "status": ""
-            }
-    
-# todo write a backup file before saving

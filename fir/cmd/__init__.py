@@ -1,70 +1,93 @@
 import argparse
-from fir.cmd.handlers import Handlers, ProfileHandlers
+from fir import config
 from fir.context import Context
 from fir.data import Data
-from fir.cmd.commands import *
+from fir.cmd.base_commands import *
+from fir.cmd.profile_commands import *
+from fir.cmd.config_commands import *
+from fir.cmd.task_data_commands import *
 
+handlers = [ProfileHandlers, ConfigHandlers, TaskDataHandlers, CommandHandlers]
 
 def setup_argparser(data: Data):
     parser = argparse.ArgumentParser(description="Fir, command line task tracking")
     parser.add_argument("--verbose", "-v", action="store_true", dest="verbose", help="Prints more information", default=False)
+    parser.add_argument("--pretty", "-p", action="store_true", dest="pretty", default=False)
+    parser.add_argument("--debug", "-d", action="store_true", dest="debug", default=False)
+    parser.add_argument("--silent", action="store_true", dest="silent", default=False)
+    parser.add_argument("--scope", "-s", action="store", dest="scope", default=data.scope)
 
     sub = parser.add_subparsers(dest="command", metavar="action")
-    for profile in data.get_profiles():
-        p = sub.add_parser(profile)
-        sub_p = p.add_subparsers(dest="profile_command", metavar="action")
-        for c in ProfileHandlers.commands:
-            c_parser = sub_p.add_parser(ProfileHandlers.commands.get(c).get("name"), aliases=ProfileHandlers.commands.get(c).get("aliases"))
-            setup_handlers(c, ProfileHandlers.commands, c_parser)
 
-    for c in Handlers.commands:
-        c_parser = sub.add_parser(Handlers.commands.get(c).get("name"), aliases=Handlers.commands.get(c).get("aliases"))
-        setup_handlers(c, Handlers.commands, c_parser)
+    for h in handlers:
+        if h.name is None:
+            for c in h.commands:
+                setup_handlers(h.commands.get(c), sub)
+        else:
+            sub_parser = sub.add_parser(h.name, aliases=h.aliases)
+            sub_sub_parser = sub_parser.add_subparsers(dest="sub_command", metavar="action")
+            for c in h.commands:
+                setup_handlers(h.commands.get(c), sub_sub_parser)
 
     return parser
 
-def setup_handlers(command:str, commands: dict, parser: argparse.ArgumentParser):
-    c_args = commands.get(command).get("args")
+def setup_handlers(command: dict, sub: argparse.ArgumentParser):
+    parser = sub.add_parser(command.get("name"), aliases=command.get("aliases"))
+    c_args = command.get("args")
     if c_args is not None:
-        for a in commands.get(command).get("args"):
-            parser.add_argument(a.get("name"), metavar=a.get("metavar"))
+        for a in command.get("args"):
+            parser.add_argument(a.get("name"), metavar=a.get("metavar"), nargs=a.get("nargs"))
 
-    c_optionals = commands.get(command).get("optionals")
+    c_optionals = command.get("optionals")
     if c_optionals is not None:
         for a in c_optionals:
-            parser.add_argument(*a.get('flags'), dest=a.get("dest"), action="store")
+            parser.add_argument(*a.get('flags'), dest=a.get("dest"), action="store", nargs=a.get("nargs"))
 
-    c_flags = commands.get(command).get("flags")
+    c_flags = command.get("flags")
     if c_flags is not None:
         for a in c_flags:
             parser.add_argument(*a.get('flags'), dest=a.get("dest"), action="store_true")
 
-def handle(context: Context, command: str) -> callable:
-    for key in Handlers.commands:
-        aliases = Handlers.commands.get(key).get("aliases")+[Handlers.commands.get(key).get("name")]
-        if command in aliases:
-            return Handlers.commands[key]["func"]
+def get_command(context: Context) -> dict:
+    scope = context.args.get("scope")
+    profile = context.data.get_profile(scope)
+    if profile is None:
+        context.logger.log_error(f"Profile not found: {scope}. Please set a new profile with 'fir profile <profile>'")
+        return None
+    
+    context.profile = profile
 
-    context.profile = context.data.get_profile(context.args.get("command"))
-    if context.profile is not None:
-        for key in Handlers.profile_commands:
-            aliases = Handlers.profile_commands.get('key').get("aliases")+[Handlers.profile_commands.get('key').get("name")]
-            if command in aliases:
-                return Handlers.profile_commands[key]["func"]
-            
+    for h in handlers:
+        if h.name is None:
+            for c in h.commands:
+                command = h.commands.get(c)
+                aliases = command.get("aliases")+[command.get("name")]
+                if context.args.get("command") in aliases:
+                    return command
+        else:
+            if context.args.get("command") == h.name:
+                for c in h.commands:
+                    command = h.commands.get(c) 
+                    aliases = command.get("aliases")+[command.get("name")]
+                    if context.args.get("sub_command") in aliases:
+                        return command
+                    
     return None
-
 
 def cmd():
 
     data = Data()
     parser = setup_argparser(data)
     args = parser.parse_args()
+
     c = Context(vars(args), data)
-    handler = handle(c, c.args.get("command"))
-    if handler is not None:
-        handler(c)
 
+    c.logger.log_debug(f"Args: {c.args}")
+    c.logger.log_debug(f"Env: {config.ENV}")
 
-# fir <command> <options>
-# fir <profile> <command> <options>
+    command = get_command(c)
+    if command is not None:
+        c.logger.log_info(f"Running command: {command.get('name')}")
+        command["func"](c)
+    else:
+        c.logger.log_error(f"Command not found")
