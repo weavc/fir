@@ -4,11 +4,11 @@ import os
 
 from fir.config import DATA_DIR
 from fir.data.defaults import default_profile_struct, default_task_struct
-from fir.helpers import generate_id, write_json_file, read_json_file
+from fir.helpers import generate_id, write_toml_file, read_toml_file
 
 class Data:
 
-    profiles_path = os.path.join(DATA_DIR, "profiles.json")
+    profiles_path = os.path.join(DATA_DIR, "profiles.toml")
     __data : dict = defaultdict(profiles={
         "default": default_profile_struct(
             name="default",
@@ -18,6 +18,9 @@ class Data:
 
     def __init__(self):
         self.__read()
+
+    def get_data(self):
+        return self.__data
 
     @property
     def scope(self) -> str:
@@ -63,11 +66,11 @@ class Data:
         self.__check_dir()
         if not os.path.exists(self.profiles_path):
             self.__save()
-        self.__data = read_json_file(self.profiles_path)
+        self.__data = read_toml_file(self.profiles_path)
 
     def __save(self):
         self.__check_dir()
-        write_json_file(self.profiles_path, self.__data)
+        write_toml_file(self.profiles_path, self.__data)
     
     
     def __check_dir(self):

@@ -5,9 +5,8 @@ from fir.data import Data
 from fir.cmd.base_commands import *
 from fir.cmd.profile_commands import *
 from fir.cmd.config_commands import *
-from fir.cmd.task_data_commands import *
 
-handlers = [ProfileHandlers, ConfigHandlers, TaskDataHandlers, CommandHandlers]
+handlers = [ProfileHandlers, ConfigHandlers, CommandHandlers]
 
 def setup_argparser(data: Data):
     parser = argparse.ArgumentParser(description="Fir, command line task tracking")

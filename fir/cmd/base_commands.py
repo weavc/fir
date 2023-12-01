@@ -1,11 +1,12 @@
 from collections import defaultdict
-from datetime import datetime
+from datetime import date, datetime
 from tabulate import tabulate
 from termcolor import colored
 
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.data.defaults import default_task_struct
+from fir.helpers.dates import datetime_to_date_string, str_to_date_string
 
 class CommandHandlers(CmdBuilder):
     commands = defaultdict(dict)
@@ -15,7 +16,7 @@ class CommandHandlers(CmdBuilder):
 @CommandHandlers.command("create", aliases=["c", "add"])
 @CommandHandlers.add_positional("task_name", nargs="+")
 @CommandHandlers.add_optional("status", "--status", "-s")
-@CommandHandlers.add_optional("tags", "--tags", "-t", nargs="+")
+@CommandHandlers.add_optional("due", "--due")
 def create_task(context: Context):
     tasks = context.profile.get("tasks")
     if tasks is None:
@@ -25,18 +26,26 @@ def create_task(context: Context):
     if context.args.get("status") is not None:
         status = context.args.get("status")
 
+    due = ""
+    if context.args.get("due"):
+        try:
+            due = str_to_date_string(context.args.get("due"))
+        except ValueError:
+            return context.logger.log_error(f"Unable to parse date from due date")
+        
     task_name = ' '.join(context.args.get("task_name"))
-    task = default_task_struct(task_name, context.args.get("tags"), status)
+    task = default_task_struct(task_name, [], status, due=due)
     tasks.append(task)
     context.data.update_profile(context.profile.get("name"), context.profile)
 
-    context.logger.log_success(f"Added task {task_name} to profile {context.profile.get('name')}")
+    return context.logger.log_success(f"Added task {task_name} to profile {context.profile.get('name')}")
 
 @CommandHandlers.command("modify", aliases=["mod", "m", "edit"])
 @CommandHandlers.add_positional("task_id")
 @CommandHandlers.add_optional("status", "--status", "-s")
-@CommandHandlers.add_optional("tags", "--tags", "-t", nargs="+")
+@CommandHandlers.add_optional("tag", "--tag", "-t")
 @CommandHandlers.add_optional("name", "--name", "-n")
+@CommandHandlers.add_optional("due", "--due")
 def modify_task(context: Context):
     tasks = context.profile.get("tasks")
     if tasks is None:
@@ -46,10 +55,21 @@ def modify_task(context: Context):
         if task.get("id").startswith(context.args.get("task_id")):
             if context.args.get("status") is not None:
                 task["status"] = context.args.get("status")
-            if context.args.get("tags") is not None:
-                task["tags"] = context.args.get("tags")
+            if context.args.get("tag") is not None:
+                if context.args.get("tag") in task["tags"]:
+                    task["tags"].remove(context.args.get("tag"))
+                else:
+                    task["tags"].append(context.args.get("tag"))
             if context.args.get("name") is not None:
                 task["name"] = context.args.get("name")
+            if context.args.get("due"):
+                try:
+                    due = str_to_date_string(context.args.get("due"))
+                    task["due"] = due
+                except ValueError:
+                    return context.logger.log_error(f"Unable to parse date from due date")
+
+            task["modified"] = datetime_to_date_string(datetime.now())
             context.data.update_profile(context.profile.get("name"), context.profile)
             return context.logger.log_success(f"Updated task {task.get('id')}")
     
@@ -94,18 +114,18 @@ def ls(context: Context):
             continue
 
         tags = ""
-        if task.get("tags") is not None:
+        if task.get("tags"):
             tags = ', '.join(task.get("tags"))
 
         due = ""
-        if task.get("due") is not None:
-            due = datetime.fromisoformat(task.get("due")).strftime("%d/%m/%Y")
+        if task.get("due"):
+            due = task.get("due")
         
         table.append([
             task.get("id"), 
             task.get("name"),
             task.get("status"), 
-            tags, due])
+            due, tags])
 
     context.logger.log(tabulate(table, 
         headers=[f"{colored('Id', 'light_green', attrs=['bold'])}", 
