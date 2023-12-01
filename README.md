@@ -5,12 +5,11 @@
 - [x] Tags
 - [x] Set due date
 - [ ] Marshmellow for object mapping
-- [ ] File locking / tmp file
 - [ ] Each profile should be its own file
-
+- [ ] Pick up profiles from a global directory & a local directory
 
 ## Future requirements
-- [ ] Pick up profiles from a global directory & a local directory
+- [ ] File locking / tmp file
 - [ ] Status definitions 
   - [ ] Defined set of statuses 
   - [ ] Define whether a status means its still todo, in progress or done

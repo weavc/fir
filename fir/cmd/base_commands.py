@@ -130,7 +130,7 @@ def ls(context: Context):
     context.logger.log(tabulate(table, 
         headers=[f"{colored('Id', 'light_green', attrs=['bold'])}", 
                  f"{colored('Task', 'light_green', attrs=['bold'])}", 
-                 f"{colored('Status', 'light_green', attrs=['bold'])}", 
-                 f"{colored('Tags', 'light_green', attrs=['bold'])}",
-                 f"{colored('Due', 'light_green', attrs=['bold'])}"
+                 f"{colored('Status', 'light_green', attrs=['bold'])}",
+                 f"{colored('Due', 'light_green', attrs=['bold'])}",
+                 f"{colored('Tags', 'light_green', attrs=['bold'])}"
                  ]))

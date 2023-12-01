@@ -2,7 +2,7 @@ install.local:
 	pip3 install . --user
 
 install:
-	poetry install
+	poetry lock && poetry install
 
 shell:
 	poetry shell

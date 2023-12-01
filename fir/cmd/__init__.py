@@ -5,6 +5,7 @@ from fir.data import Data
 from fir.cmd.base_commands import *
 from fir.cmd.profile_commands import *
 from fir.cmd.config_commands import *
+from fir.data.profile import ProfilesRepo
 
 handlers = [ProfileHandlers, ConfigHandlers, CommandHandlers]
 
@@ -74,7 +75,9 @@ def get_command(context: Context) -> dict:
     return None
 
 def cmd():
-
+    r = ProfilesRepo()
+    print(r.data)
+    
     data = Data()
     parser = setup_argparser(data)
     args = parser.parse_args()
