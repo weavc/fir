@@ -12,7 +12,6 @@ description = ""
 id = "FpB5CDGv"
 name = "Toml for config"
 tags = [
-    "assigned:andrew,jordan",
 ]
 status = "DONE"
 added = "2023-12-01"
