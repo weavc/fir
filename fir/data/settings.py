@@ -1,6 +1,7 @@
 import os
 
 from fir.config import DATA_DIR
+from fir.data.defaults import default_settings
 from fir.types.dtos import SettingsDto
 from fir.types.schemas import SettingsSchema
 from fir.helpers.files import read_toml_file, write_toml_file
@@ -28,6 +29,11 @@ class Settings:
 
     def __read(self):
         self.__check_dir()
+        
+        if not os.path.exists(self.path):
+            self.data = default_settings()
+            self.save()
+
         d = read_toml_file(self.path)
         self.data = SettingsSchema().load(d)
 

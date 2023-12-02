@@ -1,6 +1,7 @@
 from tabulate import tabulate
 from termcolor import colored
 from fir.context import Context
+from fir.data.profile import Profile
 from fir.helpers.dates import str_to_date_string
 from fir.types.dtos import TaskDto
 
@@ -84,3 +85,12 @@ def parse_date_from_arg(context: Context, date: str):
 
 def invalid_config_option(context: Context):
     return context.logger.log_error(f"{context.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
+
+
+def link_profile(context: Context, name: str, path: str):
+    p = Profile(path)
+    if p.data is None:
+        return context.logger.log_error("Invalid profile")
+
+    context.settings.data.profiles[name] = path
+    context.settings.save()

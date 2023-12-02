@@ -1,8 +1,10 @@
 import os
 
 from fir.config import DATA_DIR
+from fir.data.defaults import default_profile
+from fir.helpers import str2bool
 from fir.logger import Logger
-from fir.types import ConfigOptions, StatusTypes
+from fir.types import ConfigOptions, ConfigOptionsMap, StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.schemas import ProfileDto, ProfileSchema
 from fir.helpers.files import read_toml_file, write_toml_file
@@ -12,11 +14,16 @@ class Profile:
     path: str
     data: ProfileDto
 
-    def __init__(self, path: str = None):
+    def __init__(self, path: str = None, read: bool = True):
         self.path = path
         if self.path is None:
             self.path = os.path.join(DATA_DIR, "default.toml")
-        self.__read()
+            if not os.path.exists(self.path):
+                self.data = default_profile("default")
+                self.save()
+        
+        if read:
+            self.__read()
 
     def save(self):
         return self.__save()
@@ -32,7 +39,14 @@ class Profile:
         return True
 
     def try_get_config_value(self, key: ConfigOptions):
-        return self.data.config.get(key, None)
+        value = self.data.config.get(key, None)
+        if value is None:
+            value = ConfigOptionsMap.get(key).default
+
+        return value
+
+    def try_get_config_value_bool(self, key: ConfigOptions):
+        return str2bool(self.try_get_config_value(key))
 
     def try_get_config_value_list(self, key: ConfigOptions):
         value = self.try_get_config_value(key)

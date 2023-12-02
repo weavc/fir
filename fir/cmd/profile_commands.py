@@ -1,12 +1,16 @@
-from collections import defaultdict
 import os
+from collections import defaultdict
 from tabulate import tabulate
 from termcolor import colored
+from slugify import slugify
 
 from fir.cmd.cmd_builder import CmdBuilder
+from fir.config import DATA_DIR
 from fir.context import Context
-from fir.data.defaults import default_profile_struct
+from fir.data.defaults import default_profile
 from fir.data.profile import Profile
+from fir.helpers import generate_id
+from fir.helpers.commands import link_profile
 
 class ProfileHandlers(CmdBuilder):
     commands = defaultdict(dict)
@@ -18,15 +22,12 @@ class ProfileHandlers(CmdBuilder):
 @ProfileHandlers.add_positional("path")
 @ProfileHandlers.add_positional("profile_name")
 @ProfileHandlers.add_optional_flag("set", "--set")
-def create(context: Context):
+def link(context: Context):
     name = context.args.get("profile_name")
     path = os.path.abspath(context.args.get("path"))
-    p = Profile(path)
-    if p.data is None:
-        return context.logger.log_error("Invalid profile")
+    
+    link_profile(context, name, path)
 
-    context.settings.data.profiles[name] = path
-    context.settings.save()
     context.logger.log_success(f"Profile {name} added")
     if context.args.get("set"):
         set(context)
@@ -49,15 +50,34 @@ def set(context: Context):
     context.logger.log_success(f"Set profile to {name}")
 
 
-# @ProfileHandlers.command("create", aliases=["c"])
-# @ProfileHandlers.add_positional("profile_name")
-# @ProfileHandlers.add_optional("description", "--description", "-d")
-# def create(context: Context):
-#     context.data.add_profile(
-#         context.args.get("profile_name"),
-#         default_profile_struct(context.args.get("profile_name"), description=context.args.get("description")))
+@ProfileHandlers.command("create", aliases=["c", "new"])
+@ProfileHandlers.add_positional("profile_name")
+@ProfileHandlers.add_optional("description", "--description", "-d")
+@ProfileHandlers.add_optional("path", "--path")
+@ProfileHandlers.add_optional_flag("set", "--set")
+@ProfileHandlers.add_optional_flag("force", "--force")
+def create(context: Context):
+    name = context.args.get("profile_name")
+    desc = context.args.get("description")
+    path = os.path.abspath(os.path.join(DATA_DIR, f"{slugify(name)}.toml"))
+    if context.args.get("path"):
+        dir_path = os.path.abspath(context.args.get("path"))
+        if os.path.isdir(dir_path):
+            path = os.path.join(dir_path, f"{slugify(name)}.toml")
+        else:
+            path = dir_path
 
-#     context.logger.log_success("Profile added")
+    if os.path.exists(path) and not context.args.get("force"):
+        return context.logger.log_error("File already exists")
+
+    profile = Profile(path=path, read=False)
+    profile.data = default_profile(name, desc)
+    profile.save()
+
+    link_profile(context, name, path)
+    context.logger.log_success(f"Profile {name} added")
+    if context.args.get("set"):
+        set(context)
 
 
 # @ProfileHandlers.command("remove", aliases=["rm"])

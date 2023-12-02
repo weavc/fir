@@ -1,24 +1,21 @@
 from datetime import datetime
+from typing import get_args
 from fir.helpers import generate_id
+from fir.types import ConfigOptions, ConfigOptionsMap
+from fir.types.dtos import ProfileDto, SettingsDto
+
+def default_settings() -> SettingsDto:
+    return SettingsDto("default")
 
 
-def default_profile_struct(name: str, description: str = "", tasks: list[dict] = []) -> dict:
-    return {
-        "id": generate_id(),
-        "name": name,
-        "description": description,
-        "tasks": tasks,
-        "config": {}
-    }
+def default_profile(name: str, description: str = "") -> ProfileDto:
+    profile = ProfileDto(name, description, default_config())
+    return profile
 
 
-def default_task_struct(name: str, tags: list[str] = [], status: str = "", due: str = "") -> dict:
-    return {
-        "id": generate_id(),
-        "name": name,
-        "tags": tags,
-        "status": status,
-        "added": datetime.now().strftime("%Y-%m-%d"),
-        "modified": datetime.now().strftime("%Y-%m-%d"),
-        "due": due
-    }
+def default_config() -> dict[ConfigOptions, str]:
+    d = {}
+    for key in get_args(ConfigOptions):
+        d[key] = ConfigOptionsMap.get(key).default
+
+    return d

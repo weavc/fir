@@ -110,6 +110,10 @@ def ls(context: Context):
         if context.args.get("name") is not None and not context.args.get("name").lower() in task.name.lower():
             continue
 
+        if context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):
+            if context.profile.check_status_type(task.status) == "done":
+                continue
+
         tasks.append(task)
 
     log_task_table(context, tasks)
@@ -133,7 +137,7 @@ def ls_done(context: Context):
 @CommandHandlers.command("status")
 @CommandHandlers.add_positional("status")
 @CommandHandlers.add_positional("task_id")
-def ls_todo(context: Context):
+def set_status(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
