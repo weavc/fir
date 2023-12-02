@@ -36,7 +36,7 @@ def create_task(context: Context):
     set_status = context.profile.set_status(task, status)
     if not set_status:
         return context.logger.log_error("Invalid status provided")
-    
+
     if (context.args.get("priority")):
         passed, priority = parse_priority_from_arg(context.args.get("priority"))
         if not passed:
@@ -51,7 +51,7 @@ def create_task(context: Context):
     context.profile.save()
 
     context.logger.log_success(f"Added task {task.name} [{task.id}]")
-    
+
     if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
         log_task(context, task)
 
@@ -212,7 +212,7 @@ def set_priority(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
-    
+
     passed, priority = parse_priority_from_arg(context.args.get("priority"))
     if not passed:
         return context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
