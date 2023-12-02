@@ -29,3 +29,13 @@ Or
 - Forth status category for tasks that are on hold
 - Tracking dates for when the work started & finished (based on when they move status groups)
 - Better documentation, help commands etc
+
+### Development
+
+```
+pip3 install poetry
+git clone git@github.com:weavc/fir.git
+cd fir
+make shell
+make install
+```
