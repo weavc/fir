@@ -64,3 +64,7 @@ def parse_date_from_arg(context: Context, date: str):
             return context.logger.log_error(f"Unable to parse date from due date")
 
     return dt
+
+
+def invalid_config_option(context: Context):
+    return context.logger.log_error(f"{context.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
