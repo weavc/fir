@@ -28,7 +28,12 @@ def create_task(context: Context):
     due = parse_date_from_arg(context, context.args.get("due"))
 
     task_name = ' '.join(context.args.get("task_name"))
-    task = TaskDto(generate_id(), task_name, status, due=due)
+    task = TaskDto(generate_id(), task_name, due=due)
+ 
+    set_status = context.profile.set_status(task, status)
+    if not set_status:
+        return context.logger.log_error("Invalid status provided")
+
     context.profile.data.tasks.append(task)
     context.profile.save()
 
@@ -49,7 +54,9 @@ def modify_task(context: Context):
         return context.logger.log_error("Task not found")
 
     if context.args.get("status") is not None:
-        task.status = context.args.get("status")
+        set_status = context.profile.set_status(task, context.args.get("status"))
+        if not set_status:
+            return context.logger.log_error("Invalid status provided")
     if context.args.get("tag") is not None:
         if context.args.get("tag") in task.tags:
             task.tags.remove(context.args.get("tag"))
@@ -121,3 +128,20 @@ def ls_doing(context: Context):
 @CommandHandlers.command("done")
 def ls_done(context: Context):
     log_task_table_from_statuses(context, context.profile.get_done_statuses())
+
+
+@CommandHandlers.command("status")
+@CommandHandlers.add_positional("status")
+@CommandHandlers.add_positional("task_id")
+def ls_todo(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+    
+    set_status = context.profile.set_status(task, context.args.get("status"))
+    if not set_status:
+        return context.logger.log_error("Invalid status provided")
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)

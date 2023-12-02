@@ -49,18 +49,18 @@ due = ""
 id = "KXeUk7EH"
 name = "Profiles should have their own files"
 tags = []
-status = "PROG"
+status = "DONE"
 added = "2023-12-01"
-modified = "2023-12-02 12:44:29"
+modified = "2023-12-02 15:23:00"
 due = ""
 
 [[tasks]]
 id = "KHyxz4d9"
 name = "Local & global directories for profiles"
 tags = []
-status = "PROG"
+status = "DONE"
 added = "2023-12-01"
-modified = "2023-12-02 12:45:05"
+modified = "2023-12-02 15:25:49"
 due = ""
 
 [[tasks]]
@@ -85,9 +85,9 @@ due = ""
 id = "WcYJ8odS"
 name = "Finish status type checking when setting values"
 tags = []
-status = "TODO"
+status = "DONE"
 added = "2023-12-02 12:48:39"
-modified = "2023-12-02 12:48:39"
+modified = "2023-12-02 15:28:33"
 due = ""
 
 [[tasks]]
@@ -133,4 +133,31 @@ tags = []
 status = "TODO"
 added = "2023-12-02 13:09:13"
 modified = "2023-12-02 13:09:13"
+due = ""
+
+[[tasks]]
+id = "2sk6kn3f"
+name = "Add description, assigned, notes, link fields"
+tags = []
+status = "TODO"
+added = "2023-12-02 15:16:02"
+modified = "2023-12-02 15:16:02"
+due = ""
+
+[[tasks]]
+id = "iRsRTrWN"
+name = "Enable config options (enable table columns etc)"
+tags = []
+status = "TODO"
+added = "2023-12-02 15:18:03"
+modified = "2023-12-02 15:18:03"
+due = ""
+
+[[tasks]]
+id = "U6kKMjVJ"
+name = "ConfigOption to hide done tasks from fir ls"
+tags = []
+status = "TODO"
+added = "2023-12-02 15:19:01"
+modified = "2023-12-02 15:19:50"
 due = ""

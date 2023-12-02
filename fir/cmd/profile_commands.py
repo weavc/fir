@@ -7,8 +7,6 @@ from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.data.defaults import default_profile_struct
 from fir.data.profile import Profile
-from fir.types.dtos import LinkedProfilesDto
-
 
 class ProfileHandlers(CmdBuilder):
     commands = defaultdict(dict)

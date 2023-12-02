@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import get_args
 from marshmallow import Schema, fields, post_load, EXCLUDE, pre_load, validate
 
-from fir.types.dtos import LinkedProfilesDto, ProfileDto, TaskDto, SettingsDto
+from fir.types.dtos import ProfileDto, TaskDto, SettingsDto
 
 
 class SettingsSchema(Schema):

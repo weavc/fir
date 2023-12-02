@@ -23,6 +23,13 @@ class Profile:
 
     def get_task(self, id: str) -> TaskDto | None:
         return next((x for x in self.data.tasks if x.id.startswith(id)), None)
+    
+    def set_status(self, task: TaskDto, status: str) -> bool:
+        if status not in self.get_valid_statuses():
+            return False
+
+        task.status = status
+        return True
 
     def try_get_config_value(self, key: ConfigOptions):
         return self.data.config.get(key, None)
