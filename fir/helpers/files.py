@@ -11,6 +11,7 @@ def write_toml_file(file_path, to: dict, test_write: bool = True):
         with open(file_path, "wb") as f:
             toml = tomli_w.dump(to, f)
         if test_write and os.path.exists(file_path):
+            read_toml_file(file_path)
             os.remove(file_path)
     except Exception as e:
         print(e)
