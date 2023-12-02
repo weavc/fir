@@ -9,6 +9,7 @@ def write_toml_file(file_path, to):
         print(f'ERROR!\nCould not write to config location "{file_path}"!')
         raise SystemExit(1)
 
+
 def read_toml_file(file_path):
     import tomllib
     try:
@@ -18,6 +19,7 @@ def read_toml_file(file_path):
         print(e)
         print(f'ERROR!\nCould not read from config location "{file_path}"!')
         raise SystemExit(1)
+
 
 def write_json_file(file_path, j):
     import json
@@ -29,6 +31,7 @@ def write_json_file(file_path, j):
         print(f'ERROR!\nCould not write to config location "{file_path}"!')
         raise SystemExit(1)
 
+
 def read_json_file(file_path) -> dict:
     import json
     try:
@@ -38,6 +41,7 @@ def read_json_file(file_path) -> dict:
         print(e)
         print(f'ERROR!\nCould not read to config location "{file_path}"!')
         raise SystemExit(1)
+
 
 def generate_id():
     import shortuuid

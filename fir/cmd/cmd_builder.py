@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from collections import defaultdict
 
+
 class CmdBuilder:
 
     @classmethod
@@ -11,7 +12,7 @@ class CmdBuilder:
             cls.commands[func.__name__]["func"] = func
             return func
         return decorator
-    
+
     @classmethod
     def add_positional(cls, name: str, meta: str = None, nargs: str = None):
         def decorator(func):
@@ -24,7 +25,7 @@ class CmdBuilder:
             cls.commands[func.__name__]["args"] = args
             return func
         return decorator
-    
+
     @classmethod
     def add_optional(cls, dest: str, *flags: str, nargs: str = None):
         def decorator(func):

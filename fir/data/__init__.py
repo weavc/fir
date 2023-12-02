@@ -6,15 +6,16 @@ from fir.config import DATA_DIR
 from fir.data.defaults import default_profile_struct, default_task_struct
 from fir.helpers import generate_id, write_toml_file, read_toml_file
 
+
 class Data:
 
     profiles_path = os.path.join(DATA_DIR, "profiles.toml")
-    __data : dict = defaultdict(profiles={
+    __data: dict = defaultdict(profiles={
         "default": default_profile_struct(
             name="default",
-            description="Default profile", 
+            description="Default profile",
             tasks=[default_task_struct("Example task", tags=["example"], status="TODO")])
-    }, scope = "default")
+    }, scope="default")
 
     def __init__(self):
         self.__read()
@@ -25,7 +26,7 @@ class Data:
     @property
     def scope(self) -> str:
         return self.__data.get("scope")
-    
+
     @scope.setter
     def scope(self, value: str):
         self.__data["scope"] = value
@@ -44,12 +45,12 @@ class Data:
             self.__data.get("profiles").update({name: profile})
         self.__save()
         return profile
-    
+
     def update_profile(self, name: str, profile: dict) -> dict:
         profile = self.get_profile(name)
         if profile is None:
             return None
-        
+
         self.__data.get("profiles").update({name: profile})
         self.__save()
         return profile
@@ -61,7 +62,7 @@ class Data:
 
         self.__save()
         return profile
-    
+
     def __read(self):
         self.__check_dir()
         if not os.path.exists(self.profiles_path):
@@ -71,8 +72,7 @@ class Data:
     def __save(self):
         self.__check_dir()
         write_toml_file(self.profiles_path, self.__data)
-    
-    
+
     def __check_dir(self):
         if not os.path.isdir(DATA_DIR):
             try:

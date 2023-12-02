@@ -5,6 +5,7 @@ from fir.model.dtos import SettingsDto
 from fir.model.schemas import SettingsSchema
 from fir.helpers import read_toml_file, write_toml_file
 
+
 class Settings:
     path = os.path.join(DATA_DIR, "settings.toml")
     data: SettingsDto
@@ -14,7 +15,7 @@ class Settings:
 
     def save(self):
         return self.__save()
-    
+
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)
@@ -24,7 +25,7 @@ class Settings:
         self.__check_dir()
         s = SettingsSchema().dump(self.profile)
         write_toml_file(self.profiles_path, s)
-        
+
     def __check_dir(self):
         if not os.path.isdir(DATA_DIR):
             try:

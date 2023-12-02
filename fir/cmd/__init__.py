@@ -76,14 +76,14 @@ def get_command(context: Context) -> dict:
         if h.name is None:
             for c in h.commands:
                 command = h.commands.get(c)
-                aliases = command.get("aliases")+[command.get("name")]
+                aliases = command.get("aliases") + [command.get("name")]
                 if context.args.get("command") in aliases:
                     return command
         else:
             if context.args.get("command") == h.name:
                 for c in h.commands:
                     command = h.commands.get(c)
-                    aliases = command.get("aliases")+[command.get("name")]
+                    aliases = command.get("aliases") + [command.get("name")]
                     if context.args.get("sub_command") in aliases:
                         return command
 

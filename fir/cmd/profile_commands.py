@@ -6,20 +6,23 @@ from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.data.defaults import default_profile_struct
 
+
 class ProfileHandlers(CmdBuilder):
     commands = defaultdict(dict)
     name = "profile"
     aliases = []
+
 
 @ProfileHandlers.command("create", aliases=["c"])
 @ProfileHandlers.add_positional("profile_name")
 @ProfileHandlers.add_optional("description", "--description", "-d")
 def create(context: Context):
     context.data.add_profile(
-        context.args.get("profile_name"), 
+        context.args.get("profile_name"),
         default_profile_struct(context.args.get("profile_name"), description=context.args.get("description")))
 
     context.logger.log_success("Profile added")
+
 
 @ProfileHandlers.command("modify", aliases=["mod", "m"])
 @ProfileHandlers.add_positional("profile_name")
@@ -35,6 +38,7 @@ def modify(context: Context):
 
     context.logger.log_success(f"Updated profile {profile_name}")
 
+
 @ProfileHandlers.command("remove", aliases=["rm"])
 @ProfileHandlers.add_positional("profile_name")
 def remove(context: Context):
@@ -45,7 +49,8 @@ def remove(context: Context):
 
     context.data.remove_profile(profile_name)
     context.logger.log_success("Profile removed")
-    
+
+
 @ProfileHandlers.command("list", aliases=["ls"])
 def ls(context: Context):
     profiles = context.data.get_profiles()
@@ -54,11 +59,12 @@ def ls(context: Context):
         profile = profiles.get(p)
         table.append([profile.get("id"), p, profile.get("description")])
 
-    context.logger.log(tabulate(table, 
-        headers=[f"{colored('Id', 'light_green', attrs=['bold'])}", 
-                 f"{colored('Profile', 'light_green', attrs=['bold'])}", 
-                 f"{colored('Description', 'light_green', attrs=['bold'])}"]))
-    
+    context.logger.log(tabulate(table,
+                                headers=[f"{colored('Id', 'light_green', attrs=['bold'])}",
+                                         f"{colored('Profile', 'light_green', attrs=['bold'])}",
+                                         f"{colored('Description', 'light_green', attrs=['bold'])}"]))
+
+
 @ProfileHandlers.command("set", aliases=["set"])
 @ProfileHandlers.add_positional("profile_name")
 def set(context: Context):
