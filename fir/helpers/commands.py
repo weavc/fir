@@ -14,8 +14,24 @@ def log_task_table_from_statuses(context: Context, statuses: list):
     log_task_table(context, tasks)
 
 
-def log_task_table(context: Context, tasks: list[TaskDto]):
+def sort_by_status_type(context: Context, task: TaskDto):
+    is_type = context.profile.check_status_type(task.status)
+    if is_type == "todo":
+        return 300
+    if is_type == "doing":
+        return 200
+    if is_type == "done":
+        return 100
+    
+    return 400
+
+
+def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
     table = []
+
+    if order:
+        tasks.sort(key=lambda x: sort_by_status_type(context, x))
+
     for task in tasks:
         status = task.status
         is_type = context.profile.check_status_type(status)

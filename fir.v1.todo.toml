@@ -12,11 +12,11 @@ description = ""
 id = "FpB5CDGv"
 name = "Toml for config"
 tags = [
-    "completed:11231",
+    "assigned:andrew,jordan",
 ]
 status = "DONE"
 added = "2023-12-01"
-modified = "2023-12-02 10:52:10"
+modified = "2023-12-02 12:53:19"
 due = ""
 
 [[tasks]]
@@ -41,52 +41,88 @@ due = ""
 id = "ipmuAEKb"
 name = "Marshmellow for object mapping"
 tags = []
-status = "PROG"
+status = "DONE"
 added = "2023-12-01"
-modified = "2023-12-02 00:11:52"
+modified = "2023-12-02 12:45:48"
 due = ""
 
 [[tasks]]
 id = "KXeUk7EH"
 name = "Profiles should have their own files"
 tags = []
-status = "TODO"
+status = "PROG"
 added = "2023-12-01"
-modified = "2023-12-01 19:11:45"
+modified = "2023-12-02 12:44:29"
 due = ""
 
 [[tasks]]
 id = "KHyxz4d9"
 name = "Local & global directories for profiles"
 tags = []
-status = "TODO"
+status = "PROG"
 added = "2023-12-01"
-modified = "2023-12-01 19:12:03"
+modified = "2023-12-02 12:45:05"
 due = ""
 
 [[tasks]]
 id = "NeqTwGNv"
 name = "Print info after create/modify"
 tags = []
-status = "TODO"
+status = "DONE"
 added = "2023-12-01"
-modified = "2023-12-01 19:14:35"
+modified = "2023-12-02 12:45:33"
 due = ""
 
 [[tasks]]
 id = "CCnnMuCN"
 name = "Fix commands for config and profile"
 tags = []
-status = "TODO"
+status = "PROG"
 added = "2023-12-02 00:12:41"
-modified = "2023-12-02 00:12:41"
+modified = "2023-12-02 12:48:11"
 due = ""
 
 [[tasks]]
-id = "Msdyxmzw"
-name = "Setup default profile"
+id = "WcYJ8odS"
+name = "Finish status type checking when setting values"
 tags = []
 status = "TODO"
-added = "2023-12-02 10:22:12"
-modified = "2023-12-02 10:22:12"
+added = "2023-12-02 12:48:39"
+modified = "2023-12-02 12:48:39"
+due = ""
+
+[[tasks]]
+id = "edJYyRfi"
+name = "Add easier way to set status"
+tags = []
+status = "TODO"
+added = "2023-12-02 12:48:52"
+modified = "2023-12-02 12:48:52"
+due = ""
+
+[[tasks]]
+id = "PojCndkn"
+name = "Order task list by status todo -> doing -> done"
+tags = []
+status = "DONE"
+added = "2023-12-02 12:49:26"
+modified = "2023-12-02 13:03:45"
+due = ""
+
+[[tasks]]
+id = "hwhqJFuh"
+name = "Create profiles (and a default)"
+tags = []
+status = "TODO"
+added = "2023-12-02 12:50:32"
+modified = "2023-12-02 12:50:32"
+due = ""
+
+[[tasks]]
+id = "4UVqtcZf"
+name = "Tidy private methods in data repos"
+tags = []
+status = "TODO"
+added = "2023-12-02 13:05:16"
+modified = "2023-12-02 13:05:16"
 due = ""

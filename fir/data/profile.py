@@ -58,7 +58,7 @@ class Profile:
             return "done"
 
         return None
-
+    
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)
