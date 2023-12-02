@@ -151,6 +151,56 @@ def set_status(context: Context):
     log_task(context, task)
 
 
+@CommandHandlers.command("description", aliases=["desc"])
+@CommandHandlers.add_positional("description", nargs="+")
+@CommandHandlers.add_positional("task_id")
+def set_description(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+
+    task.description = ' '.join(context.args.get("description"))
+    
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+@CommandHandlers.command("link", aliases=["ln"])
+@CommandHandlers.add_positional("link")
+@CommandHandlers.add_positional("task_id")
+def set_link(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+
+    task.link = context.args.get("link")
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+
+@CommandHandlers.command("priority")
+@CommandHandlers.add_positional("priority")
+@CommandHandlers.add_positional("task_id")
+def set_priority(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+
+    try:
+        p = int(context.args.get("priority"))
+        if p < 1 or p > 999:
+            raise Exception()
+        task.priority = p
+    except:
+        return context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
+    
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+
 @CommandHandlers.command("tag")
 @CommandHandlers.add_positional("tag")
 @CommandHandlers.add_positional("task_id")
@@ -177,6 +227,38 @@ def rm_tag(context: Context):
 
     if context.args.get("tag") in task.tags:
         task.tags.remove(context.args.get("tag"))
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+
+@CommandHandlers.command("assigned")
+@CommandHandlers.add_positional("assigned")
+@CommandHandlers.add_positional("task_id")
+def add_assigned(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+
+    if context.args.get("assigned") not in task.assigned_to:
+        task.assigned_to.append(context.args.get("assigned"))
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+
+@CommandHandlers.command("rmassigned", aliases=["rma"])
+@CommandHandlers.add_positional("assigned")
+@CommandHandlers.add_positional("task_id")
+def rm_assigned(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+
+    if context.args.get("assigned") in task.assigned_to:
+        task.assigned_to.remove(context.args.get("assigned"))
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")

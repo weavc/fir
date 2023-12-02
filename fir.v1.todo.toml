@@ -7,16 +7,21 @@ description = ""
 "status.doing" = "PROG,PR"
 "status.done" = "DONE,REJECTED"
 "enable.ls.hide_done_tasks" = "1"
+"enable.column.link" = "1"
+"enable.column.assigned" = "1"
 
 [[tasks]]
 id = "FpB5CDGv"
 name = "Toml for config"
-tags = [
-]
+tags = []
 status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-02 12:53:19"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "LHV2ya5S"
@@ -26,6 +31,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-01"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "j5ZXVUWv"
@@ -35,6 +44,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-01"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "ipmuAEKb"
@@ -44,6 +57,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-02 12:45:48"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "KXeUk7EH"
@@ -53,6 +70,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-02 15:23:00"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "KHyxz4d9"
@@ -62,6 +83,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-02 15:25:49"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "NeqTwGNv"
@@ -71,6 +96,10 @@ status = "DONE"
 added = "2023-12-01"
 modified = "2023-12-02 12:45:33"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "CCnnMuCN"
@@ -82,6 +111,10 @@ status = "DONE"
 added = "2023-12-02 00:12:41"
 modified = "2023-12-02 12:48:11"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "WcYJ8odS"
@@ -91,6 +124,10 @@ status = "DONE"
 added = "2023-12-02 12:48:39"
 modified = "2023-12-02 15:28:33"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "edJYyRfi"
@@ -100,6 +137,10 @@ status = "DONE"
 added = "2023-12-02 12:48:52"
 modified = "2023-12-02 12:48:52"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "PojCndkn"
@@ -109,6 +150,10 @@ status = "DONE"
 added = "2023-12-02 12:49:26"
 modified = "2023-12-02 13:03:45"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "hwhqJFuh"
@@ -118,6 +163,10 @@ status = "DONE"
 added = "2023-12-02 12:50:32"
 modified = "2023-12-02 12:50:32"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "4UVqtcZf"
@@ -127,6 +176,10 @@ status = "TODO"
 added = "2023-12-02 13:05:16"
 modified = "2023-12-02 13:05:16"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "FNtWLSZ3"
@@ -136,15 +189,28 @@ status = "TODO"
 added = "2023-12-02 13:09:13"
 modified = "2023-12-02 13:09:13"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "2sk6kn3f"
 name = "Add description, assigned, notes, link fields"
-tags = []
-status = "TODO"
+tags = [
+    "complexity:low",
+]
+status = "DONE"
 added = "2023-12-02 15:16:02"
 modified = "2023-12-02 15:16:02"
 due = ""
+link = "https://github.com/weavc/fir/issues/1"
+description = "We need to be able to add descriptions, links and assign people to tasks. Without these features the software is quite bare."
+priority = 999
+assigned_to = [
+    "chris",
+    "john",
+]
 
 [[tasks]]
 id = "iRsRTrWN"
@@ -154,6 +220,10 @@ status = "PROG"
 added = "2023-12-02 15:18:03"
 modified = "2023-12-02 15:18:03"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "U6kKMjVJ"
@@ -163,6 +233,10 @@ status = "DONE"
 added = "2023-12-02 15:19:01"
 modified = "2023-12-02 15:19:50"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "KsdLSbTT"
@@ -172,6 +246,10 @@ status = "DONE"
 added = "2023-12-02 17:13:05"
 modified = "2023-12-02 17:13:05"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
 
 [[tasks]]
 id = "inbcjR3B"
@@ -181,3 +259,7 @@ status = "TODO"
 added = "2023-12-02 17:22:43"
 modified = "2023-12-02 17:22:43"
 due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []

@@ -14,6 +14,10 @@ class TaskDto:
     tags: list[str] = field(default_factory=list[str])
     added: str = datetime_to_date_string(datetime.now())
     modified: str = datetime_to_date_string(datetime.now())
+    link: str = ""
+    description: str = ""
+    priority: int = 100
+    assigned_to: list[str] = field(default_factory=list[str])
 
 
 @dataclass

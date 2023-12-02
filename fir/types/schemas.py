@@ -25,6 +25,10 @@ class TaskSchema(Schema):
     added = fields.Str(default="")
     modified = fields.Str(default="")
     due = fields.Str(default="")
+    link = fields.Str(default="")
+    description = fields.Str(default="")
+    priority = fields.Field(strict=True, validate=validate.Range(min=0, max=999))
+    assigned_to = fields.List(fields.String())
 
     @post_load
     def make_task(self, data, **kwargs):
