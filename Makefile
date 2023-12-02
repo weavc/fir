@@ -6,3 +6,6 @@ install:
 
 shell:
 	poetry shell
+
+format.project:
+	autopep8 .
