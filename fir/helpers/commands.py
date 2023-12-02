@@ -51,13 +51,13 @@ def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
             values.append(task.due)
         if enable_tags:
             values.append(', '.join(task.tags))
-        
+
         table.append(values)
-        
+
     headers = [f"{colored('Id', 'light_blue', attrs=['bold'])}",
-            f"{colored('Task', 'light_blue', attrs=['bold'])}",
-            f"{colored('Status', 'light_blue', attrs=['bold'])}"]
-    
+               f"{colored('Task', 'light_blue', attrs=['bold'])}",
+               f"{colored('Status', 'light_blue', attrs=['bold'])}"]
+
     if enable_due:
         headers.append(f"{colored('Due Date', 'light_blue', attrs=['bold'])}")
 
@@ -66,11 +66,12 @@ def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
 
     context.logger.log(tabulate(table, headers=headers))
 
+
 def log_task(context: Context, task: TaskDto):
     context.logger.log(f"{colored('Id', 'light_blue', attrs=['bold'])}: {task.id}")
     context.logger.log(f"{colored('Name', 'light_blue', attrs=['bold'])}: {task.name}")
     context.logger.log(f"{colored('Status', 'light_blue', attrs=['bold'])}: {task.status}")
-    
+
     if task.due:
         context.logger.log(f"{colored('Due', 'light_blue', attrs=['bold'])}: {task.due}")
     if task.tags:

@@ -4,6 +4,7 @@ from fir.helpers import generate_id
 from fir.types import ConfigOptions, ConfigOptionsMap
 from fir.types.dtos import ProfileDto, SettingsDto
 
+
 def default_settings() -> SettingsDto:
     return SettingsDto("default")
 

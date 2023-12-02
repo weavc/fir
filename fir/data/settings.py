@@ -29,7 +29,7 @@ class Settings:
 
     def __read(self):
         self.__check_dir()
-        
+
         if not os.path.exists(self.path):
             self.data = default_settings()
             self.save()

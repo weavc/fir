@@ -12,6 +12,7 @@ from fir.data.profile import Profile
 from fir.helpers import generate_id
 from fir.helpers.commands import link_profile
 
+
 class ProfileHandlers(CmdBuilder):
     commands = defaultdict(dict)
     name = "profile"
@@ -25,7 +26,7 @@ class ProfileHandlers(CmdBuilder):
 def link(context: Context):
     name = context.args.get("profile_name")
     path = os.path.abspath(context.args.get("path"))
-    
+
     link_profile(context, name, path)
 
     context.logger.log_success(f"Profile {name} added")

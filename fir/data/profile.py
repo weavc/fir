@@ -21,7 +21,7 @@ class Profile:
             if not os.path.exists(self.path):
                 self.data = default_profile("default")
                 self.save()
-        
+
         if read:
             self.__read()
 
@@ -30,7 +30,7 @@ class Profile:
 
     def get_task(self, id: str) -> TaskDto | None:
         return next((x for x in self.data.tasks if x.id.startswith(id)), None)
-    
+
     def set_status(self, task: TaskDto, status: str) -> bool:
         if status not in self.get_valid_statuses():
             return False

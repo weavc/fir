@@ -29,7 +29,7 @@ def create_task(context: Context):
 
     task_name = ' '.join(context.args.get("task_name"))
     task = TaskDto(generate_id(), task_name, due=due)
- 
+
     set_status = context.profile.set_status(task, status)
     if not set_status:
         return context.logger.log_error("Invalid status provided")
@@ -141,7 +141,7 @@ def set_status(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
-    
+
     set_status = context.profile.set_status(task, context.args.get("status"))
     if not set_status:
         return context.logger.log_error("Invalid status provided")
@@ -150,6 +150,7 @@ def set_status(context: Context):
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
     log_task(context, task)
 
+
 @CommandHandlers.command("tag")
 @CommandHandlers.add_positional("tag")
 @CommandHandlers.add_positional("task_id")
@@ -157,13 +158,14 @@ def add_tag(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
-    
+
     if context.args.get("tag") not in task.tags:
         task.tags.append(context.args.get("tag"))
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
     log_task(context, task)
+
 
 @CommandHandlers.command("rmtag", aliases=["rmt"])
 @CommandHandlers.add_positional("tag")
@@ -172,7 +174,7 @@ def rm_tag(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
-    
+
     if context.args.get("tag") in task.tags:
         task.tags.remove(context.args.get("tag"))
 
