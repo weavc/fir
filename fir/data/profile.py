@@ -3,6 +3,7 @@ import os
 from fir.config import DATA_DIR
 from fir.helpers.logger import Logger
 from fir.types import ConfigOptions, StatusTypes
+from fir.types.dtos import TaskDto
 from fir.types.schemas import ProfileDto, ProfileSchema
 from fir.helpers.files import read_toml_file, write_toml_file
 
@@ -16,6 +17,9 @@ class Profile:
 
     def save(self):
         return self.__save()
+
+    def get_task(self, id: str) -> TaskDto | None:
+        return next((x for x in self.data.tasks if x.id.startswith(id)), None)
 
     def try_get_config_value(self, key: ConfigOptions):
         return self.data.config.get(key, None)

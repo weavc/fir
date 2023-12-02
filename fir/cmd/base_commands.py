@@ -6,6 +6,7 @@ from termcolor import colored
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_id
+from fir.helpers.commands import log_task, log_task_table, log_task_table_from_statuses, parse_date_from_arg
 from fir.helpers.dates import datetime_to_date_string, str_to_date_string
 from fir.types.dtos import TaskDto
 
@@ -25,7 +26,7 @@ def create_task(context: Context):
     if context.args.get("status"):
         status = context.args.get("status")
 
-    due = __parse_date_from_arg(context, context.args.get("due"))
+    due = parse_date_from_arg(context, context.args.get("due"))
 
     task_name = ' '.join(context.args.get("task_name"))
     task = TaskDto(generate_id(), task_name, status, due=due)
@@ -34,7 +35,7 @@ def create_task(context: Context):
 
     context.logger.log_success(
         f"Added task {task.name} [{task.id}] to profile {context.profile.data.name}")
-    __log_task(context, task)
+    log_task(context, task)
 
 
 @CommandHandlers.command("modify", aliases=["mod", "m", "edit"])
@@ -44,8 +45,7 @@ def create_task(context: Context):
 @CommandHandlers.add_optional("name", "--name", "-n")
 @CommandHandlers.add_optional("due", "--due")
 def modify_task(context: Context):
-    task = next((x for x in context.profile.data.tasks if x.id.startswith(
-        context.args.get("task_id"))), None)
+    task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
 
@@ -59,19 +59,18 @@ def modify_task(context: Context):
     if context.args.get("name") is not None:
         task.name = context.args.get("name")
     if context.args.get("due"):
-        task.due = __parse_date_from_arg(context, context.args.get("due"))
+        task.due = parse_date_from_arg(context, context.args.get("due"))
 
     task.modified = datetime_to_date_string(datetime.now())
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    __log_task(context, task)
+    log_task(context, task)
 
 
 @CommandHandlers.command("remove", aliases=["rm"])
 @CommandHandlers.add_positional("task_id")
 def remove_task(context: Context):
-    task = next((x for x in context.profile.data.tasks if x.id.startswith(
-        context.args.get("task_id"))), None)
+    task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
 
@@ -84,12 +83,11 @@ def remove_task(context: Context):
 @CommandHandlers.command("info", aliases=["i"])
 @CommandHandlers.add_positional("task_id")
 def task_info(context: Context):
-    task = next((x for x in context.profile.data.tasks if x.id.startswith(
-        context.args.get("task_id"))), None)
+    task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
 
-    __log_task(context, task)
+    log_task(context, task)
 
 
 @CommandHandlers.command("list", aliases=["ls"])
@@ -108,80 +106,19 @@ def ls(context: Context):
 
         tasks.append(task)
 
-    __log_task_table(context, tasks)
+    log_task_table(context, tasks)
 
 
 @CommandHandlers.command("todo")
 def ls_todo(context: Context):
-    __log_task_table_from_statuses(context, context.profile.get_todo_statuses())
+    log_task_table_from_statuses(context, context.profile.get_todo_statuses())
 
 
 @CommandHandlers.command("doing", aliases=["prog"])
 def ls_doing(context: Context):
-    __log_task_table_from_statuses(context, context.profile.get_doing_statuses())
+    log_task_table_from_statuses(context, context.profile.get_doing_statuses())
 
 
 @CommandHandlers.command("done")
 def ls_done(context: Context):
-    __log_task_table_from_statuses(context, context.profile.get_done_statuses())
-
-
-def __log_task_table_from_statuses(context: Context, statuses: list):
-    tasks = []
-    for task in context.profile.data.tasks:
-        if task.status in statuses:
-            tasks.append(task)
-
-    __log_task_table(context, tasks)
-
-
-def __log_task_table(context: Context, tasks: list[TaskDto]):
-    table = []
-    for task in tasks:
-        status = task.status
-        is_type = context.profile.check_status_type(status)
-        if is_type == "todo":
-            status = colored(task.status, 'light_red')
-        if is_type == "doing":
-            status = colored(task.status, 'light_yellow')
-        if is_type == "done":
-            status = colored(task.status, 'light_green')
-
-        table.append([
-            colored(task.id, 'light_grey'),
-            task.name,
-            status,
-            task.due,
-            ', '.join(task.tags)])
-
-    context.logger.log(tabulate(table,
-                                headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Task', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Status', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Due', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Tags', 'light_blue', attrs=['bold'])}"
-                                         ]))
-
-
-def __log_task(context: Context, task: TaskDto):
-    context.logger.log(
-        f"{colored('Name', 'light_blue', attrs=['bold'])}: {task.name}")
-    context.logger.log(
-        f"{colored('Id', 'light_blue', attrs=['bold'])}: {task.id}")
-    context.logger.log(
-        f"{colored('Status', 'light_blue', attrs=['bold'])}: {task.status}")
-    context.logger.log(
-        f"{colored('Due', 'light_blue', attrs=['bold'])}: {task.due}")
-    context.logger.log(
-        f"{colored('Tags', 'light_blue', attrs=['bold'])}: {', '.join(task.tags)}")
-
-
-def __parse_date_from_arg(context: Context, date: str):
-    dt = ""
-    if date:
-        try:
-            dt = str_to_date_string(date)
-        except ValueError:
-            return context.logger.log_error(f"Unable to parse date from due date")
-
-    return dt
+    log_task_table_from_statuses(context, context.profile.get_done_statuses())
