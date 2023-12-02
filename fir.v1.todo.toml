@@ -126,3 +126,12 @@ status = "TODO"
 added = "2023-12-02 13:05:16"
 modified = "2023-12-02 13:05:16"
 due = ""
+
+[[tasks]]
+id = "FNtWLSZ3"
+name = "Review error handling"
+tags = []
+status = "TODO"
+added = "2023-12-02 13:09:13"
+modified = "2023-12-02 13:09:13"
+due = ""

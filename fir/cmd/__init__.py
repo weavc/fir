@@ -6,7 +6,6 @@ from argcomplete import FilesCompleter
 
 from fir import config
 from fir.context import Context
-from fir.data import Data
 from fir.cmd.base_commands import *
 from fir.cmd.profile_commands import *
 from fir.cmd.config_commands import *
