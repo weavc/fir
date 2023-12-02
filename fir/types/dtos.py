@@ -26,5 +26,13 @@ class ProfileDto:
 
 
 @dataclass
+class LinkedProfilesDto:
+    name: str
+    path: str
+
+
+@dataclass
 class SettingsDto:
     scope: str
+    profiles: dict[str, str] = field(default_factory=dict[str, str])
+

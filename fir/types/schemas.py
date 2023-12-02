@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 from typing import get_args
 from marshmallow import Schema, fields, post_load, EXCLUDE, pre_load, validate
-from fir.types import ConfigOptions
 
-from fir.types.dtos import ProfileDto, TaskDto, SettingsDto
+from fir.types.dtos import LinkedProfilesDto, ProfileDto, TaskDto, SettingsDto
 
 
 class SettingsSchema(Schema):
-    scope = fields.Str()
+    scope = fields.Str()    
+    profiles = fields.Dict(keys=fields.String(), values=fields.String())
 
     @post_load
     def make(self, data, **kwargs):

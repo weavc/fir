@@ -1,0 +1,92 @@
+id = "3md8FCAM"
+name = "Fir V1 Todo List"
+description = ""
+
+[config]
+"status.default" = "TODO"
+"status.todo" = "TODO,ONHOLD"
+"status.doing" = "PROG,PR"
+"status.done" = "DONE,REJECTED"
+
+[[tasks]]
+id = "FpB5CDGv"
+name = "Toml for config"
+tags = [
+    "completed:11231",
+]
+status = "DONE"
+added = "2023-12-01"
+modified = "2023-12-02 10:52:10"
+due = ""
+
+[[tasks]]
+id = "LHV2ya5S"
+name = "Tags"
+tags = []
+status = "DONE"
+added = "2023-12-01"
+modified = "2023-12-01"
+due = ""
+
+[[tasks]]
+id = "j5ZXVUWv"
+name = "Date improvements"
+tags = []
+status = "DONE"
+added = "2023-12-01"
+modified = "2023-12-01"
+due = ""
+
+[[tasks]]
+id = "ipmuAEKb"
+name = "Marshmellow for object mapping"
+tags = []
+status = "PROG"
+added = "2023-12-01"
+modified = "2023-12-02 00:11:52"
+due = ""
+
+[[tasks]]
+id = "KXeUk7EH"
+name = "Profiles should have their own files"
+tags = []
+status = "TODO"
+added = "2023-12-01"
+modified = "2023-12-01 19:11:45"
+due = ""
+
+[[tasks]]
+id = "KHyxz4d9"
+name = "Local & global directories for profiles"
+tags = []
+status = "TODO"
+added = "2023-12-01"
+modified = "2023-12-01 19:12:03"
+due = ""
+
+[[tasks]]
+id = "NeqTwGNv"
+name = "Print info after create/modify"
+tags = []
+status = "TODO"
+added = "2023-12-01"
+modified = "2023-12-01 19:14:35"
+due = ""
+
+[[tasks]]
+id = "CCnnMuCN"
+name = "Fix commands for config and profile"
+tags = []
+status = "TODO"
+added = "2023-12-02 00:12:41"
+modified = "2023-12-02 00:12:41"
+due = ""
+
+[[tasks]]
+id = "Msdyxmzw"
+name = "Setup default profile"
+tags = []
+status = "TODO"
+added = "2023-12-02 10:22:12"
+modified = "2023-12-02 10:22:12"
+due = ""
