@@ -3,7 +3,7 @@ description = ""
 
 [config]
 "status.default" = "TODO"
-"status.todo" = "TODO,ONHOLD"
+"status.todo" = "TODO,HOLD"
 "status.doing" = "PROG,PR"
 "status.done" = "DONE,REJECTED"
 "enable.ls.hide_done_tasks" = "1"
@@ -171,7 +171,9 @@ assigned_to = []
 [[tasks]]
 id = "4UVqtcZf"
 name = "Tidy private methods in data repos"
-tags = []
+tags = [
+    "complexity:med",
+]
 status = "TODO"
 added = "2023-12-02 13:05:16"
 modified = "2023-12-02 13:05:16"
@@ -179,7 +181,9 @@ due = ""
 link = ""
 description = ""
 priority = 100
-assigned_to = []
+assigned_to = [
+    "Chris",
+]
 
 [[tasks]]
 id = "FNtWLSZ3"
@@ -255,7 +259,7 @@ assigned_to = []
 id = "inbcjR3B"
 name = "Better help commands"
 tags = []
-status = "TODO"
+status = "HOLD"
 added = "2023-12-02 17:22:43"
 modified = "2023-12-02 17:22:43"
 due = ""
@@ -276,3 +280,20 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "bdSFHYtx"
+name = "Add a forth status category for on hold tasks"
+tags = [
+    "complextity:med",
+]
+status = "TODO"
+added = "2023-12-02 20:32:53"
+modified = "2023-12-02 20:32:53"
+due = ""
+link = ""
+description = "Tasks that are on hold don't really fit into any of the other 3 status categories. They need a home"
+priority = 1
+assigned_to = [
+    "Chris",
+]

@@ -50,9 +50,10 @@ def create_task(context: Context):
     context.profile.data.tasks.append(task)
     context.profile.save()
 
-    context.logger.log_success(
-        f"Added task {task.name} [{task.id}] to profile {context.profile.data.name}")
-    log_task(context, task)
+    context.logger.log_success(f"Added task {task.name} [{task.id}]")
+    
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("mod", aliases=["edit"])
@@ -89,7 +90,8 @@ def modify_task(context: Context):
     task.modified = datetime_to_date_string(datetime.now())
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("rm")
@@ -167,7 +169,8 @@ def set_status(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("description", aliases=["desc"])
@@ -182,7 +185,8 @@ def set_description(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("link", aliases=["ln"])
@@ -197,7 +201,8 @@ def set_link(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("priority")
@@ -216,7 +221,8 @@ def set_priority(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("tag")
@@ -235,7 +241,8 @@ def add_tag(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("rmtag", aliases=["rmt"])
@@ -254,7 +261,8 @@ def rm_tag(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("assign")
@@ -273,7 +281,8 @@ def add_assigned(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)
 
 
 @CommandHandlers.command("unassign")
@@ -292,4 +301,5 @@ def rm_assigned(context: Context):
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-    log_task(context, task)
+    if context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
+        log_task(context, task)

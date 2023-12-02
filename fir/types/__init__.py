@@ -7,6 +7,7 @@ ConfigOptions = Literal[
     "status.doing",
     "status.done",
     "enable.ls.hide_done_tasks",
+    "enable.log_task_post_modify",
     "enable.column.due",
     "enable.column.tags",
     "enable.column.link",
@@ -36,6 +37,7 @@ ConfigOptionsMap: dict[ConfigOptions, ConfigOptionsData] = {
     "enable.column.link": ConfigOptionsData("enable.column.link", "Show [1] or hide [0] link column", "0", "0"),
     "enable.column.assigned": ConfigOptionsData("enable.column.assigned", "Show [1] or hide [0] assigned column", "1", "0"),
     "enable.column.priority": ConfigOptionsData("enable.column.priority", "Show [1] or hide [0] priority column", "1", "0"),
+    "enable.log_task_post_modify": ConfigOptionsData("enable.log_task_post_modify", "Print full task details after modifying it", "0", "0"),
 }
 
 StatusTypes = Literal[
