@@ -1,7 +1,16 @@
 from dataclasses import dataclass, field
 from marshmallow import Schema, fields, post_load, EXCLUDE, pre_load, validate
 
-from fir.data.dtos import Profile, Task
+from fir.model.dtos import ProfileDto, TaskDto, SettingsDto
+
+
+class SettingsSchema(Schema):
+    scope = fields.Str()
+
+    @post_load
+    def make(self, data, **kwargs):
+        return SettingsDto(**data)
+
 
 class TaskSchema(Schema):
     class Meta:
@@ -17,7 +26,8 @@ class TaskSchema(Schema):
 
     @post_load
     def make_task(self, data, **kwargs):
-        return Task(**data)
+        return TaskDto(**data)
+
 
 class ProfileSchema(Schema):
     class Meta:
@@ -31,4 +41,4 @@ class ProfileSchema(Schema):
 
     @post_load
     def make_profile(self, data, **kwargs):
-        return Profile(**data)
+        return ProfileDto(**data)
