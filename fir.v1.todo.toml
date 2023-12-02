@@ -7,7 +7,7 @@ description = ""
 "status.doing" = "PROG,PR"
 "status.done" = "DONE,REJECTED"
 "enable.ls.hide_done_tasks" = "1"
-"enable.column.link" = "1"
+"enable.column.link" = "0"
 "enable.column.assigned" = "1"
 
 [[tasks]]
@@ -174,7 +174,7 @@ name = "Tidy private methods in data repos"
 tags = [
     "complexity:med",
 ]
-status = "TODO"
+status = "PR"
 added = "2023-12-02 13:05:16"
 modified = "2023-12-02 13:05:16"
 due = ""
@@ -188,15 +188,20 @@ assigned_to = [
 [[tasks]]
 id = "FNtWLSZ3"
 name = "Review error handling"
-tags = []
-status = "TODO"
+tags = [
+    "complexity:high",
+]
+status = "PROG"
 added = "2023-12-02 13:09:13"
 modified = "2023-12-02 13:09:13"
 due = ""
 link = ""
 description = ""
 priority = 100
-assigned_to = []
+assigned_to = [
+    "Chris",
+    "Megan",
+]
 
 [[tasks]]
 id = "2sk6kn3f"
@@ -282,17 +287,36 @@ priority = 100
 assigned_to = []
 
 [[tasks]]
-id = "bdSFHYtx"
+id = "kioPjfuk"
+name = "Add a forth status category for on hold"
+tags = [
+    "feature",
+    "complexity:med",
+]
+status = "TODO"
+added = "2023-12-02 20:44:46"
+modified = "2023-12-02 20:44:46"
+due = ""
+link = ""
+description = "Tasks that are on hold don't really have a place within the current categories so we should create a new category group for it."
+priority = 1
+assigned_to = [
+    "Chris",
+]
+
+[[tasks]]
+id = "YW2rcJgB"
 name = "Add a forth status category for on hold tasks"
 tags = [
     "complextity:med",
+    "feature",
 ]
 status = "TODO"
-added = "2023-12-02 20:32:53"
-modified = "2023-12-02 20:32:53"
+added = "2023-12-02 20:57:45"
+modified = "2023-12-02 20:57:45"
 due = ""
 link = ""
-description = "Tasks that are on hold don't really fit into any of the other 3 status categories. They need a home"
+description = "On hold tasks don't fit into the current categories, so we should add another"
 priority = 1
 assigned_to = [
     "Chris",
