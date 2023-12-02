@@ -13,7 +13,7 @@ ConfigOptions = Literal[
     "enable.column.description",
     "enable.column.assigned",
     "enable.column.priority",
-    ]
+]
 
 
 @dataclass

@@ -30,7 +30,7 @@ def sort_by_status_type(context: Context, task: TaskDto):
 def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
     # Might want to tidy the if statements in here at some point. I think
     # theres probably a way to do this automatically when the settings/fields are added
-    
+
     table = []
 
     if order:
@@ -66,7 +66,7 @@ def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
             values.append(', '.join(task.assigned_to))
         if enable_tags:
             values.append(', '.join(task.tags))
-        
+
         table.append(values)
 
     headers = [f"{colored('Id', 'light_blue', attrs=['bold'])}",
@@ -93,7 +93,7 @@ def log_task(context: Context, task: TaskDto):
     context.logger.log(f"{colored('Id', 'light_blue', attrs=['bold'])}: {task.id}")
     context.logger.log(f"{colored('Name', 'light_blue', attrs=['bold'])}: {task.name}")
     context.logger.log(f"{colored('Status', 'light_blue', attrs=['bold'])}: {task.status}")
-    
+
     if task.description:
         context.logger.log(f"{colored('Description', 'light_blue', attrs=['bold'])}: {task.description}")
     if task.due:
@@ -106,7 +106,7 @@ def log_task(context: Context, task: TaskDto):
         context.logger.log(f"{colored('Tags', 'light_blue', attrs=['bold'])}: {', '.join(task.tags)}")
     if task.priority:
         context.logger.log(f"{colored('Priority', 'light_blue', attrs=['bold'])}: {task.priority}")
-    
+
 
 def parse_date_from_arg(context: Context, date: str):
     dt = ""

@@ -263,3 +263,16 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "SFqYA3ZT"
+name = "Add new task properties to new and mod commands"
+tags = []
+status = "TODO"
+added = "2023-12-02 20:03:16"
+modified = "2023-12-02 20:03:16"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
