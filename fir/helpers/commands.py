@@ -118,6 +118,14 @@ def parse_date_from_arg(context: Context, date: str):
 
     return dt
 
+def parse_priority_from_arg(priority: str) -> (bool, int):
+    try:
+        p = int(priority)
+        if p < 1 or p > 999:
+            raise Exception()
+        return True, p
+    except BaseException:
+        return False, 0
 
 def invalid_config_option(context: Context):
     return context.logger.log_error(f"{context.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")

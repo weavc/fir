@@ -5,7 +5,7 @@ from datetime import datetime
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_id
-from fir.helpers.commands import log_task, log_task_table, log_task_table_from_statuses, parse_date_from_arg
+from fir.helpers.commands import log_task, log_task_table, log_task_table_from_statuses, parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
 
@@ -20,6 +20,9 @@ class CommandHandlers(CmdBuilder):
 @CommandHandlers.add_positional("task_name", nargs="+")
 @CommandHandlers.add_optional("status", "--status")
 @CommandHandlers.add_optional("due", "--due")
+@CommandHandlers.add_optional("link", "--link")
+@CommandHandlers.add_optional("priority", "--priority")
+@CommandHandlers.add_optional("description", "--desc", "--description")
 def create_task(context: Context):
     status = context.profile.data.config.get("status.default", "")
     if context.args.get("status"):
@@ -33,6 +36,16 @@ def create_task(context: Context):
     set_status = context.profile.set_status(task, status)
     if not set_status:
         return context.logger.log_error("Invalid status provided")
+    
+    if (context.args.get("priority")):
+        passed, priority = parse_priority_from_arg(context.args.get("priority"))
+        if not passed:
+            return context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
+        task.priority = priority
+    if context.args.get("description"):
+        task.description = context.args.get("description")
+    if context.args.get("link"):
+        task.link = context.args.get("link")
 
     context.profile.data.tasks.append(task)
     context.profile.save()
@@ -44,10 +57,12 @@ def create_task(context: Context):
 
 @CommandHandlers.command("mod", aliases=["edit"])
 @CommandHandlers.add_positional("task_id")
-@CommandHandlers.add_optional("status", "--status", "-s")
-@CommandHandlers.add_optional("tag", "--tag", "-t")
-@CommandHandlers.add_optional("name", "--name", "-n")
+@CommandHandlers.add_optional("status", "--status")
+@CommandHandlers.add_optional("name", "--name")
 @CommandHandlers.add_optional("due", "--due")
+@CommandHandlers.add_optional("link", "--link")
+@CommandHandlers.add_optional("priority", "--priority")
+@CommandHandlers.add_optional("description", "--desc", "--description")
 def modify_task(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -57,15 +72,19 @@ def modify_task(context: Context):
         set_status = context.profile.set_status(task, context.args.get("status"))
         if not set_status:
             return context.logger.log_error("Invalid status provided")
-    if context.args.get("tag") is not None:
-        if context.args.get("tag") in task.tags:
-            task.tags.remove(context.args.get("tag"))
-        else:
-            task.tags.append(context.args.get("tag"))
     if context.args.get("name") is not None:
         task.name = context.args.get("name")
     if context.args.get("due"):
         task.due = parse_date_from_arg(context, context.args.get("due"))
+    if (context.args.get("priority")):
+        passed, priority = parse_priority_from_arg(context.args.get("priority"))
+        if not passed:
+            return context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
+        task.priority = priority
+    if context.args.get("description"):
+        task.description = context.args.get("description")
+    if context.args.get("link"):
+        task.link = context.args.get("link")
 
     task.modified = datetime_to_date_string(datetime.now())
     context.profile.save()
@@ -188,14 +207,12 @@ def set_priority(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
         return context.logger.log_error("Task not found")
-
-    try:
-        p = int(context.args.get("priority"))
-        if p < 1 or p > 999:
-            raise Exception()
-        task.priority = p
-    except BaseException:
+    
+    passed, priority = parse_priority_from_arg(context.args.get("priority"))
+    if not passed:
         return context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
+
+    task.priority = priority
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
