@@ -1,9 +1,9 @@
 import os
 
 from fir.config import DATA_DIR
-from fir.model.dtos import SettingsDto
-from fir.model.schemas import SettingsSchema
-from fir.helpers import read_toml_file, write_toml_file
+from fir.types.dtos import SettingsDto
+from fir.types.schemas import SettingsSchema
+from fir.helpers.files import read_toml_file, write_toml_file
 
 
 class Settings:

@@ -5,10 +5,9 @@ from termcolor import colored
 
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
-from fir.data.defaults import default_task_struct
 from fir.helpers import generate_id
 from fir.helpers.dates import datetime_to_date_string, str_to_date_string
-from fir.model.dtos import TaskDto
+from fir.types.dtos import TaskDto
 
 
 class CommandHandlers(CmdBuilder):
@@ -22,7 +21,7 @@ class CommandHandlers(CmdBuilder):
 @CommandHandlers.add_optional("status", "--status", "-s")
 @CommandHandlers.add_optional("due", "--due")
 def create_task(context: Context):
-    status = context.profile.data.config.get("defaults.status")
+    status = context.profile.data.config.get("status.default", "")
     if context.args.get("status"):
         status = context.args.get("status")
 
@@ -98,7 +97,7 @@ def task_info(context: Context):
 @CommandHandlers.add_optional("name", "--name", "-n")
 @CommandHandlers.add_optional("id", "--id", "-i")
 def ls(context: Context):
-    table = []
+    tasks = []
     for task in context.profile.data.tasks:
         if context.args.get("status") is not None and task.status != context.args.get("status"):
             continue
@@ -107,10 +106,51 @@ def ls(context: Context):
         if context.args.get("name") is not None and not context.args.get("name").lower() in task.name.lower():
             continue
 
+        tasks.append(task)
+
+    __log_task_table(context, tasks)
+
+
+@CommandHandlers.command("todo")
+def ls_todo(context: Context):
+    __log_task_table_from_statuses(context, context.profile.get_todo_statuses())
+
+
+@CommandHandlers.command("doing", aliases=["prog"])
+def ls_doing(context: Context):
+    __log_task_table_from_statuses(context, context.profile.get_doing_statuses())
+
+
+@CommandHandlers.command("done")
+def ls_done(context: Context):
+    __log_task_table_from_statuses(context, context.profile.get_done_statuses())
+
+
+def __log_task_table_from_statuses(context: Context, statuses: list):
+    tasks = []
+    for task in context.profile.data.tasks:
+        if task.status in statuses:
+            tasks.append(task)
+
+    __log_task_table(context, tasks)
+
+
+def __log_task_table(context: Context, tasks: list[TaskDto]):
+    table = []
+    for task in tasks:
+        status = task.status
+        is_type = context.profile.check_status_type(status)
+        if is_type == "todo":
+            status = colored(task.status, 'light_red')
+        if is_type == "doing":
+            status = colored(task.status, 'light_yellow')
+        if is_type == "done":
+            status = colored(task.status, 'light_green')
+
         table.append([
             colored(task.id, 'light_grey'),
             task.name,
-            task.status,
+            status,
             task.due,
             ', '.join(task.tags)])
 

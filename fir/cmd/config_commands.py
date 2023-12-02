@@ -15,7 +15,7 @@ class ConfigHandlers(CmdBuilder):
 @ConfigHandlers.command("get", aliases=["g"])
 @ConfigHandlers.add_positional("config_name")
 def get_config_value(context: Context):
-    value = context.profile.get("config").get(context.args.get("config_name"))
+    value = context.profile.data.config.get(context.args.get("config_name"))
     context.logger.log(f"{context.args.get('config_name')}: {value}")
 
 
@@ -23,25 +23,25 @@ def get_config_value(context: Context):
 @ConfigHandlers.add_positional("config_value")
 @ConfigHandlers.add_positional("config_name")
 def set_config_value(context: Context):
-    context.profile.get("config")[context.args.get("config_name")] = context.args.get("config_value")
-    context.data.update_profile(context.profile.get("name"), context.profile)
+    context.profile.data.config[context.args.get("config_name")] = context.args.get("config_value")
+    context.profile.save()
     context.logger.log_success(f"Updated config {context.args.get('config_name')}")
 
 
 @ConfigHandlers.command("clear", aliases=["rm", "remove"])
 @ConfigHandlers.add_positional("config_name")
 def remove_config_value(context: Context):
-    context.profile.get("config")[context.args.get("config_name")] = None
-    context.data.update_profile(context.profile.get("name"), context.profile)
+    context.profile.data.config.pop(context.args.get("config_name"))
+    context.profile.save()
     context.logger.log_success(f"Removed config {context.args.get('config_name')}")
 
 
 @ConfigHandlers.command("ls", aliases=["list"])
 def list_config_values(context: Context):
     table = []
-    for key, value in context.profile.get("config").items():
+    for key, value in context.profile.data.config.items():
         table.append([key, value])
 
     context.logger.log(tabulate(table,
-                                headers=[f"{colored('Name', 'light_green', attrs=['bold'])}",
-                                         f"{colored('Value', 'light_green', attrs=['bold'])}"]))
+                                headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
+                                         f"{colored('Value', 'light_blue', attrs=['bold'])}"]))

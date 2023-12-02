@@ -4,7 +4,7 @@ import os
 
 from fir.config import DATA_DIR
 from fir.data.defaults import default_profile_struct, default_task_struct
-from fir.helpers import generate_id, write_toml_file, read_toml_file
+from fir.helpers.files import write_toml_file, read_toml_file
 
 
 class Data:
