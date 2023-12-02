@@ -6,7 +6,9 @@ ConfigOptions = Literal[
     "status.todo",
     "status.doing",
     "status.done",
-    "enable.ls.hide_done_tasks"]
+    "enable.ls.hide_done_tasks",
+    "enable.ls.column.due",
+    "enable.ls.column.tags"]
 
 
 @dataclass
@@ -23,6 +25,8 @@ ConfigOptionsMap: dict[ConfigOptions, ConfigOptionsData] = {
     "status.doing": ConfigOptionsData("status.doing", "Comma-seperated list of doing or in progress statuses", "PROG,PR", "doing"),
     "status.done": ConfigOptionsData("status.done", "Comma-seperated list of done statuses", "DONE,REJECTED", "done,rejected"),
     "enable.ls.hide_done_tasks": ConfigOptionsData("enable.ls.hide_done_tasks", "1 to hide done tasks, 0 to show done tasks", "1", "1"),
+    "enable.ls.column.due": ConfigOptionsData("enable.ls.column.due", "Show [1] or hide [0] due column", "1", "0"),
+    "enable.ls.column.tags": ConfigOptionsData("enable.ls.column.tags", "Show [1] or hide [0] tags column", "1", "1"),
 }
 
 StatusTypes = Literal[

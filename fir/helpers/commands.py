@@ -33,6 +33,9 @@ def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
     if order:
         tasks.sort(key=lambda x: sort_by_status_type(context, x))
 
+    enable_tags = context.profile.try_get_config_value_bool("enable.ls.column.tags")
+    enable_due = context.profile.try_get_config_value_bool("enable.ls.column.due")
+
     for task in tasks:
         status = task.status
         is_type = context.profile.check_status_type(status)
@@ -43,33 +46,35 @@ def log_task_table(context: Context, tasks: list[TaskDto], order: bool = True):
         if is_type == "done":
             status = colored(task.status, 'light_green')
 
-        table.append([
-            colored(task.id, 'light_grey'),
-            task.name,
-            status,
-            task.due,
-            ', '.join(task.tags)])
+        values = [colored(task.id, 'light_grey'), task.name, status]
+        if enable_due:
+            values.append(task.due)
+        if enable_tags:
+            values.append(', '.join(task.tags))
+        
+        table.append(values)
+        
+    headers = [f"{colored('Id', 'light_blue', attrs=['bold'])}",
+            f"{colored('Task', 'light_blue', attrs=['bold'])}",
+            f"{colored('Status', 'light_blue', attrs=['bold'])}"]
+    
+    if enable_due:
+        headers.append(f"{colored('Due Date', 'light_blue', attrs=['bold'])}")
 
-    context.logger.log(tabulate(table,
-                                headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Task', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Status', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Due', 'light_blue', attrs=['bold'])}",
-                                         f"{colored('Tags', 'light_blue', attrs=['bold'])}"
-                                         ]))
+    if enable_tags:
+        headers.append(f"{colored('Tags', 'light_blue', attrs=['bold'])}")
 
+    context.logger.log(tabulate(table, headers=headers))
 
 def log_task(context: Context, task: TaskDto):
-    context.logger.log(
-        f"{colored('Name', 'light_blue', attrs=['bold'])}: {task.name}")
-    context.logger.log(
-        f"{colored('Id', 'light_blue', attrs=['bold'])}: {task.id}")
-    context.logger.log(
-        f"{colored('Status', 'light_blue', attrs=['bold'])}: {task.status}")
-    context.logger.log(
-        f"{colored('Due', 'light_blue', attrs=['bold'])}: {task.due}")
-    context.logger.log(
-        f"{colored('Tags', 'light_blue', attrs=['bold'])}: {', '.join(task.tags)}")
+    context.logger.log(f"{colored('Id', 'light_blue', attrs=['bold'])}: {task.id}")
+    context.logger.log(f"{colored('Name', 'light_blue', attrs=['bold'])}: {task.name}")
+    context.logger.log(f"{colored('Status', 'light_blue', attrs=['bold'])}: {task.status}")
+    
+    if task.due:
+        context.logger.log(f"{colored('Due', 'light_blue', attrs=['bold'])}: {task.due}")
+    if task.tags:
+        context.logger.log(f"{colored('Tags', 'light_blue', attrs=['bold'])}: {', '.join(task.tags)}")
 
 
 def parse_date_from_arg(context: Context, date: str):
