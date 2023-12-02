@@ -107,7 +107,7 @@ def remove_task(context: Context):
     return context.logger.log_success(f"Removed task {task.name} [{task.id}]")
 
 
-@CommandHandlers.command("info")
+@CommandHandlers.command("info", aliases=["i"])
 @CommandHandlers.add_positional("task_id")
 def task_info(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
