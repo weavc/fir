@@ -76,7 +76,9 @@ due = ""
 [[tasks]]
 id = "CCnnMuCN"
 name = "Fix commands for config and profile"
-tags = []
+tags = [
+    "helloworld!",
+]
 status = "PROG"
 added = "2023-12-02 00:12:41"
 modified = "2023-12-02 12:48:11"
@@ -113,7 +115,7 @@ due = ""
 id = "hwhqJFuh"
 name = "Create profiles (and a default)"
 tags = []
-status = "PROG"
+status = "DONE"
 added = "2023-12-02 12:50:32"
 modified = "2023-12-02 12:50:32"
 due = ""
@@ -161,4 +163,13 @@ tags = []
 status = "DONE"
 added = "2023-12-02 15:19:01"
 modified = "2023-12-02 15:19:50"
+due = ""
+
+[[tasks]]
+id = "KsdLSbTT"
+name = "Better commands to add and remove tags"
+tags = []
+status = "DONE"
+added = "2023-12-02 17:13:05"
+modified = "2023-12-02 17:13:05"
 due = ""

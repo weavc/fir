@@ -16,7 +16,7 @@ class CommandHandlers(CmdBuilder):
     aliases = []
 
 
-@CommandHandlers.command("create", aliases=["c", "add"])
+@CommandHandlers.command("create", aliases=["c", "add", "new"])
 @CommandHandlers.add_positional("task_name", nargs="+")
 @CommandHandlers.add_optional("status", "--status", "-s")
 @CommandHandlers.add_optional("due", "--due")
@@ -145,6 +145,36 @@ def set_status(context: Context):
     set_status = context.profile.set_status(task, context.args.get("status"))
     if not set_status:
         return context.logger.log_error("Invalid status provided")
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+@CommandHandlers.command("tag")
+@CommandHandlers.add_positional("tag")
+@CommandHandlers.add_positional("task_id")
+def add_tag(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+    
+    if context.args.get("tag") not in task.tags:
+        task.tags.append(context.args.get("tag"))
+
+    context.profile.save()
+    context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+    log_task(context, task)
+
+@CommandHandlers.command("rmtag", aliases=["rmt"])
+@CommandHandlers.add_positional("tag")
+@CommandHandlers.add_positional("task_id")
+def rm_tag(context: Context):
+    task = context.profile.get_task(context.args.get("task_id"))
+    if task is None:
+        return context.logger.log_error("Task not found")
+    
+    if context.args.get("tag") in task.tags:
+        task.tags.remove(context.args.get("tag"))
 
     context.profile.save()
     context.logger.log_success(f"Updated task {task.name} [{task.id}]")
