@@ -1,13 +1,12 @@
 from collections import defaultdict
-from datetime import date, datetime
-from tabulate import tabulate
-from termcolor import colored
+from datetime import datetime
+
 
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_id
 from fir.helpers.commands import log_task, log_task_table, log_task_table_from_statuses, parse_date_from_arg
-from fir.helpers.dates import datetime_to_date_string, str_to_date_string
+from fir.helpers.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
 
 
