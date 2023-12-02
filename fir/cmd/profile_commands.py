@@ -58,7 +58,10 @@ def set(context: Context):
 @ProfileHandlers.add_optional_flag("force", "--force")
 def create(context: Context):
     name = context.args.get("profile_name")
-    desc = context.args.get("description")
+    desc = ""
+    if context.args.get("description"):
+        desc = context.args.get("description")
+
     path = os.path.abspath(os.path.join(DATA_DIR, f"{slugify(name)}.toml"))
     if context.args.get("path"):
         dir_path = os.path.abspath(context.args.get("path"))
@@ -80,27 +83,25 @@ def create(context: Context):
         set(context)
 
 
-# @ProfileHandlers.command("remove", aliases=["rm"])
-# @ProfileHandlers.add_positional("profile_name")
-# def remove(context: Context):
-#     profile_name = context.args.get("profile_name")
-#     profile = context.data.get_profile(profile_name)
-#     if profile is None:
-#         context.logger.log_error("Profile not found")
+@ProfileHandlers.command("remove", aliases=["rm"])
+@ProfileHandlers.add_positional("profile_name")
+def remove(context: Context):
+    profile_name = context.args.get("profile_name")
+    profile = context.settings.data.profiles.get(profile_name, None)
+    if profile is None:
+        context.logger.log_error("Profile not found")
 
-#     context.data.remove_profile(profile_name)
-#     context.logger.log_success("Profile removed")
+    context.settings.data.profiles.pop(profile_name)
+    context.settings.save()
+    context.logger.log_success("Profile removed")
 
 
-# @ProfileHandlers.command("list", aliases=["ls"])
-# def ls(context: Context):
-#     profiles = context.data.get_profiles()
-#     table = []
-#     for p in profiles:
-#         profile = profiles.get(p)
-#         table.append([profile.get("id"), p, profile.get("description")])
+@ProfileHandlers.command("list", aliases=["ls"])
+def ls(context: Context):
+    table = []
+    for key in context.settings.data.profiles.keys():
+        table.append([key, context.settings.data.profiles[key]])
 
-#     context.logger.log(tabulate(table,
-#                                 headers=[f"{colored('Id', 'light_green', attrs=['bold'])}",
-#                                          f"{colored('Profile', 'light_green', attrs=['bold'])}",
-#                                          f"{colored('Description', 'light_green', attrs=['bold'])}"]))
+    context.logger.log(tabulate(table,
+                                headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
+                                         f"{colored('Path', 'light_blue', attrs=['bold'])}"]))

@@ -79,7 +79,7 @@ name = "Fix commands for config and profile"
 tags = [
     "helloworld!",
 ]
-status = "PROG"
+status = "DONE"
 added = "2023-12-02 00:12:41"
 modified = "2023-12-02 12:48:11"
 due = ""
@@ -172,4 +172,13 @@ tags = []
 status = "DONE"
 added = "2023-12-02 17:13:05"
 modified = "2023-12-02 17:13:05"
+due = ""
+
+[[tasks]]
+id = "inbcjR3B"
+name = "Better help commands"
+tags = []
+status = "TODO"
+added = "2023-12-02 17:22:43"
+modified = "2023-12-02 17:22:43"
 due = ""
