@@ -35,4 +35,3 @@ class LinkedProfilesDto:
 class SettingsDto:
     scope: str
     profiles: dict[str, str] = field(default_factory=dict[str, str])
-

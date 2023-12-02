@@ -9,13 +9,13 @@ from fir.helpers.files import read_toml_file, write_toml_file
 
 
 class Profile:
-    path: str 
+    path: str
     data: ProfileDto
 
     def __init__(self, path: str = None):
         self.path = path
         if self.path is None:
-            self.path = os.path.join(DATA_DIR, "default.toml") 
+            self.path = os.path.join(DATA_DIR, "default.toml")
         self.__read()
 
     def save(self):
@@ -58,7 +58,7 @@ class Profile:
             return "done"
 
         return None
-    
+
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)

@@ -6,7 +6,7 @@ from fir.types.dtos import LinkedProfilesDto, ProfileDto, TaskDto, SettingsDto
 
 
 class SettingsSchema(Schema):
-    scope = fields.Str()    
+    scope = fields.Str()
     profiles = fields.Dict(keys=fields.String(), values=fields.String())
 
     @post_load

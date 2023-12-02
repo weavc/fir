@@ -22,7 +22,7 @@ def sort_by_status_type(context: Context, task: TaskDto):
         return 200
     if is_type == "done":
         return 100
-    
+
     return 400
 
 

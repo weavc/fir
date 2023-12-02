@@ -34,7 +34,6 @@ def create(context: Context):
         set(context)
 
 
-
 @ProfileHandlers.command("set", aliases=["set"])
 @ProfileHandlers.add_positional("profile_name")
 def set(context: Context):
@@ -46,7 +45,7 @@ def set(context: Context):
     p = Profile(path)
     if p.data is None:
         return context.logger.log_error("Invalid profile")
-    
+
     context.settings.data.scope = name
     context.settings.save()
     context.logger.log_success(f"Set profile to {name}")

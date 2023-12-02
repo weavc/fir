@@ -17,7 +17,7 @@ class Settings:
         profile = self.data.profiles.get(name, None)
         if profile is None:
             return None, None
-    
+
         return self.data.scope, profile
 
     def get_scoped_profile(self) -> (str, str):
