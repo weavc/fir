@@ -1,7 +1,7 @@
 import os
 
 from fir.config import DATA_DIR
-from fir.helpers.logger import Logger
+from fir.logger import Logger
 from fir.types import ConfigOptions, StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.schemas import ProfileDto, ProfileSchema

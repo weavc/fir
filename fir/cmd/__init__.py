@@ -70,13 +70,6 @@ def setup_handlers(command: dict, sub: argparse.ArgumentParser):
 
 
 def get_command(context: Context) -> dict:
-    # scope = context.args.get("scope")
-    # profile = context.data.get_profile(scope)
-    # if profile is None:
-    #     context.logger.log_error(f"Profile not found: {scope}. Please set a new profile with 'fir profile <profile>'")
-    #     return None
-
-    # context.profile = profile
 
     for h in handlers:
         if h.name is None:

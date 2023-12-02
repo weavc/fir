@@ -7,5 +7,5 @@ install:
 shell:
 	poetry shell
 
-format.project:
+format:
 	autopep8 .

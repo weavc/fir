@@ -1,6 +1,6 @@
 from fir.data.profile import Profile
 from fir.data.settings import Settings
-from fir.helpers.logger import Logger
+from fir.logger import Logger
 
 
 class Context:

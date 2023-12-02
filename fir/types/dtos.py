@@ -18,17 +18,10 @@ class TaskDto:
 
 @dataclass
 class ProfileDto:
-    id: str
     name: str
     description: str
     config: dict[ConfigOptions, str] = field(default_factory=dict[ConfigOptions, str])
     tasks: list[TaskDto] = field(default_factory=list[TaskDto])
-
-
-@dataclass
-class LinkedProfilesDto:
-    name: str
-    path: str
 
 
 @dataclass
