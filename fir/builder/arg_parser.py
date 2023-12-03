@@ -6,9 +6,11 @@ from fir.builder import Cmd, CmdBuilder
 class ArgParserSetup:
 
     handlers: list[CmdBuilder]
+    print_help: bool
 
-    def __init__(self, *handlers: CmdBuilder):
+    def __init__(self, *handlers: CmdBuilder, print_help: bool = False):
         self.handlers = handlers
+        self.print_help = print_help
 
     def configure_argparser(self, parser: argparse.ArgumentParser):
         sub = parser.add_subparsers(dest="command", metavar="<command>")
@@ -33,8 +35,7 @@ class ArgParserSetup:
         for a in command.flags:
             parser.add_argument(*a.aliases, dest=a.name, action="store_true", help=a.description)
 
-    def get_command(self, args: dict) -> Cmd | None:
-
+    def get_command(self, args: dict, parser: argparse.ArgumentParser) -> Cmd | None:
         for h in self.handlers:
             if h.name is None:
                 for c in h.cmds:

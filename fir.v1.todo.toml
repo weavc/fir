@@ -355,3 +355,16 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "2vgdclb6"
+name = "Register parser/sub parser to the command / handler so we can print help"
+tags = []
+status = "TODO"
+added = "2023-12-03 21:56:02"
+modified = "2023-12-03 21:56:02"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
