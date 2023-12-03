@@ -174,7 +174,7 @@ name = "Tidy private methods in data repos"
 tags = [
     "complexity:med",
 ]
-status = "PR"
+status = "TODO"
 added = "2023-12-02 13:05:16"
 modified = "2023-12-02 13:05:16"
 due = ""
@@ -191,7 +191,7 @@ name = "Review error handling"
 tags = [
     "complexity:high",
 ]
-status = "PROG"
+status = "TODO"
 added = "2023-12-02 13:09:13"
 modified = "2023-12-02 13:09:13"
 due = ""

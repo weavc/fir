@@ -9,7 +9,6 @@ from fir.config import DATA_DIR
 from fir.context import Context
 from fir.data.defaults import default_profile
 from fir.data.profile import Profile
-from fir.helpers.commands import link_profile
 
 
 class ProfileHandlers(CmdBuilder):
@@ -26,7 +25,7 @@ def link(context: Context):
     name = context.args.get("profile_name")
     path = os.path.abspath(context.args.get("path"))
 
-    link_profile(context, name, path)
+    context.link_profile(name, path)
 
     context.logger.log_success(f"Profile {name} added")
     if context.args.get("set"):
@@ -77,7 +76,7 @@ def create(context: Context):
     profile.data = default_profile(name, desc)
     profile.save()
 
-    link_profile(context, name, path)
+    context.link_profile(context, name, path)
     context.logger.log_success(f"Profile {name} added")
     if context.args.get("set"):
         set(context)

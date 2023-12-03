@@ -5,7 +5,6 @@ from termcolor import colored
 
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
-from fir.helpers.commands import invalid_config_option
 from fir.types import ConfigOptions, ConfigOptionsMap
 
 
@@ -19,7 +18,7 @@ class ConfigHandlers(CmdBuilder):
 @ConfigHandlers.add_positional("config_name")
 def get_config_value(context: Context):
     if context.args.get("config_name") not in get_args(ConfigOptions):
-        return invalid_config_option(context)
+        return context.invalid_config_option(context)
 
     value = context.profile.data.config.get(context.args.get("config_name"))
     context.logger.log(f"{context.args.get('config_name')}: {value}")
@@ -30,7 +29,7 @@ def get_config_value(context: Context):
 @ConfigHandlers.add_positional("config_name")
 def set_config_value(context: Context):
     if context.args.get("config_name") not in get_args(ConfigOptions):
-        return invalid_config_option(context)
+        return context.invalid_config_option(context)
 
     context.profile.data.config[context.args.get("config_name")] = context.args.get("config_value")
     context.profile.save()
@@ -41,7 +40,7 @@ def set_config_value(context: Context):
 @ConfigHandlers.add_positional("config_name")
 def remove_config_value(context: Context):
     if context.args.get("config_name") not in get_args(ConfigOptions):
-        return invalid_config_option(context)
+        return context.invalid_config_option(context)
 
     context.profile.data.config.pop(context.args.get("config_name"))
     context.profile.save()
