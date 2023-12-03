@@ -25,44 +25,95 @@ class CmdArg:
 @dataclass
 class Cmd:
     name: str
-    description: str
+    description: str = None
     aliases: list[str] = field(default_factory=list[str])
-    args: list[CmdArg] = field(default_factory=list[CmdArg], init=False)
-    optionals: list[CmdArg] = field(default_factory=list[CmdArg], init=False)
-    flags: list[CmdArg] = field(default_factory=list[CmdArg], init=False)
+    args: list[CmdArg] = field(default_factory=list[CmdArg])
+    optionals: list[CmdArg] = field(default_factory=list[CmdArg])
+    flags: list[CmdArg] = field(default_factory=list[CmdArg])
 
-    func: Any = field(init=False)  # Look for a better way to define functions (like delegates in c#?)
+    func: Any = None  # Look for a better way to define functions (like delegates in c#?)
 
 
-class CmdBuilderV2:
+class CmdWrapper:
+    cmd: Cmd
+
+    def __init__(self, cmd: Cmd):
+        self.cmd = cmd
+
+    def add_positional(self, *parameters: CmdArg):
+        self.cmd.args.extend(parameters)
+        return self
+
+    def add_optional(self, *parameters: CmdArg):
+        self.cmd.optionals.extend(parameters)
+        return self
+
+    def add_optional_flag(self, *parameters: CmdArg):
+        self.cmd.flags.extend(parameters)
+        return self
+
+
+class CmdBuilder:
     name: str
     aliases: list[str]
     cmds: dict[str, Cmd] = {}
 
-    @classmethod
-    def command(cls, cmd: Cmd):
-        def decorator(func):
+    def register_command(self, cmd: Cmd, func: Any = None):
+        self.__register(cmd, func)
+        return CmdWrapper(self.cmds[cmd.func.__name__])
+
+    def register_commands(self, *cmd: Cmd):
+        for c in cmd:
+            self.__register(c)
+
+    def __register(self, cmd, func=None):
+        if func is not None:
             cmd.func = func
-            cls.cmds[func.__name__] = cmd
+
+        self.cmds[cmd.func.__name__] = cmd
+
+
+class CmdBuilderDecorators(CmdBuilder):
+
+    @classmethod
+    def command(self, cmd: Cmd):
+        def decorator(func):
+
+            # workaround for decorator ordering:
+            if self.cmds.get(func.__name__, None) is not None:
+                cmd.args = self.cmds[func.__name__].args
+                cmd.optionals = self.cmds[func.__name__].optionals
+                cmd.flags = self.cmds[func.__name__].flags
+
+            cmd.func = func
+            self.cmds[func.__name__] = cmd
             return func
         return decorator
 
     @classmethod
-    def add_positional(cls, *parameters: CmdArg):
+    def add_positional(self, *parameters: CmdArg):
         def decorator(func):
-            cls.cmds[func.__name__].args.extend(parameters)
+            self.get_cmd_or_default(func.__name__).args.extend(parameters)
             return func
         return decorator
 
     @classmethod
-    def add_optional(cls, *parameters: CmdArg):
+    def add_optional(self, *parameters: CmdArg):
         def decorator(func):
-            cls.cmds[func.__name__].optionals.extend(parameters)
+            self.get_cmd_or_default(func.__name__).optionals.extend(parameters)
             return func
         return decorator
 
     @classmethod
-    def add_optional_flag(cls, *parameters: CmdArg):
+    def add_optional_flag(self, *parameters: CmdArg):
         def decorator(func):
-            cls.cmds[func.__name__].flags.extend(parameters)
+            self.get_cmd_or_default(func.__name__).flags.extend(parameters)
+            return func
         return decorator
+
+    @classmethod
+    def get_cmd_or_default(self, name: str):
+        if self.cmds.get(name) is None:
+            self.cmds[name] = Cmd("default")
+
+        return self.cmds[name]

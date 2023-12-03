@@ -4,22 +4,23 @@ from tabulate import tabulate
 from termcolor import colored
 from slugify import slugify
 
-from fir.builder import CmdBuilderV2, Cmd
+from fir.builder import CmdBuilderDecorators, Cmd
 from fir.config import DATA_DIR
 from fir.context import Context
 from fir.data.defaults import default_profile
 from fir.data.profile import Profile
-from fir.types.parameters import ParameterMap
+from fir.types.parameters import ParameterMap as pm
 
 
-class ProfileHandlers(CmdBuilderV2):
+class ProfileHandlers(CmdBuilderDecorators):
     name = "profile"
     aliases = []
+    cmds: dict[str, Cmd] = {}
 
 
 @ProfileHandlers.command(Cmd("link", description="Link an existing fir profile file."))
-@ProfileHandlers.add_positional(ParameterMap["profile_path"], ParameterMap["profile_name"])
-@ProfileHandlers.add_optional_flag(ParameterMap["profile_set"])
+@ProfileHandlers.add_positional(pm["profile_path"], pm["profile_name"])
+@ProfileHandlers.add_optional_flag(pm["profile_set"])
 def link(context: Context):
     name = context.args.get("profile_name")
     path = os.path.abspath(context.args.get("profile_path"))
@@ -34,7 +35,7 @@ def link(context: Context):
 @ProfileHandlers.command(Cmd("set",
                          aliases=["set"],
                          description="Set scope to target profile. See available profiles using 'fir profile ls'."))
-@ProfileHandlers.add_positional(ParameterMap["profile_name"])
+@ProfileHandlers.add_positional(pm["profile_name"])
 def set(context: Context):
     name = context.args.get("profile_name")
     path = context.settings.data.profiles.get(name)
@@ -51,9 +52,9 @@ def set(context: Context):
 
 
 @ProfileHandlers.command(Cmd("create", aliases=["c", "new"], description="Create a new fir profile."))
-@ProfileHandlers.add_positional(ParameterMap["profile_name"])
-@ProfileHandlers.add_optional(ParameterMap["profile_path"], ParameterMap["description"])
-@ProfileHandlers.add_optional_flag(ParameterMap["profile_set"], ParameterMap["force"])
+@ProfileHandlers.add_positional(pm["profile_name"])
+@ProfileHandlers.add_optional(pm["profile_path"], pm["description"])
+@ProfileHandlers.add_optional_flag(pm["profile_set"], pm["force"])
 def create(context: Context):
     name = context.args.get("profile_name")
     desc = ""
@@ -82,7 +83,7 @@ def create(context: Context):
 
 
 @ProfileHandlers.command(Cmd("remove", aliases=["rm"], description="Remove fir profile. Does not remove the file."))
-@ProfileHandlers.add_positional(ParameterMap["profile_name"])
+@ProfileHandlers.add_positional(pm["profile_name"])
 def remove(context: Context):
     profile_name = context.args.get("profile_name")
     profile = context.settings.data.profiles.get(profile_name, None)

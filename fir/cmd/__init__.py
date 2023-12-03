@@ -6,14 +6,13 @@ from argcomplete import FilesCompleter
 
 
 from fir import config
+from fir.builder.arg_parser import ArgParserSetup
 from fir.context import Context
 from fir.cmd.base_commands import *
 from fir.cmd.profile_commands import *
 from fir.cmd.config_commands import *
 from fir.data.profile import Profile
 from fir.data.settings import Settings
-
-handlers = [ProfileHandlers, ConfigHandlers, CommandHandlers]
 
 
 class FirParser(argparse.ArgumentParser):
@@ -23,7 +22,9 @@ class FirParser(argparse.ArgumentParser):
         sys.exit(2)
 
 
-def setup_argparser():
+def cmd():
+    s = Settings()
+
     parser = FirParser(description="Fir, command line task tracking")
 
     parser.add_argument("--verbose", "-v", action="store_true",
@@ -37,68 +38,10 @@ def setup_argparser():
     parser.add_argument("--scope", action="store",
                         dest="scope", help="Use a specific profile to run this action")
 
-    sub = parser.add_subparsers(dest="command", metavar="<command>")
-    for h in handlers:
-        if h.name is None:
-            for c in h.commands:
-                setup_handlers(h.commands.get(c), sub)
-        else:
-            sub_parser = sub.add_parser(h.name, aliases=h.aliases, help=f"See: 'fir {h.name} --help'")
-            sub_sub_parser = sub_parser.add_subparsers(dest="sub_command", metavar="<command>")
-            for c in h.commands:
-                setup_handlers(h.commands.get(c), sub_sub_parser)
+    setup = ArgParserSetup(CommandHandlers(), ConfigHandlers(), ProfileHandlers())
 
-    return parser
+    setup.configure_argparser(parser)
 
-
-def setup_handlers(command: dict, sub: argparse.ArgumentParser):
-    parser = sub.add_parser(command.get(
-        "name"), aliases=command.get("aliases"), help=command.get("desc"))
-    c_args = command.get("args")
-    if c_args is not None:
-        for a in command.get("args"):
-            p = parser.add_argument(a.get("name"), metavar=a.get(
-                "metavar"), nargs=a.get("nargs"), help=a.get("desc"))
-            if a.get("name") == "path":
-                p.completer = FilesCompleter()
-
-    c_optionals = command.get("optionals")
-    if c_optionals is not None:
-        for a in c_optionals:
-            parser.add_argument(*a.get('flags'), dest=a.get("dest"),
-                                action="store", nargs=a.get("nargs"), help=a.get("desc"))
-
-    c_flags = command.get("flags")
-    if c_flags is not None:
-        for a in c_flags:
-            parser.add_argument(
-                *a.get('flags'), dest=a.get("dest"), action="store_true", help=a.get("desc"))
-
-
-def get_command(context: Context) -> dict:
-
-    for h in handlers:
-        if h.name is None:
-            for c in h.commands:
-                command = h.commands.get(c)
-                aliases = command.get("aliases") + [command.get("name")]
-                if context.args.get("command") in aliases:
-                    return command
-        else:
-            if context.args.get("command") == h.name:
-                for c in h.commands:
-                    command = h.commands.get(c)
-                    aliases = command.get("aliases") + [command.get("name")]
-                    if context.args.get("sub_command") in aliases:
-                        return command
-
-    return None
-
-
-def cmd():
-    s = Settings()
-
-    parser = setup_argparser()
     args = vars(parser.parse_args())
     scope = s.data.scope
 
@@ -113,10 +56,10 @@ def cmd():
     c.logger.log_debug(f"Args: {c.args}")
     c.logger.log_debug(f"Env: {config.ENV}")
 
-    command = get_command(c)
+    command = setup.get_command(args)
     if command is not None:
-        c.logger.log_info(f"Running command: {command.get('name')}")
-        command["func"](c)
+        c.logger.log_info(f"Running command: {command.name}")
+        command.func(c)
     else:
         c.logger.log_error(f"Command not found", exit=False)
         parser.print_help()

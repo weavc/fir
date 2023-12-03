@@ -1,26 +1,24 @@
 from datetime import datetime
 
 
-from fir.builder import Cmd, CmdBuilderV2
+from fir.builder import Cmd, CmdBuilderDecorators
 from fir.context import Context
 from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
-from fir.types.parameters import ParameterMap
+from fir.types.parameters import ParameterMap as pm
 
 
-class CommandHandlers(CmdBuilderV2):
+class CommandHandlers(CmdBuilderDecorators):
     name = None
     aliases = []
+    cmds: dict[str, Cmd] = {}
+
 
 @CommandHandlers.command(Cmd("new", "Add a new task.", aliases=["add"]))
-@CommandHandlers.add_positional(ParameterMap["task_name"].with_overrides(nargs="+"))
-@CommandHandlers.add_optional(ParameterMap["status"],
-                            ParameterMap["due"],
-                            ParameterMap["link"],
-                            ParameterMap["priority"],
-                            ParameterMap["description"])
+@CommandHandlers.add_positional(pm["task_name"].with_overrides(nargs="+"))
+@CommandHandlers.add_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"])
 def create_task(context: Context):
     status = context.profile.data.config.get("status.default", "")
     if context.args.get("status"):
@@ -57,13 +55,8 @@ def create_task(context: Context):
 
 
 @CommandHandlers.command(Cmd("mod", "Modify a task.", aliases=["edit"]))
-@CommandHandlers.add_optional(ParameterMap["status"],
-                            ParameterMap["due"],
-                            ParameterMap["link"],
-                            ParameterMap["priority"],
-                            ParameterMap["description"],
-                            ParameterMap["task_name"])
-@CommandHandlers.add_positional(ParameterMap["task_id"])
+@CommandHandlers.add_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"])
+@CommandHandlers.add_positional(pm["task_id"])
 def modify_task(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -98,8 +91,8 @@ def modify_task(context: Context):
         context.log_task(task)
 
 
+@CommandHandlers.add_positional(pm["task_id"])
 @CommandHandlers.command(Cmd("rm", description="Remove a task."))
-@CommandHandlers.add_positional(ParameterMap["task_id"])
 def remove_task(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -112,7 +105,7 @@ def remove_task(context: Context):
 
 
 @CommandHandlers.command(Cmd("info", aliases=["i"], description="Prints all information for given task."))
-@CommandHandlers.add_positional(ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["task_id"])
 def task_info(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -122,7 +115,7 @@ def task_info(context: Context):
 
 
 @CommandHandlers.command(Cmd("list", aliases=["ls"], description="List all tasks."))
-@CommandHandlers.add_optional(ParameterMap["task_id"], ParameterMap["status"], ParameterMap["task_name"])
+@CommandHandlers.add_optional(pm["task_id"], pm["status"], pm["task_name"])
 def ls(context: Context):
     tasks = []
     for task in context.profile.data.tasks:
@@ -158,7 +151,7 @@ def ls_done(context: Context):
 
 
 @CommandHandlers.command(Cmd("status", description="Set the status of a task."))
-@CommandHandlers.add_positional(ParameterMap["status"], ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["status"], pm["task_id"])
 def set_status(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -175,7 +168,7 @@ def set_status(context: Context):
 
 
 @CommandHandlers.command(Cmd("description", aliases=["desc"], description="Add a description to a task."))
-@CommandHandlers.add_positional(ParameterMap["description"].with_overrides(nargs="+"), ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["description"].with_overrides(nargs="+"), pm["task_id"])
 def set_description(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -190,9 +183,9 @@ def set_description(context: Context):
 
 
 @CommandHandlers.command(Cmd("link",
-                         aliases=["ln"],
-                         description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1"))
-@CommandHandlers.add_positional(ParameterMap["link"], ParameterMap["task_id"])
+                             aliases=["ln"],
+                             description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1"))
+@CommandHandlers.add_positional(pm["link"], pm["task_id"])
 def set_link(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -207,7 +200,7 @@ def set_link(context: Context):
 
 
 @CommandHandlers.command(Cmd("priority", description="Set priority level of a task (1-999). Default: 100."))
-@CommandHandlers.add_positional(ParameterMap["priority"], ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["priority"], pm["task_id"])
 def set_priority(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -226,7 +219,7 @@ def set_priority(context: Context):
 
 
 @CommandHandlers.command(Cmd("tag", description="Add tag to task."))
-@CommandHandlers.add_positional(ParameterMap["tags"].with_overrides(nargs="+"), ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["tags"].with_overrides(nargs="+"), pm["task_id"])
 def add_tag(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -245,7 +238,7 @@ def add_tag(context: Context):
 
 
 @CommandHandlers.command(Cmd("rmtag", aliases=["rmt"], description="Remove tag from task."))
-@CommandHandlers.add_positional(ParameterMap["tags"].with_overrides(nargs="+"), ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["tags"].with_overrides(nargs="+"), pm["task_id"])
 def rm_tag(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -264,7 +257,7 @@ def rm_tag(context: Context):
 
 
 @CommandHandlers.command(Cmd("assign", description="Assign person to task."))
-@CommandHandlers.add_positional(ParameterMap["assignee"].with_overrides(nargs="+"), ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["assignee"].with_overrides(nargs="+"), pm["task_id"])
 def add_assigned(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
@@ -283,7 +276,7 @@ def add_assigned(context: Context):
 
 
 @CommandHandlers.command(Cmd("unassign", description="Unassign person from task."))
-@CommandHandlers.add_positional(ParameterMap["assignee"].with_overrides(nargs="+"), ParameterMap["task_id"])
+@CommandHandlers.add_positional(pm["assignee"].with_overrides(nargs="+"), pm["task_id"])
 def rm_assigned(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
