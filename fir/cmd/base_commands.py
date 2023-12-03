@@ -8,6 +8,7 @@ from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
+from fir.types.parameters import Parameters, ParameterMap
 
 
 class CommandHandlers(CmdBuilder):
@@ -59,13 +60,13 @@ def create_task(context: Context):
 
 
 @CommandHandlers.command("mod", aliases=["edit"], description="Modify a task.")
-@CommandHandlers.add_positional("task_id")
-@CommandHandlers.add_optional("status", "--status")
-@CommandHandlers.add_optional("name", "--name")
-@CommandHandlers.add_optional("due", "--due")
-@CommandHandlers.add_optional("link", "--link")
-@CommandHandlers.add_optional("priority", "--priority")
-@CommandHandlers.add_optional("description", "--desc", "--description")
+@CommandHandlers.add_positional("task_id", description="Task id value. It will accept shortened values and matches on the first matching task. i.e. 'inbcjR3B' || 'inb'")
+@CommandHandlers.add_optional("status", "--status", description="Set status of the task, otherwise the value provided in 'status.default' will be used.")
+@CommandHandlers.add_optional("name", "--name", description="Set the name of the task to a new value.")
+@CommandHandlers.add_optional("due", "--due", description="Set the due date of task.")
+@CommandHandlers.add_optional("link", "--link", description="Add a link to the task.")
+@CommandHandlers.add_optional("priority", "--priority", description="Set the priority of the task.")
+@CommandHandlers.add_optional("description", "--desc", "--description", description="Add a description to the task.")
 def modify_task(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
     if task is None:
