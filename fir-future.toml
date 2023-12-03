@@ -1,0 +1,81 @@
+name = "fir.future"
+description = ""
+
+[config]
+"status.default" = "maybe"
+"status.todo" = "no"
+"status.doing" = "maybe,yes"
+"status.done" = "done"
+"enable.ls.hide_done_tasks" = "1"
+"enable.log_task_post_modify" = "0"
+"enable.column.due" = "0"
+"enable.column.tags" = "0"
+"enable.column.link" = "0"
+"enable.column.description" = "0"
+"enable.column.assigned" = "0"
+"enable.column.priority" = "0"
+
+[[tasks]]
+id = "0n0jz7z3"
+name = "'fir-serve', web client"
+tags = []
+status = "maybe"
+added = "2023-12-03 22:02:19"
+modified = "2023-12-03 22:02:19"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "f1xscrhp"
+name = "'fir-cmd-builder', package up builder project"
+tags = []
+status = "maybe"
+added = "2023-12-03 22:05:41"
+modified = "2023-12-03 22:05:41"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "d3ra7b8b"
+name = "Add backlog feature"
+tags = []
+status = "yes"
+added = "2023-12-03 22:06:38"
+modified = "2023-12-03 22:06:38"
+due = ""
+link = ""
+description = "['Backlog of tasks that dont show on regular task list but can easily be moved into the task list']"
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "dbudvny3"
+name = "Tracking dates for when work started & finished"
+tags = []
+status = "maybe"
+added = "2023-12-03 22:11:25"
+modified = "2023-12-03 22:11:25"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "0ezroiwd"
+name = "Forth status for on hold"
+tags = []
+status = "yes"
+added = "2023-12-03 22:15:33"
+modified = "2023-12-03 22:15:33"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []

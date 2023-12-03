@@ -12,7 +12,10 @@ class Context:
     args: tuple[str, dict]
     logger: Logger
 
-    def __init__(self, args: dict, profile: Profile, settings: Settings):
+    def __init__(self):
+        pass
+
+    def setup(self, args: dict, profile: Profile, settings: Settings):
         self.profile = profile
         self.settings = settings
         self.args = args
@@ -120,7 +123,8 @@ class Context:
             self.logger.log(f"{colored('Priority', 'light_blue', attrs=['bold'])}: {task.priority}")
 
     def invalid_config_option(self):
-        return self.logger.log_error(f"{self.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
+        return self.logger.log_error(
+            f"{self.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
 
     def link_profile(self, name: str, path: str):
         p = Profile(path)
