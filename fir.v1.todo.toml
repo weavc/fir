@@ -316,3 +316,29 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "emscsy6y"
+name = "Better autocomplete"
+tags = []
+status = "TODO"
+added = "2023-12-03 12:04:46"
+modified = "2023-12-03 12:04:46"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "eayc6rhs"
+name = "Work on default commands"
+tags = []
+status = "TODO"
+added = "2023-12-03 12:10:16"
+modified = "2023-12-03 12:10:16"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
