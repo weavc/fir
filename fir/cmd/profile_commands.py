@@ -4,36 +4,37 @@ from tabulate import tabulate
 from termcolor import colored
 from slugify import slugify
 
-from fir.cmd.cmd_builder import CmdBuilder
+from fir.builder import CmdBuilderV2, Cmd
 from fir.config import DATA_DIR
 from fir.context import Context
 from fir.data.defaults import default_profile
 from fir.data.profile import Profile
+from fir.types.parameters import ParameterMap
 
 
-class ProfileHandlers(CmdBuilder):
-    commands = defaultdict(dict)
+class ProfileHandlers(CmdBuilderV2):
     name = "profile"
     aliases = []
 
 
-@ProfileHandlers.command("link", description="Link an existing fir profile file.")
-@ProfileHandlers.add_positional("path")
-@ProfileHandlers.add_positional("profile_name")
-@ProfileHandlers.add_optional_flag("set", "--set")
+@ProfileHandlers.command(Cmd("link", description="Link an existing fir profile file."))
+@ProfileHandlers.add_positional(ParameterMap["profile_path"], ParameterMap["profile_name"])
+@ProfileHandlers.add_optional_flag(ParameterMap["profile_set"])
 def link(context: Context):
     name = context.args.get("profile_name")
-    path = os.path.abspath(context.args.get("path"))
+    path = os.path.abspath(context.args.get("profile_path"))
 
     context.link_profile(name, path)
 
     context.logger.log_success(f"Profile {name} added")
-    if context.args.get("set"):
+    if context.args.get("profile_set"):
         set(context)
 
 
-@ProfileHandlers.command("set", aliases=["set"], description="Set scope to target profile. See available profiles using 'fir profile ls'.")
-@ProfileHandlers.add_positional("profile_name")
+@ProfileHandlers.command(Cmd("set",
+                         aliases=["set"],
+                         description="Set scope to target profile. See available profiles using 'fir profile ls'."))
+@ProfileHandlers.add_positional(ParameterMap["profile_name"])
 def set(context: Context):
     name = context.args.get("profile_name")
     path = context.settings.data.profiles.get(name)
@@ -49,12 +50,10 @@ def set(context: Context):
     context.logger.log_success(f"Set profile to {name}")
 
 
-@ProfileHandlers.command("create", aliases=["c", "new"], description="Create a new fir profile.")
-@ProfileHandlers.add_positional("profile_name")
-@ProfileHandlers.add_optional("description", "--description", "-d")
-@ProfileHandlers.add_optional("path", "--path")
-@ProfileHandlers.add_optional_flag("set", "--set")
-@ProfileHandlers.add_optional_flag("force", "--force")
+@ProfileHandlers.command(Cmd("create", aliases=["c", "new"], description="Create a new fir profile."))
+@ProfileHandlers.add_positional(ParameterMap["profile_name"])
+@ProfileHandlers.add_optional(ParameterMap["profile_path"], ParameterMap["description"])
+@ProfileHandlers.add_optional_flag(ParameterMap["profile_set"], ParameterMap["force"])
 def create(context: Context):
     name = context.args.get("profile_name")
     desc = ""
@@ -63,7 +62,7 @@ def create(context: Context):
 
     path = os.path.abspath(os.path.join(DATA_DIR, f"{slugify(name)}.toml"))
     if context.args.get("path"):
-        dir_path = os.path.abspath(context.args.get("path"))
+        dir_path = os.path.abspath(context.args.get("profile_path"))
         if os.path.isdir(dir_path):
             path = os.path.join(dir_path, f"{slugify(name)}.toml")
         else:
@@ -78,12 +77,12 @@ def create(context: Context):
 
     context.link_profile(context, name, path)
     context.logger.log_success(f"Profile {name} added")
-    if context.args.get("set"):
+    if context.args.get("profile_set"):
         set(context)
 
 
-@ProfileHandlers.command("remove", aliases=["rm"], description="Remove fir profile. Does not remove the file.")
-@ProfileHandlers.add_positional("profile_name")
+@ProfileHandlers.command(Cmd("remove", aliases=["rm"], description="Remove fir profile. Does not remove the file."))
+@ProfileHandlers.add_positional(ParameterMap["profile_name"])
 def remove(context: Context):
     profile_name = context.args.get("profile_name")
     profile = context.settings.data.profiles.get(profile_name, None)
@@ -95,7 +94,7 @@ def remove(context: Context):
     context.logger.log_success("Profile removed")
 
 
-@ProfileHandlers.command("list", aliases=["ls"], description="List linked profiles.")
+@ProfileHandlers.command(Cmd("list", aliases=["ls"], description="List linked profiles."))
 def ls(context: Context):
     table = []
     for key in context.settings.data.profiles.keys():

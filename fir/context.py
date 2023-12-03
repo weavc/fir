@@ -120,7 +120,8 @@ class Context:
             self.logger.log(f"{colored('Priority', 'light_blue', attrs=['bold'])}: {task.priority}")
 
     def invalid_config_option(self):
-        return self.logger.log_error(f"{self.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
+        return self.logger.log_error(
+            f"{self.args.get('config_name')} is not a valid option. Try 'fir config opts' for more information.")
 
     def link_profile(self, name: str, path: str):
         p = Profile(path)
