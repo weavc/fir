@@ -2,7 +2,7 @@
 class CmdBuilder:
 
     @classmethod
-    def command(cls, name, aliases=[], description = ""):
+    def command(cls, name, aliases=[], description=""):
         def decorator(func):
             cls.commands[func.__name__]["name"] = name
             cls.commands[func.__name__]["aliases"] = aliases
@@ -51,7 +51,7 @@ class CmdBuilder:
             cls.commands[func.__name__]["flags"] = args
             return func
         return decorator
-    
+
     @classmethod
     def get_command_names(cls):
         return [cls.commands[c].get("name") for c in cls.commands if cls.commands[c].get("name")]

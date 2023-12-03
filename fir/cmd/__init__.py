@@ -15,11 +15,13 @@ from fir.data.settings import Settings
 
 handlers = [ProfileHandlers, ConfigHandlers, CommandHandlers]
 
-class FirParser(argparse.ArgumentParser): 
-   def error(self, message):
-      sys.stderr.write('error: %s\n' % message)
-      self.print_help()
-      sys.exit(2)
+
+class FirParser(argparse.ArgumentParser):
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
+
 
 def setup_argparser():
     parser = FirParser(description="Fir, command line task tracking")
@@ -38,7 +40,7 @@ def setup_argparser():
     sub = parser.add_subparsers(dest="command", metavar="<command>")
     for h in handlers:
         if h.name is None:
-            for c in h.commands:    
+            for c in h.commands:
                 setup_handlers(h.commands.get(c), sub)
         else:
             sub_parser = sub.add_parser(h.name, aliases=h.aliases, help=f"See: 'fir {h.name} --help'")
@@ -118,4 +120,3 @@ def cmd():
     else:
         c.logger.log_error(f"Command not found", exit=False)
         parser.print_help()
-
