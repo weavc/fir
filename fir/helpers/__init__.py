@@ -21,5 +21,12 @@ def __generate_id(not_in: list[str] = [], i: int = 0):
     return u
 
 
-def str2bool(v):
-    return v.lower() in ("yes", "true", "1")
+def str2bool(v, default=False):
+    if v is None:
+        return default
+    elif v.lower() in ("yes", "y", "true", "1"):
+        return True
+    elif v.lower() in ("no", "n", "false", "0"):
+        return False
+    else:
+        return default
