@@ -16,13 +16,13 @@ class CommandHandlers(CmdBuilder):
     aliases = []
 
 
-@CommandHandlers.command("new", aliases=["add"])
-@CommandHandlers.add_positional("task_name", nargs="+")
-@CommandHandlers.add_optional("status", "--status")
-@CommandHandlers.add_optional("due", "--due")
-@CommandHandlers.add_optional("link", "--link")
-@CommandHandlers.add_optional("priority", "--priority")
-@CommandHandlers.add_optional("description", "--desc", "--description")
+@CommandHandlers.command("new", aliases=["add"], description="Add a new task.")
+@CommandHandlers.add_positional("task_name", nargs="+", description="Name of task, should be a short description of what needs to be done.")
+@CommandHandlers.add_optional("status", "--status", description="Set status of the task, otherwise the value provided in 'status.default' will be used.")
+@CommandHandlers.add_optional("due", "--due", description="Set the due date of task.")
+@CommandHandlers.add_optional("link", "--link", description="Add a link to the task.")
+@CommandHandlers.add_optional("priority", "--priority", description="Set the priority of the task.")
+@CommandHandlers.add_optional("description", "--desc", "--description", description="Add a description to the task.")
 def create_task(context: Context):
     status = context.profile.data.config.get("status.default", "")
     if context.args.get("status"):
@@ -58,7 +58,7 @@ def create_task(context: Context):
         context.log_task(context, task)
 
 
-@CommandHandlers.command("mod", aliases=["edit"])
+@CommandHandlers.command("mod", aliases=["edit"], description="Modify a task.")
 @CommandHandlers.add_positional("task_id")
 @CommandHandlers.add_optional("status", "--status")
 @CommandHandlers.add_optional("name", "--name")
@@ -100,7 +100,7 @@ def modify_task(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("rm")
+@CommandHandlers.command("rm", description="Remove a task.")
 @CommandHandlers.add_positional("task_id")
 def remove_task(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
@@ -113,7 +113,7 @@ def remove_task(context: Context):
     return context.logger.log_success(f"Removed task {task.name} [{task.id}]")
 
 
-@CommandHandlers.command("info", aliases=["i"])
+@CommandHandlers.command("info", aliases=["i"], description="Prints all information for given task.")
 @CommandHandlers.add_positional("task_id")
 def task_info(context: Context):
     task = context.profile.get_task(context.args.get("task_id"))
@@ -123,7 +123,7 @@ def task_info(context: Context):
     context.log_task(task)
 
 
-@CommandHandlers.command("list", aliases=["ls"])
+@CommandHandlers.command("list", aliases=["ls"], description="List all tasks.")
 @CommandHandlers.add_optional("status", "--status", "-s")
 @CommandHandlers.add_optional("name", "--name", "-n")
 @CommandHandlers.add_optional("id", "--id", "-i")
@@ -146,22 +146,22 @@ def ls(context: Context):
     context.log_task_table(tasks)
 
 
-@CommandHandlers.command("todo")
+@CommandHandlers.command("todo", description="List all todo tasks.")
 def ls_todo(context: Context):
     context.log_task_table_from_statuses(context.profile.get_todo_statuses())
 
 
-@CommandHandlers.command("doing", aliases=["prog"])
+@CommandHandlers.command("doing", aliases=["prog"], description="List all in progress tasks.")
 def ls_doing(context: Context):
     context.log_task_table_from_statuses(context.profile.get_doing_statuses())
 
 
-@CommandHandlers.command("done")
+@CommandHandlers.command("done", description="List all done/completed tasks.")
 def ls_done(context: Context):
     context.log_task_table_from_statuses(context.profile.get_done_statuses())
 
 
-@CommandHandlers.command("status")
+@CommandHandlers.command("status", description="Set the status of a task.")
 @CommandHandlers.add_positional("status")
 @CommandHandlers.add_positional("task_id")
 def set_status(context: Context):
@@ -179,7 +179,7 @@ def set_status(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("description", aliases=["desc"])
+@CommandHandlers.command("description", aliases=["desc"], description="Add a description to a task.")
 @CommandHandlers.add_positional("description", nargs="+")
 @CommandHandlers.add_positional("task_id")
 def set_description(context: Context):
@@ -195,7 +195,7 @@ def set_description(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("link", aliases=["ln"])
+@CommandHandlers.command("link", aliases=["ln"], description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1")
 @CommandHandlers.add_positional("link")
 @CommandHandlers.add_positional("task_id")
 def set_link(context: Context):
@@ -211,7 +211,7 @@ def set_link(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("priority")
+@CommandHandlers.command("priority", description="Set priority level of a task (1-999). Default: 100.")
 @CommandHandlers.add_positional("priority")
 @CommandHandlers.add_positional("task_id")
 def set_priority(context: Context):
@@ -231,7 +231,7 @@ def set_priority(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("tag")
+@CommandHandlers.command("tag", description="Add tag to task.")
 @CommandHandlers.add_positional("tags", nargs="+")
 @CommandHandlers.add_positional("task_id")
 def add_tag(context: Context):
@@ -251,7 +251,7 @@ def add_tag(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("rmtag", aliases=["rmt"])
+@CommandHandlers.command("rmtag", aliases=["rmt"], description="Remove tag from task.")
 @CommandHandlers.add_positional("tags", nargs="+")
 @CommandHandlers.add_positional("task_id")
 def rm_tag(context: Context):
@@ -271,7 +271,7 @@ def rm_tag(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("assign")
+@CommandHandlers.command("assign", description="Assign person to task.")
 @CommandHandlers.add_positional("assignee", nargs="+")
 @CommandHandlers.add_positional("task_id")
 def add_assigned(context: Context):
@@ -291,7 +291,7 @@ def add_assigned(context: Context):
         context.log_task(task)
 
 
-@CommandHandlers.command("unassign")
+@CommandHandlers.command("unassign", description="Unassign person from task.")
 @CommandHandlers.add_positional("assignee", nargs="+")
 @CommandHandlers.add_positional("task_id")
 def rm_assigned(context: Context):

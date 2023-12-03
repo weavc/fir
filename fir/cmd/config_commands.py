@@ -14,7 +14,7 @@ class ConfigHandlers(CmdBuilder):
     aliases = []
 
 
-@ConfigHandlers.command("get", aliases=["g"])
+@ConfigHandlers.command("get", aliases=["g"], description="Get value for config option.")
 @ConfigHandlers.add_positional("config_name")
 def get_config_value(context: Context):
     if context.args.get("config_name") not in get_args(ConfigOptions):
@@ -24,7 +24,7 @@ def get_config_value(context: Context):
     context.logger.log(f"{context.args.get('config_name')}: {value}")
 
 
-@ConfigHandlers.command("set", aliases=["s"])
+@ConfigHandlers.command("set", aliases=["s"], description="Set value for config option.")
 @ConfigHandlers.add_positional("config_value")
 @ConfigHandlers.add_positional("config_name")
 def set_config_value(context: Context):
@@ -36,7 +36,7 @@ def set_config_value(context: Context):
     context.logger.log_success(f"Updated config {context.args.get('config_name')}")
 
 
-@ConfigHandlers.command("clear", aliases=["rm", "remove"])
+@ConfigHandlers.command("clear", aliases=["rm", "remove"], description="Remove value for a config option.")
 @ConfigHandlers.add_positional("config_name")
 def remove_config_value(context: Context):
     if context.args.get("config_name") not in get_args(ConfigOptions):
@@ -47,7 +47,7 @@ def remove_config_value(context: Context):
     context.logger.log_success(f"Removed config {context.args.get('config_name')}")
 
 
-@ConfigHandlers.command("ls", aliases=["list"])
+@ConfigHandlers.command("ls", aliases=["list"], description="List all set config options.")
 def list_config_values(context: Context):
     table = []
     for key, value in context.profile.data.config.items():
@@ -58,7 +58,7 @@ def list_config_values(context: Context):
                                          f"{colored('Value', 'light_blue', attrs=['bold'])}"]))
 
 
-@ConfigHandlers.command("options", aliases=["opt", "opts"])
+@ConfigHandlers.command("options", aliases=["opt", "opts"], description="List all available config options.")
 def list_config_options(context: Context):
     table = []
     for key in get_args(ConfigOptions):

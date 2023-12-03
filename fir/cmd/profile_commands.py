@@ -17,7 +17,7 @@ class ProfileHandlers(CmdBuilder):
     aliases = []
 
 
-@ProfileHandlers.command("link")
+@ProfileHandlers.command("link", description="Link an existing fir profile file.")
 @ProfileHandlers.add_positional("path")
 @ProfileHandlers.add_positional("profile_name")
 @ProfileHandlers.add_optional_flag("set", "--set")
@@ -32,7 +32,7 @@ def link(context: Context):
         set(context)
 
 
-@ProfileHandlers.command("set", aliases=["set"])
+@ProfileHandlers.command("set", aliases=["set"], description="Set scope to target profile. See available profiles using 'fir profile ls'.")
 @ProfileHandlers.add_positional("profile_name")
 def set(context: Context):
     name = context.args.get("profile_name")
@@ -49,7 +49,7 @@ def set(context: Context):
     context.logger.log_success(f"Set profile to {name}")
 
 
-@ProfileHandlers.command("create", aliases=["c", "new"])
+@ProfileHandlers.command("create", aliases=["c", "new"], description="Create a new fir profile.")
 @ProfileHandlers.add_positional("profile_name")
 @ProfileHandlers.add_optional("description", "--description", "-d")
 @ProfileHandlers.add_optional("path", "--path")
@@ -82,7 +82,7 @@ def create(context: Context):
         set(context)
 
 
-@ProfileHandlers.command("remove", aliases=["rm"])
+@ProfileHandlers.command("remove", aliases=["rm"], description="Remove fir profile. Does not remove the file.")
 @ProfileHandlers.add_positional("profile_name")
 def remove(context: Context):
     profile_name = context.args.get("profile_name")
@@ -95,7 +95,7 @@ def remove(context: Context):
     context.logger.log_success("Profile removed")
 
 
-@ProfileHandlers.command("list", aliases=["ls"])
+@ProfileHandlers.command("list", aliases=["ls"], description="List linked profiles.")
 def ls(context: Context):
     table = []
     for key in context.settings.data.profiles.keys():
