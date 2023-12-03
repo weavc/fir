@@ -368,3 +368,16 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "3i01rnha"
+name = "Fix description when setting from new, appears as array"
+tags = []
+status = "TODO"
+added = "2023-12-03 22:10:36"
+modified = "2023-12-03 22:10:36"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []

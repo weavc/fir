@@ -83,7 +83,7 @@ class ProfileHandlers(CmdBuilder):
             desc = self.context.args.get("description")
 
         path = os.path.abspath(os.path.join(DATA_DIR, f"{slugify(name)}.toml"))
-        if self.context.args.get("path"):
+        if self.context.args.get("profile_path"):
             dir_path = os.path.abspath(self.context.args.get("profile_path"))
             if os.path.isdir(dir_path):
                 path = os.path.join(dir_path, f"{slugify(name)}.toml")
