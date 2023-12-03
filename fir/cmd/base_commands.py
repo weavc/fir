@@ -28,7 +28,7 @@ def create_task(context: Context):
     if context.args.get("status"):
         status = context.args.get("status")
 
-    success, due = parse_date_from_arg(context, context.args.get("due"))
+    success, due = parse_date_from_arg(context.args.get("due"))
     if not success:
         return context.logger.log_error(f"Unable to parse date from due date")
 
@@ -78,7 +78,7 @@ def modify_task(context: Context):
     if context.args.get("name") is not None:
         task.name = context.args.get("name")
     if context.args.get("due"):
-        success, due = parse_date_from_arg(context, context.args.get("due"))
+        success, due = parse_date_from_arg(context.args.get("due"))
         if not success:
             return context.logger.log_error(f"Unable to parse date from due date")
 
