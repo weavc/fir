@@ -12,7 +12,10 @@ class Context:
     args: tuple[str, dict]
     logger: Logger
 
-    def __init__(self, args: dict, profile: Profile, settings: Settings):
+    def __init__(self):
+        pass
+
+    def setup(self, args: dict, profile: Profile, settings: Settings):
         self.profile = profile
         self.settings = settings
         self.args = args

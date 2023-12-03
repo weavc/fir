@@ -14,7 +14,10 @@ class ConfigHandlers(CmdBuilder):
     aliases = []
     cmds: dict[str, Cmd] = {}
 
-    def __init__(self):
+    context: Context
+
+    def __init__(self, context: Context):
+        self.context = context
         self.register_commands(*[t for t in self.map()])
 
     def map(self) -> list[Cmd]:
@@ -43,45 +46,45 @@ class ConfigHandlers(CmdBuilder):
                 func=self.list_config_options)
         ]
 
-    def get_config_value(self, context: Context):
-        if context.args.get("config_name") not in get_args(ConfigOptions):
-            return context.invalid_config_option()
+    def get_config_value(self):
+        if self.context.args.get("config_name") not in get_args(ConfigOptions):
+            return self.context.invalid_config_option()
 
-        value = context.profile.data.config.get(context.args.get("config_name"))
-        context.logger.log(f"{context.args.get('config_name')}: {value}")
+        value = self.context.profile.data.config.get(self.context.args.get("config_name"))
+        self.context.logger.log(f"{self.context.args.get('config_name')}: {value}")
 
-    def set_config_value(self, context: Context):
-        if context.args.get("config_name") not in get_args(ConfigOptions):
-            return context.invalid_config_option()
+    def set_config_value(self):
+        if self.context.args.get("config_name") not in get_args(ConfigOptions):
+            return self.context.invalid_config_option()
 
-        context.profile.data.config[context.args.get("config_name")] = context.args.get("config_value")
-        context.profile.save()
-        context.logger.log_success(f"Updated config {context.args.get('config_name')}")
+        self.context.profile.data.config[self.context.args.get("config_name")] = self.context.args.get("config_value")
+        self.context.profile.save()
+        self.context.logger.log_success(f"Updated config {self.context.args.get('config_name')}")
 
-    def remove_config_value(self, context: Context):
-        if context.args.get("config_name") not in get_args(ConfigOptions):
-            return context.invalid_config_option()
+    def remove_config_value(self):
+        if self.context.args.get("config_name") not in get_args(ConfigOptions):
+            return self.context.invalid_config_option()
 
-        context.profile.data.config.pop(context.args.get("config_name"))
-        context.profile.save()
-        context.logger.log_success(f"Removed config {context.args.get('config_name')}")
+        self.context.profile.data.config.pop(self.context.args.get("config_name"))
+        self.context.profile.save()
+        self.context.logger.log_success(f"Removed config {self.context.args.get('config_name')}")
 
-    def list_config_values(self, context: Context):
+    def list_config_values(self):
         table = []
-        for key, value in context.profile.data.config.items():
+        for key, value in self.context.profile.data.config.items():
             table.append([key, value])
 
-        context.logger.log(tabulate(table,
+        self.context.logger.log(tabulate(table,
                                     headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
                                              f"{colored('Value', 'light_blue', attrs=['bold'])}"]))
 
-    def list_config_options(self, context: Context):
+    def list_config_options(self):
         table = []
         for key in get_args(ConfigOptions):
             map = ConfigOptionsMap.get(key)
             table.append([map.name, map.description, map.example])
 
-        context.logger.log(tabulate(table,
+        self.context.logger.log(tabulate(table,
                                     headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
                                              f"{colored('Description', 'light_blue', attrs=['bold'])}",
                                              f"{colored('Example', 'light_blue', attrs=['bold'])}"]))

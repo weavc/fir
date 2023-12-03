@@ -16,7 +16,10 @@ class ProfileHandlers(CmdBuilder):
     aliases = []
     cmds: dict[str, Cmd] = {}
 
-    def __init__(self):
+    context: Context
+
+    def __init__(self, context: Context):
+        self.context = context
         self.register_commands(*[t for t in self.map()])
 
     def map(self) -> list[Cmd]:
@@ -49,71 +52,71 @@ class ProfileHandlers(CmdBuilder):
                 func=self.ls)
         ]
 
-    def link(self, context: Context):
-        name = context.args.get("profile_name")
-        path = os.path.abspath(context.args.get("profile_path"))
+    def link(self):
+        name = self.context.args.get("profile_name")
+        path = os.path.abspath(self.context.args.get("profile_path"))
 
-        context.link_profile(name, path)
+        self.context.link_profile(name, path)
 
-        context.logger.log_success(f"Profile {name} added")
-        if context.args.get("profile_set"):
-            self.set(context)
+        self.context.logger.log_success(f"Profile {name} added")
+        if self.context.args.get("profile_set"):
+            self.set()
 
-    def set(self, context: Context):
-        name = context.args.get("profile_name")
-        path = context.settings.data.profiles.get(name)
+    def set(self):
+        name = self.context.args.get("profile_name")
+        path = self.context.settings.data.profiles.get(name)
         if path is None:
-            return context.logger.log_error("Invalid profile")
+            return self.context.logger.log_error("Invalid profile")
 
         p = Profile(path)
         if p.data is None:
-            return context.logger.log_error("Invalid profile")
+            return self.context.logger.log_error("Invalid profile")
 
-        context.settings.data.scope = name
-        context.settings.save()
-        context.logger.log_success(f"Set profile to {name}")
+        self.context.settings.data.scope = name
+        self.context.settings.save()
+        self.context.logger.log_success(f"Set profile to {name}")
 
-    def create(self, context: Context):
-        name = context.args.get("profile_name")
+    def create(self):
+        name = self.context.args.get("profile_name")
         desc = ""
-        if context.args.get("description"):
-            desc = context.args.get("description")
+        if self.context.args.get("description"):
+            desc = self.context.args.get("description")
 
         path = os.path.abspath(os.path.join(DATA_DIR, f"{slugify(name)}.toml"))
-        if context.args.get("path"):
-            dir_path = os.path.abspath(context.args.get("profile_path"))
+        if self.context.args.get("path"):
+            dir_path = os.path.abspath(self.context.args.get("profile_path"))
             if os.path.isdir(dir_path):
                 path = os.path.join(dir_path, f"{slugify(name)}.toml")
             else:
                 path = dir_path
 
-        if os.path.exists(path) and not context.args.get("force"):
-            return context.logger.log_error("File already exists")
+        if os.path.exists(path) and not self.context.args.get("force"):
+            return self.context.logger.log_error("File already exists")
 
         profile = Profile(path=path, read=False)
         profile.data = default_profile(name, desc)
         profile.save()
 
-        context.link_profile(context, name, path)
-        context.logger.log_success(f"Profile {name} added")
-        if context.args.get("profile_set"):
-            self.set(context)
+        self.context.link_profile(name, path)
+        self.context.logger.log_success(f"Profile {name} added")
+        if self.context.args.get("profile_set"):
+            self.set()
 
-    def remove(self, context: Context):
-        profile_name = context.args.get("profile_name")
-        profile = context.settings.data.profiles.get(profile_name, None)
+    def remove(self):
+        profile_name = self.context.args.get("profile_name")
+        profile = self.context.settings.data.profiles.get(profile_name, None)
         if profile is None:
-            context.logger.log_error("Profile not found")
+            self.context.logger.log_error("Profile not found")
 
-        context.settings.data.profiles.pop(profile_name)
-        context.settings.save()
-        context.logger.log_success("Profile removed")
+        self.context.settings.data.profiles.pop(profile_name)
+        self.context.settings.save()
+        self.context.logger.log_success("Profile removed")
 
-    def ls(self, context: Context):
+    def ls(self):
         table = []
-        for key in context.settings.data.profiles.keys():
-            table.append([key, context.settings.data.profiles[key]])
+        for key in self.context.settings.data.profiles.keys():
+            table.append([key, self.context.settings.data.profiles[key]])
 
-        context.logger.log(tabulate(table,
+        self.context.logger.log(tabulate(table,
                                     headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
                                              f"{colored('Path', 'light_blue', attrs=['bold'])}"]))
