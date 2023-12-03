@@ -287,24 +287,6 @@ priority = 100
 assigned_to = []
 
 [[tasks]]
-id = "kioPjfuk"
-name = "Add a forth status category for on hold"
-tags = [
-    "feature",
-    "complexity:med",
-]
-status = "TODO"
-added = "2023-12-02 20:44:46"
-modified = "2023-12-02 20:44:46"
-due = ""
-link = ""
-description = "Tasks that are on hold don't really have a place within the current categories so we should create a new category group for it."
-priority = 1
-assigned_to = [
-    "Chris",
-]
-
-[[tasks]]
 id = "YW2rcJgB"
 name = "Add a forth status category for on hold tasks"
 tags = [
@@ -321,3 +303,16 @@ priority = 1
 assigned_to = [
     "Chris",
 ]
+
+[[tasks]]
+id = "a35aob8f"
+name = "Easier to use ids"
+tags = []
+status = "DONE"
+added = "2023-12-03 11:01:42"
+modified = "2023-12-03 11:01:42"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []

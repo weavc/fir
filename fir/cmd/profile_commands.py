@@ -9,7 +9,6 @@ from fir.config import DATA_DIR
 from fir.context import Context
 from fir.data.defaults import default_profile
 from fir.data.profile import Profile
-from fir.helpers import generate_id
 from fir.helpers.commands import link_profile
 
 

@@ -4,7 +4,7 @@ from datetime import datetime
 
 from fir.cmd.cmd_builder import CmdBuilder
 from fir.context import Context
-from fir.helpers import generate_id
+from fir.helpers import generate_task_id
 from fir.helpers.commands import log_task, log_task_table, log_task_table_from_statuses, parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
@@ -31,7 +31,7 @@ def create_task(context: Context):
     due = parse_date_from_arg(context, context.args.get("due"))
 
     task_name = ' '.join(context.args.get("task_name"))
-    task = TaskDto(generate_id(), task_name, due=due)
+    task = TaskDto(generate_task_id(not_in=context.profile.data.tasks), task_name, due=due)
 
     set_status = context.profile.set_status(task, status)
     if not set_status:
