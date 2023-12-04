@@ -79,3 +79,16 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "baq67i9j"
+name = "Git integration using GitPython"
+tags = []
+status = "maybe"
+added = "2023-12-04 16:03:00"
+modified = "2023-12-04 16:03:00"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []

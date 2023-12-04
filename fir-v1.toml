@@ -368,3 +368,68 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "ebmuxx2i"
+name = "Order by status within status categories"
+tags = []
+status = "TODO"
+added = "2023-12-04 15:59:47"
+modified = "2023-12-04 15:59:47"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "4fduau21"
+name = "Filter ls by tag & assigned"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:00:22"
+modified = "2023-12-04 16:00:22"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "9zz1aa06"
+name = "Truncate names (+ config option)"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:00:46"
+modified = "2023-12-04 16:00:46"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "af9e146n"
+name = "Use name from toml file when linking"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:01:49"
+modified = "2023-12-04 16:01:49"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "6ck8pcn9"
+name = "Bug requiring a profile_path value when creating new"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:02:13"
+modified = "2023-12-04 16:02:13"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
