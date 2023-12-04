@@ -38,4 +38,4 @@ jobs:
     - name: Build package
       run: python -m poetry build
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1.8.11
+      uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf
