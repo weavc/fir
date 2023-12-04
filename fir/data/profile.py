@@ -69,13 +69,16 @@ class Profile:
     def get_done_statuses(self):
         return self.try_get_config_value_list("status.done")
 
-    def check_status_type(self, status: str) -> StatusTypes | None:
-        if status in self.get_todo_statuses():
-            return "todo"
-        if status in self.get_doing_statuses():
-            return "doing"
-        if status in self.get_done_statuses():
-            return "done"
+    def check_status_type(self, status: str) -> (StatusTypes | None, int):
+        todo = self.get_todo_statuses()
+        doing = self.get_doing_statuses()
+        done = self.get_done_statuses()
+        if status in todo:
+            return "todo", todo.index(status) + 1 
+        if status in doing:
+            return "doing", doing.index(status) + 1
+        if status in done:
+            return "done", done.index(status) + 1
 
         return None
 

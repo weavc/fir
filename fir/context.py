@@ -33,15 +33,15 @@ class Context:
         self.log_task_table(tasks)
 
     def sort_by_status_type(self, task: TaskDto):
-        is_type = self.profile.check_status_type(task.status)
+        is_type, index = self.profile.check_status_type(task.status)
         if is_type == "todo":
-            return 3000 + task.priority
+            return 30000 + task.priority + index
         if is_type == "doing":
-            return 2000 + task.priority
+            return 20000 + task.priority + index
         if is_type == "done":
-            return 1000 + task.priority
+            return 10000 + task.priority + index
 
-        return 4000 + task.priority
+        return 100000 + task.priority
 
     def log_task_table(self, tasks: list[TaskDto], order: bool = True):
 
@@ -106,7 +106,7 @@ class Context:
         self.settings.save()
 
     def __get_status_colour(self, status: str):
-        is_type = self.profile.check_status_type(status)
+        is_type, _ = self.profile.check_status_type(status)
         if is_type == "todo":
             status = colored(status, 'light_red')
         if is_type == "doing":

@@ -118,7 +118,7 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.data.tasks.append(task)
         self.context.profile.save()
 
-        self.context.logger.log_success(f"Added task {task.name} [{task.id}]")
+        self.context.logger.log_success(f"Added task \"{task.name}\" [{task.id}]")
 
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.log_task(task)
@@ -132,13 +132,12 @@ class CommandHandlers(CmdBuilder):
             set_status = self.context.profile.set_status(task, self.context.args.get("status"))
             if not set_status:
                 return self.context.logger.log_error("Invalid status provided")
-        if self.context.args.get("name") is not None:
-            task.name = self.context.args.get("name")
+        if self.context.args.get("task_name") is not None:
+            task.name = self.context.args.get("task_name")
         if self.context.args.get("due"):
             success, due = parse_date_from_arg(self.context.args.get("due"))
             if not success:
                 return self.context.logger.log_error("Unable to parse date from due date")
-
             task.due = due
         if (self.context.args.get("priority")):
             passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
@@ -152,7 +151,7 @@ class CommandHandlers(CmdBuilder):
 
         task.modified = datetime_to_date_string(datetime.now())
         self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
+        self.context.logger.log_success(f"Updated task \"{task.name}\" [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.log_task(task)
 
@@ -185,7 +184,8 @@ class CommandHandlers(CmdBuilder):
                 continue
 
             if self.context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):
-                if self.context.profile.check_status_type(task.status) == "done":
+                is_type, _ = self.context.profile.check_status_type(task.status)
+                if  is_type == "done":
                     continue
 
             tasks.append(task)
