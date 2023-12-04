@@ -99,7 +99,7 @@ class CommandHandlers(CmdBuilder):
             return self.context.logger.log_error("Unable to parse date from due date")
 
         task_name = ' '.join(self.context.args.get("task_name"))
-        task = TaskDto(generate_task_id(not_in=self.context.profile.data.tasks), task_name, due=due)
+        task = TaskDto(generate_task_id(not_in=[t.id for t in self.context.profile.data.tasks]), task_name, due=due)
 
         set_status = self.context.profile.set_status(task, status)
         if not set_status:

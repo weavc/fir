@@ -16,7 +16,12 @@ tomli-w = "^1.0.0"
 marshmallow = "~3.20.1"
 argcomplete = "^3.1.6"
 python-slugify = "^8.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^6.0.0"
 flake8 = "^6.1.0"
+autopep8 = "2.0.4"
+tox = "4.11.4"
 
 [tool.poetry.scripts]
 fir = 'fir.cmd:cmd'
@@ -24,3 +29,10 @@ fir = 'fir.cmd:cmd'
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+max_line_length = 120
+# ignore = "E501,W6"  # or ["E501", "W6"]
+in-place = true
+recursive = true
+aggressive = 3
