@@ -433,3 +433,55 @@ link = ""
 description = ""
 priority = 100
 assigned_to = []
+
+[[tasks]]
+id = "4tlonk56"
+name = "Add speech marks around values in print"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:05:14"
+modified = "2023-12-04 16:05:14"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "2cob2gk8"
+name = "Allow name value instead of id?"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:06:04"
+modified = "2023-12-04 16:06:04"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "bsgvhrsc"
+name = "If theres multiple matches on an id, error"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:06:51"
+modified = "2023-12-04 16:06:51"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "2y7lcaa9"
+name = "Reassign task with a new id"
+tags = []
+status = "TODO"
+added = "2023-12-04 16:07:27"
+modified = "2023-12-04 16:07:27"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
