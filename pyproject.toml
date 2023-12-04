@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fir"
+name = "weavc-fir"
 version = "0.1.0-alpha.1"
 description = ""
 authors = ["weavc <chrisweaver1@pm.me>"]
