@@ -1,3 +1,4 @@
+from copy import copy
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -10,16 +11,17 @@ class CmdArg:
     aliases: list[str] = field(default_factory=list[str])
 
     def with_overrides(self, name: str = None, description: str = None, flags: list[str] = None, nargs: str = None):
+        m = copy(self)
         if name is not None:
-            self.name = name
+            m.name = name
         if description is not None:
-            self.description = description
+            m.description = description
         if flags is not None:
-            self.flags = flags
+            m.flags = flags
         if nargs is not None:
-            self.nargs = nargs
+            m.nargs = nargs
 
-        return self
+        return m
 
 
 @dataclass

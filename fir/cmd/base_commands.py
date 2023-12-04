@@ -6,6 +6,7 @@ from fir.context import Context
 from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
+from fir.types import StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.parameters import ParameterMap as pm
 
@@ -47,7 +48,7 @@ class CommandHandlers(CmdBuilder):
             Cmd("list",
                 aliases=["ls"],
                 description="List all tasks.",
-                optionals=[pm["task_id"], pm["status"], pm["task_name"]],
+                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]],
                 func=self.ls),
             Cmd("status",
                 description="Set the status of a task.",
@@ -84,9 +85,19 @@ class CommandHandlers(CmdBuilder):
                 description="Remove person(s) from task.",
                 args=[pm["task_id"], pm["assignee"].with_overrides(nargs="+")],
                 func=self.rm_assigned),
-            Cmd("todo", description="List all todo tasks.", func=self.ls_todo),
-            Cmd("doing", aliases=["prog"], description="List all in progress tasks.", func=self.ls_doing),
-            Cmd("done", description="List all done/completed tasks.", func=self.ls_done),
+            Cmd("todo", 
+                description="List all todo tasks.", 
+                func=self.ls_todo, 
+                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
+            Cmd("doing", 
+                aliases=["prog"], 
+                description="List all in progress tasks.", 
+                func=self.ls_doing, 
+                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
+            Cmd("done", 
+                description="List all done/completed tasks.", 
+                func=self.ls_done, 
+                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
         ]
 
     def create_task(self):
@@ -172,34 +183,38 @@ class CommandHandlers(CmdBuilder):
 
         self.context.log_task(task)
 
-    def ls(self):
+    def ls(self, category: StatusTypes = None):
         tasks = []
         for task in self.context.profile.data.tasks:
-            if self.context.args.get("status") is not None and task.status != self.context.args.get("status"):
+            if self.context.args.get("status") and task.status != self.context.args.get("status"):
                 continue
-            if self.context.args.get("id") is not None and not task.id.startswith(self.context.args.get("id")):
+            if self.context.args.get("task_name") and not self.context.args.get("task_name").lower() in task.name.lower():
                 continue
-            if self.context.args.get("name") is not None and not self.context.args.get(
-                    "name").lower() in task.name.lower():
+            if self.context.args.get("assignee") and self.context.args.get("assignee") not in task.assigned_to:
                 continue
+            if self.context.args.get("tags") and self.context.args.get("tags") not in task.tags:
+                continue
+            
+            c, _ = self.context.profile.check_status_type(task.status) 
 
             if self.context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):
-                is_type, _ = self.context.profile.check_status_type(task.status)
-                if  is_type == "done":
+                if  c == "done":
                     continue
+            if category and category != c:
+                continue
 
             tasks.append(task)
 
         self.context.log_task_table(tasks)
 
     def ls_todo(self):
-        self.context.log_task_table_from_statuses(self.context.profile.get_todo_statuses())
+        return self.ls("todo")
 
     def ls_doing(self):
-        self.context.log_task_table_from_statuses(self.context.profile.get_doing_statuses())
+        return self.ls("doing")
 
     def ls_done(self):
-        self.context.log_task_table_from_statuses(self.context.profile.get_done_statuses())
+        return self.ls("done")
 
     def set_status(self):
         task = self.context.profile.get_task(self.context.args.get("task_id"))
