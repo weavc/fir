@@ -21,10 +21,19 @@ Parameters = Literal[
 ]
 
 ParameterMap: dict[Parameters, CmdArg] = {
-    "status": CmdArg("status", "Set status of the task, otherwise the value provided in 'status.default' will be used.", aliases=["--status"]),
+    "status": CmdArg(
+        "status",
+        "Set status of the task, otherwise the value provided in 'status.default' will be used.",
+        aliases=["--status"]),
     "description": CmdArg("description", "Add a description to the task.", aliases=["--desc", "--description"]),
-    "task_id": CmdArg("task_id", "Task id value. It will accept shortened values and matches on the first matching task. i.e. 'inbcjR3B' || 'inb'", aliases=["--id"]),
-    "task_name": CmdArg("task_name", "Name of task, should be a short description of what needs to be done.", aliases=["-n", "--name"]),
+    "task_id": CmdArg(
+        "task_id",
+        "Task id value. It will accept shortened values and matches on the first matching task. i.e. 'inbcjR3B' || 'inb'",
+        aliases=["--id"]),
+    "task_name": CmdArg(
+        "task_name",
+        "Name of task, should be a short description of what needs to be done.",
+        aliases=["-n", "--name"]),
     "due": CmdArg("due", "Set the due date of task.", aliases=["--due"]),
     "link": CmdArg("link", "Add a link to the task.", aliases=["--link"]),
     "priority": CmdArg("priority", "Set the priority of the task.", aliases=["--priority"]),

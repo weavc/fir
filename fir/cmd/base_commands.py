@@ -14,7 +14,7 @@ class CommandHandlers(CmdBuilder):
     name = None
     aliases = []
     cmds: dict[str, Cmd] = {}
-    
+
     context: Context
 
     def __init__(self, context: Context):
@@ -96,7 +96,7 @@ class CommandHandlers(CmdBuilder):
 
         success, due = parse_date_from_arg(self.context.args.get("due"))
         if not success:
-            return self.context.logger.log_error(f"Unable to parse date from due date")
+            return self.context.logger.log_error("Unable to parse date from due date")
 
         task_name = ' '.join(self.context.args.get("task_name"))
         task = TaskDto(generate_task_id(not_in=self.context.profile.data.tasks), task_name, due=due)
@@ -137,7 +137,7 @@ class CommandHandlers(CmdBuilder):
         if self.context.args.get("due"):
             success, due = parse_date_from_arg(self.context.args.get("due"))
             if not success:
-                return self.context.logger.log_error(f"Unable to parse date from due date")
+                return self.context.logger.log_error("Unable to parse date from due date")
 
             task.due = due
         if (self.context.args.get("priority")):
@@ -180,7 +180,8 @@ class CommandHandlers(CmdBuilder):
                 continue
             if self.context.args.get("id") is not None and not task.id.startswith(self.context.args.get("id")):
                 continue
-            if self.context.args.get("name") is not None and not self.context.args.get("name").lower() in task.name.lower():
+            if self.context.args.get("name") is not None and not self.context.args.get(
+                    "name").lower() in task.name.lower():
                 continue
 
             if self.context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):

@@ -1,6 +1,4 @@
-from dataclasses import dataclass, field
-from typing import get_args
-from marshmallow import Schema, fields, post_load, EXCLUDE, pre_load, validate
+from marshmallow import Schema, fields, post_load, EXCLUDE, validate
 
 from fir.types.dtos import ProfileDto, TaskDto, SettingsDto
 

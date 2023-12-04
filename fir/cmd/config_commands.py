@@ -1,4 +1,3 @@
-from collections import defaultdict
 from typing import get_args
 from tabulate import tabulate
 from termcolor import colored
@@ -75,8 +74,8 @@ class ConfigHandlers(CmdBuilder):
             table.append([key, value])
 
         self.context.logger.log(tabulate(table,
-                                    headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
-                                             f"{colored('Value', 'light_blue', attrs=['bold'])}"]))
+                                         headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
+                                                  f"{colored('Value', 'light_blue', attrs=['bold'])}"]))
 
     def list_config_options(self):
         table = []
@@ -85,6 +84,6 @@ class ConfigHandlers(CmdBuilder):
             table.append([map.name, map.description, map.example])
 
         self.context.logger.log(tabulate(table,
-                                    headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
-                                             f"{colored('Description', 'light_blue', attrs=['bold'])}",
-                                             f"{colored('Example', 'light_blue', attrs=['bold'])}"]))
+                                         headers=[f"{colored('Name', 'light_blue', attrs=['bold'])}",
+                                                  f"{colored('Description', 'light_blue', attrs=['bold'])}",
+                                                  f"{colored('Example', 'light_blue', attrs=['bold'])}"]))

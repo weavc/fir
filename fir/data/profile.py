@@ -3,7 +3,6 @@ import os
 from fir.config import DATA_DIR
 from fir.data.defaults import default_profile
 from fir.helpers import str2bool
-from fir.logger import Logger
 from fir.types import ConfigOptions, ConfigOptionsMap, StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.schemas import ProfileDto, ProfileSchema

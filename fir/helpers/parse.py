@@ -1,4 +1,3 @@
-from fir.context import Context
 from fir.helpers.dates import str_to_date_string
 
 

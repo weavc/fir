@@ -1,16 +1,12 @@
 import argparse
 import sys
 
-
-from argcomplete import FilesCompleter
-
-
 from fir import config
 from fir.builder.arg_parser import ArgParserSetup
 from fir.context import Context
-from fir.cmd.base_commands import *
-from fir.cmd.profile_commands import *
-from fir.cmd.config_commands import *
+from fir.cmd.base_commands import CommandHandlers
+from fir.cmd.profile_commands import ProfileHandlers
+from fir.cmd.config_commands import ConfigHandlers
 from fir.data.profile import Profile
 from fir.data.settings import Settings
 
@@ -60,5 +56,5 @@ def cmd():
         c.logger.log_info(f"Running command: {command.name}")
         command.func()
     else:
-        c.logger.log_error(f"Command not found", exit=False)
+        c.logger.log_error("Command not found", exit=False)
         parser.print_help()

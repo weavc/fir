@@ -118,5 +118,5 @@ class ProfileHandlers(CmdBuilder):
             table.append([key, self.context.settings.data.profiles[key]])
 
         self.context.logger.log(tabulate(table,
-                                    headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
-                                             f"{colored('Path', 'light_blue', attrs=['bold'])}"]))
+                                         headers=[f"{colored('Id', 'light_blue', attrs=['bold'])}",
+                                                  f"{colored('Path', 'light_blue', attrs=['bold'])}"]))

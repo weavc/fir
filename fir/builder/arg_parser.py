@@ -27,7 +27,7 @@ class ArgParserSetup:
     def setup_handlers(self, command: Cmd, sub: argparse.ArgumentParser):
         parser = sub.add_parser(command.name, aliases=command.aliases, help=command.description)
         for a in command.args:
-            p = parser.add_argument(a.name, nargs=a.nargs, help=a.description)
+            parser.add_argument(a.name, nargs=a.nargs, help=a.description)
 
         for a in command.optionals:
             parser.add_argument(*a.aliases, dest=a.name, action="store", nargs=a.nargs, help=a.description)
