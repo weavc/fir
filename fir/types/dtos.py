@@ -46,6 +46,7 @@ class StatusDto:
     name: str
     color: str
     priority: int = 100
+    hide_by_default: bool = False
     
     class Schema(Schema):
         class Meta:
@@ -53,7 +54,8 @@ class StatusDto:
 
         name = fields.String(required=True, validate=validate.Length(max=50))
         color = fields.String(required=True, validate=validate.Length(max=20))
-        priority = fields.Field(strict=True, validate=validate.Range(min=0, max=999))
+        priority = fields.Field(strict=True, validate=validate.Range(min=0, max=9999))
+        hide_by_default = fields.Bool()
 
         @post_load
         def make_task(self, data, **kwargs):
