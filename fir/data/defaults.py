@@ -1,5 +1,5 @@
 from typing import get_args
-from fir.types import ConfigOptions, ConfigOptionsMap
+from fir.types.config_options import ConfigOptions, ConfigOptionsMap
 from fir.types.dtos import ProfileDto, SettingsDto
 
 

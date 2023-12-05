@@ -36,7 +36,6 @@ class CommandHandlers(CmdBuilder):
             .with_positional(pm["task_id"])
 
         self.register("ls", self.ls, description="List tasks", aliases=["list"])\
-            .with_positional(pm["task_id"])\
             .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
 
         self.register("status", self.set_status, description="Set the status of a task.")\
@@ -71,7 +70,7 @@ class CommandHandlers(CmdBuilder):
         self.register("todo", self.ls_todo, description="List all todo tasks.")\
             .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
 
-        self.register("todo", self.ls_done, description="List all completed tasks.")\
+        self.register("done", self.ls_done, description="List all completed tasks.")\
             .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
 
         self.register("doing", self.ls_doing, description="List all todo tasks.", aliases=["prog"])\

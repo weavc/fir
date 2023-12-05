@@ -3,7 +3,8 @@ import os
 from fir.config import DATA_DIR
 from fir.data.defaults import default_profile
 from fir.helpers import str2bool
-from fir.types import ConfigOptions, ConfigOptionsMap, StatusTypes
+from fir.types.config_options import ConfigOptions, ConfigOptionsMap
+from fir.types import StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.schemas import ProfileDto, ProfileSchema
 from fir.helpers.files import read_toml_file, write_toml_file
@@ -47,6 +48,9 @@ class Profile:
             value = ConfigOptionsMap.get(key).default
 
         return value
+
+    def try_get_config_value_int(self, key: ConfigOptions):
+        return int(self.try_get_config_value(key))
 
     def try_get_config_value_bool(self, key: ConfigOptions):
         return str2bool(self.try_get_config_value(key))

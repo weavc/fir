@@ -4,7 +4,7 @@ from termcolor import colored
 
 from fir.cmd.builder import Cmd, CmdBuilder
 from fir.context import Context
-from fir.types import ConfigOptions, ConfigOptionsMap
+from fir.types.config_options import ConfigOptions, ConfigOptionsMap
 from fir.types.parameters import ParameterMap as pm
 
 

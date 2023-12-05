@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from fir.helpers.dates import datetime_to_date_string
-from fir.types import ConfigOptions
+from fir.types.config_options import ConfigOptions
 
 
 @dataclass

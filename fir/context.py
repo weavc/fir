@@ -2,6 +2,7 @@ from tabulate import tabulate
 from termcolor import colored
 from fir.data.profile import Profile
 from fir.data.settings import Settings
+from fir.helpers import truncate
 from fir.logger import Logger
 from fir.types.dtos import TaskDto
 
@@ -61,7 +62,9 @@ class Context:
         for task in tasks:
             status = self.__get_status_colour(task.status)
 
-            values = [colored(task.id, 'light_grey'), task.name, status]
+            values = [colored(task.id, 'light_grey'), 
+                      truncate(task.name, self.profile.try_get_config_value_int("name.truncate")), 
+                      status]
             if enabled.get("description"):
                 values.append(task.description)
             if enabled.get("link"):
