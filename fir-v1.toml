@@ -187,9 +187,7 @@ due = ""
 link = ""
 description = ""
 priority = 100
-assigned_to = [
-    "Chris",
-]
+assigned_to = []
 
 [[tasks]]
 id = "FNtWLSZ3"
@@ -204,10 +202,7 @@ due = ""
 link = ""
 description = ""
 priority = 100
-assigned_to = [
-    "Chris",
-    "Megan",
-]
+assigned_to = []
 
 [[tasks]]
 id = "2sk6kn3f"
@@ -486,6 +481,19 @@ tags = []
 status = "todo"
 added = "2023-12-04 16:07:27"
 modified = "2023-12-04 16:07:27"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "auq7vjrd"
+name = "Headers optional param on ls"
+tags = []
+status = "todo"
+added = "2023-12-05 21:50:09"
+modified = "2023-12-05 21:50:09"
 due = ""
 link = ""
 description = ""

@@ -45,10 +45,10 @@ class CommandHandlers(CmdBuilder):
             .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
 
         self.register("assign", self.add_assigned, description="Add person(s) to a task.")\
-            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+            .with_positional(pm["task_id"], pm["assignee"].with_overrides(nargs="+"))
 
         self.register("unassign", self.rm_assigned, description="Remove person(s) from a task.")\
-            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+            .with_positional(pm["task_id"], pm["assignee"].with_overrides(nargs="+"))
 
     def create_task(self):
         status = self.context.profile.data.config.get("status.default", "")
