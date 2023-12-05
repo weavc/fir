@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from fir import config
-from fir.builder.arg_parser import ArgParserSetup
+from fir.cmd.builder.arg_parser import ArgParserSetup
 from fir.context import Context
 from fir.cmd.base_commands import CommandHandlers
 from fir.cmd.profile_commands import ProfileHandlers

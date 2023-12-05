@@ -1,6 +1,6 @@
 from typing import Literal
 
-from fir.builder import CmdArg
+from fir.cmd.builder import CmdArg
 
 Parameters = Literal[
     "status",

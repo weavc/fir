@@ -1,7 +1,7 @@
 import pytest
 from copy import copy
 
-from fir.builder import Cmd, CmdArg, CmdBuilder
+from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
 
 @pytest.fixture
 def default_cmd():
