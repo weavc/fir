@@ -73,7 +73,7 @@ class CmdBuilder:
         for c in cmd:
             self.__register(c)
 
-    def __register(self, cmd, func=None):
+    def __register(self, cmd, func: Callable = None):
         if func is not None:
             cmd.func = func
 

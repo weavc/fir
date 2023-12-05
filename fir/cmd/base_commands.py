@@ -24,76 +24,59 @@ class CommandHandlers(CmdBuilder):
         self.register("new", self.create_task, description="Add a new task.", aliases=["add"])\
             .with_positional(pm["task_name"].with_overrides(nargs="+"))\
             .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"])
+
+        self.register("mod", self.modify_task, description="Modify a task.", aliases=["edit"])\
+            .with_positional(pm["task_id"])\
+            .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"])
         
+        self.register("rm", self.remove_task, description="Remove a task.")\
+            .with_positional(pm["task_id"])
+        
+        self.register("info", self.task_info, description="Prints all information for given task.", aliases=["i"])\
+            .with_positional(pm["task_id"])
+
+        self.register("ls", self.ls, description="List tasks", aliases=["list"])\
+            .with_positional(pm["task_id"])\
+            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
+        
+        self.register("status", self.set_status, description="Set the status of a task.")\
+            .with_positional(pm["task_id"], pm["status"])
+        
+        self.register("description", self.set_description, aliases=["desc"], description="Add a description to a task.")\
+            .with_positional(pm["task_id"], pm["description"].with_overrides(nargs="+"))
+
+        self.register("link", self.set_link, aliases=["ln"], description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1")\
+            .with_positional(pm["task_id"], pm["link"])
+        
+        self.register("priority", self.set_priority, description="Set priority level of a task (1-999). Default: 100.")\
+            .with_positional(pm["task_id"], pm["priority"])
+        
+        self.register("tag", self.add_tag, description="Add tag(s) to a task.")\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+
+        self.register("rmtag", self.rm_tag, description="Remove tag(s) from a task.", aliases=["rmt"])\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+        
+        self.register("assign", self.add_assigned, description="Add person(s) to a task.")\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+
+        self.register("unassign", self.rm_assigned, description="Remove person(s) from a task.")\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+        
+        self.register("todo", self.ls_todo, description="List all todo tasks.")\
+            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
+        
+        self.register("todo", self.ls_done, description="List all completed tasks.")\
+            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
+        
+        self.register("doing", self.ls_doing, description="List all todo tasks.", aliases=["prog"])\
+            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
+        
+
         self.register_commands(*[t for t in self.map()])
 
     def map(self) -> list[Cmd]:
         return [
-            # Cmd("new",
-            #     "Add a new task.",
-            #     aliases=["add"],
-            #     args=[pm["task_name"].with_overrides(nargs="+")],
-            #     optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"]],
-            #     func=self.create_task),
-            Cmd("mod",
-                "Modify a task.",
-                aliases=["edit"],
-                args=[pm["task_id"]],
-                optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"]],
-                func=self.modify_task),
-            Cmd("rm",
-                description="Remove a task.",
-                args=[pm["task_id"]],
-                func=self.remove_task),
-            Cmd("info",
-                aliases=["i"],
-                description="Prints all information for given task.",
-                args=[pm["task_id"]],
-                func=self.task_info),
-            Cmd("list",
-                aliases=["ls"],
-                description="List all tasks.",
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]],
-                func=self.ls),
-            Cmd("status",
-                description="Set the status of a task.",
-                args=[pm["task_id"], pm["status"]],
-                func=self.set_status),
-            Cmd("description",
-                aliases=["desc"],
-                description="Add a description to a task.",
-                args=[pm["task_id"], pm["description"].with_overrides(nargs="+")],
-                func=self.set_description),
-            Cmd("link",
-                aliases=["ln"],
-                description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1",
-                args=[pm["task_id"], pm["link"]],
-                func=self.set_link),
-            Cmd("priority",
-                description="Set priority level of a task (1-999). Default: 100.",
-                args=[pm["task_id"], pm["priority"]],
-                func=self.set_priority),
-            Cmd("tag",
-                description="Add tag(s) to task.",
-                args=[pm["task_id"], pm["tags"].with_overrides(nargs="+")],
-                func=self.add_tag),
-            Cmd("rmtag",
-                aliases=["rmt"],
-                description="Remove tag(s) from task.",
-                args=[pm["task_id"], pm["tags"].with_overrides(nargs="+")],
-                func=self.rm_tag),
-            Cmd("assign",
-                description="Assign person(s) to task.",
-                args=[pm["task_id"], pm["assignee"].with_overrides(nargs="+")],
-                func=self.add_assigned),
-            Cmd("unassign",
-                description="Remove person(s) from task.",
-                args=[pm["task_id"], pm["assignee"].with_overrides(nargs="+")],
-                func=self.rm_assigned),
-            Cmd("todo", 
-                description="List all todo tasks.", 
-                func=self.ls_todo, 
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
             Cmd("doing", 
                 aliases=["prog"], 
                 description="List all in progress tasks.", 
