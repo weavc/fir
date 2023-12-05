@@ -44,11 +44,11 @@ def test_cmd_builder_register(default_cmd):
 def test_cmd_builder_wrapper(default_cmd, default_arg):
     builder = CmdBuilder()
     builder.register_command(default_cmd) \
-        .add_optional(
-            copy(default_arg).with_overrides("opt1"),
-            copy(default_arg).with_overrides("opt2")) \
-        .add_optional_flag(copy(default_arg).with_overrides(name="flag1")) \
-        .add_positional(copy(default_arg).with_overrides(name="arg1"))
+        .with_optional(
+            default_arg.with_overrides("opt1"),
+            default_arg.with_overrides("opt2")) \
+        .with_flag(default_arg.with_overrides(name="flag1")) \
+        .with_positional(default_arg.with_overrides(name="arg1"))
 
     cmd = builder.cmds.get("fn")
     assert len(cmd.optionals) == 2
