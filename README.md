@@ -4,12 +4,17 @@
 
 Configurable command line task management tool inspired by emacs org mode & web based task management tools.
 
+Install / Update:
+```
+python -m pip install [--upgrade] weavc-fir
+```
+
 ### Features
 - Support for multiple profiles allowing the user to easily switch between task lists. 
 - Toml configuration files, easy for humans and source control. See: [example](./fir.v1.todo.toml)
 - Configurable outputs (& more to come)
 - Support for tags, due dates, assigned people, notes and more
-- Configurable statuses, with 3 status categories todo, doing, done (on hold category coming soon).
+- Configurable statuses, used to group tasks, define list ordering and colours
 
 View tasks with `fir ls` to see all ongoing tasks:
 
