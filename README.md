@@ -15,11 +15,6 @@ View tasks with `fir ls` to see all ongoing tasks:
 
 ![ls](./.github/screenshots/1143d8c55c079e3e19ecdaf5221eeb68b57c5e73.png)
 
-Or
-- `fir done` shows all completed tasks
-- `fir todo` shows tasks on the todo list
-- `fir prog` shows tasks that are currently in progress
-
 ### Creating/Modifying tasks:
 
 ![Adding a new task](./.github/screenshots/bd79c6bc12c8a755e056e1a1fe85de7dc5e88ca5.png)
