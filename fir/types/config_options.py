@@ -3,7 +3,6 @@ from typing import Literal
 
 ConfigOptions = Literal[
     "status.default",
-    "enable.ls.hide_done_tasks",
     "enable.log_task_post_modify",
     "enable.column.due",
     "enable.column.tags",
@@ -29,11 +28,6 @@ ConfigOptionsMap: dict[ConfigOptions, ConfigOptionsData] = {
         "Default status that will be used when tasks are created",
         "TODO",
         "todo"),
-    "enable.ls.hide_done_tasks": ConfigOptionsData(
-        "enable.ls.hide_done_tasks",
-        "1 to hide done tasks, 0 to show done tasks",
-        "1",
-        "1"),
     "enable.column.due": ConfigOptionsData(
         "enable.column.due",
         "Show [1] or hide [0] due column",

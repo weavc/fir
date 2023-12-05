@@ -3,6 +3,7 @@ import sys
 
 from fir import config
 from fir.cmd.builder.arg_parser import ArgParserSetup
+from fir.cmd.set_commands import SetHandlers
 from fir.cmd.status_commands import StatusHandlers
 from fir.context import Context
 from fir.cmd.base_commands import CommandHandlers
@@ -35,7 +36,7 @@ def cmd():
     parser.add_argument("--scope", action="store",
                         dest="scope", help="Use a specific profile to run this action")
 
-    setup = ArgParserSetup(CommandHandlers(c), ConfigHandlers(c), ProfileHandlers(c), StatusHandlers(c))
+    setup = ArgParserSetup(CommandHandlers(c), ConfigHandlers(c), ProfileHandlers(c), StatusHandlers(c), SetHandlers(c))
     setup.configure_argparser(parser)
 
     args = vars(parser.parse_args())

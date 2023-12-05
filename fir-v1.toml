@@ -197,7 +197,7 @@ name = "Review error handling"
 tags = [
     "complexity:high",
 ]
-status = "todo"
+status = "hold"
 added = "2023-12-02 13:09:13"
 modified = "2023-12-02 13:09:13"
 due = ""
@@ -299,7 +299,7 @@ tags = [
     "complextity:med",
     "feature",
 ]
-status = "prog"
+status = "done"
 added = "2023-12-02 20:57:45"
 modified = "2023-12-05 20:32:14"
 due = ""
@@ -457,7 +457,7 @@ assigned_to = []
 id = "2cob2gk8"
 name = "Allow name value instead of id?"
 tags = []
-status = "todo"
+status = "rejected"
 added = "2023-12-04 16:06:04"
 modified = "2023-12-04 16:06:04"
 due = ""

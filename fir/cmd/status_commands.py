@@ -14,9 +14,6 @@ class StatusHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
-
-        self.register("", self.set_status, description="Set the status of a task.")\
-            .with_positional(pm["task_id"], pm["status"])
         
         self.register("new", self.new_status, description="Set the status of a task.")\
             .with_positional(pm["status"])\
@@ -25,20 +22,6 @@ class StatusHandlers(CmdBuilder):
     
         self.register("hide", self.hide_status, description="Hide or show tasks with this status.")\
             .with_positional(pm["status"])
-
-    def set_status(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        set_status = self.context.profile.set_status(task, self.context.args.get("status"))
-        if not set_status:
-            return self.context.logger.log_error("Invalid status provided")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
 
     def new_status(self):
         color = self.context.args.get("color", "light_blue")
