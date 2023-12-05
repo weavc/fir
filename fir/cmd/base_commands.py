@@ -1,12 +1,11 @@
 from datetime import datetime
 
 
-from fir.builder import Cmd, CmdBuilder
+from fir.cmd.builder import Cmd, CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
 from fir.helpers.dates import datetime_to_date_string
-from fir.types import StatusTypes
 from fir.types.dtos import TaskDto
 from fir.types.parameters import ParameterMap as pm
 
@@ -20,85 +19,36 @@ class CommandHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
-        self.register_commands(*[t for t in self.map()])
 
-    def map(self) -> list[Cmd]:
-        return [
-            Cmd("new",
-                "Add a new task.",
-                aliases=["add"],
-                args=[pm["task_name"].with_overrides(nargs="+")],
-                optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"]],
-                func=self.create_task),
-            Cmd("mod",
-                "Modify a task.",
-                aliases=["edit"],
-                args=[pm["task_id"]],
-                optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"]],
-                func=self.modify_task),
-            Cmd("rm",
-                description="Remove a task.",
-                args=[pm["task_id"]],
-                func=self.remove_task),
-            Cmd("info",
-                aliases=["i"],
-                description="Prints all information for given task.",
-                args=[pm["task_id"]],
-                func=self.task_info),
-            Cmd("list",
-                aliases=["ls"],
-                description="List all tasks.",
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]],
-                func=self.ls),
-            Cmd("status",
-                description="Set the status of a task.",
-                args=[pm["task_id"], pm["status"]],
-                func=self.set_status),
-            Cmd("description",
-                aliases=["desc"],
-                description="Add a description to a task.",
-                args=[pm["task_id"], pm["description"].with_overrides(nargs="+")],
-                func=self.set_description),
-            Cmd("link",
-                aliases=["ln"],
-                description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1",
-                args=[pm["task_id"], pm["link"]],
-                func=self.set_link),
-            Cmd("priority",
-                description="Set priority level of a task (1-999). Default: 100.",
-                args=[pm["task_id"], pm["priority"]],
-                func=self.set_priority),
-            Cmd("tag",
-                description="Add tag(s) to task.",
-                args=[pm["task_id"], pm["tags"].with_overrides(nargs="+")],
-                func=self.add_tag),
-            Cmd("rmtag",
-                aliases=["rmt"],
-                description="Remove tag(s) from task.",
-                args=[pm["task_id"], pm["tags"].with_overrides(nargs="+")],
-                func=self.rm_tag),
-            Cmd("assign",
-                description="Assign person(s) to task.",
-                args=[pm["task_id"], pm["assignee"].with_overrides(nargs="+")],
-                func=self.add_assigned),
-            Cmd("unassign",
-                description="Remove person(s) from task.",
-                args=[pm["task_id"], pm["assignee"].with_overrides(nargs="+")],
-                func=self.rm_assigned),
-            Cmd("todo", 
-                description="List all todo tasks.", 
-                func=self.ls_todo, 
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
-            Cmd("doing", 
-                aliases=["prog"], 
-                description="List all in progress tasks.", 
-                func=self.ls_doing, 
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
-            Cmd("done", 
-                description="List all done/completed tasks.", 
-                func=self.ls_done, 
-                optionals=[pm["status"], pm["task_name"], pm["assignee"], pm["tags"]]),
-        ]
+        self.register("new", self.create_task, description="Add a new task.", aliases=["add"])\
+            .with_positional(pm["task_name"].with_overrides(nargs="+"))\
+            .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"])
+
+        self.register("modify", self.modify_task, description="Modify a task.", aliases=["edit", "mod"])\
+            .with_positional(pm["task_id"])\
+            .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"])
+
+        self.register("remove", self.remove_task, description="Remove a task.", aliases=["rm"])\
+            .with_positional(pm["task_id"])
+
+        self.register("info", self.task_info, description="Prints all information for given task.", aliases=["i"])\
+            .with_positional(pm["task_id"])
+
+        self.register("list", self.ls, description="List tasks", aliases=["ls"])\
+            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])\
+            .with_flag(pm["all"])
+
+        self.register("tag", self.add_tag, description="Add tag(s) to a task.")\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+
+        self.register("rmtag", self.rm_tag, description="Remove tag(s) from a task.", aliases=["rmt"])\
+            .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
+
+        self.register("assign", self.add_assigned, description="Add person(s) to a task.")\
+            .with_positional(pm["task_id"], pm["assignee"].with_overrides(nargs="+"))
+
+        self.register("unassign", self.rm_assigned, description="Remove person(s) from a task.")\
+            .with_positional(pm["task_id"], pm["assignee"].with_overrides(nargs="+"))
 
     def create_task(self):
         status = self.context.profile.data.config.get("status.default", "")
@@ -183,92 +133,30 @@ class CommandHandlers(CmdBuilder):
 
         self.context.log_task(task)
 
-    def ls(self, category: StatusTypes = None):
+    def ls(self):
         tasks = []
         for task in self.context.profile.data.tasks:
             if self.context.args.get("status") and task.status != self.context.args.get("status"):
                 continue
-            if self.context.args.get("task_name") and not self.context.args.get("task_name").lower() in task.name.lower():
+            if self.context.args.get("task_name") and not \
+                    self.context.args.get("task_name").lower() in task.name.lower():
                 continue
             if self.context.args.get("assignee") and self.context.args.get("assignee") not in task.assigned_to:
                 continue
             if self.context.args.get("tags") and self.context.args.get("tags") not in task.tags:
                 continue
-            
-            c, _ = self.context.profile.check_status_type(task.status) 
 
-            if self.context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):
-                if  c == "done":
-                    continue
-            if category and category != c:
+            get_all = self.context.args.get("all", False)
+            status = self.context.profile.get_status_by_name(task.status)
+            if not get_all and task.status != self.context.args.get("status") and status.hide_by_default:
                 continue
 
             tasks.append(task)
 
         self.context.log_task_table(tasks)
 
-    def ls_todo(self):
-        return self.ls("todo")
-
-    def ls_doing(self):
-        return self.ls("doing")
-
-    def ls_done(self):
-        return self.ls("done")
-
-    def set_status(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        set_status = self.context.profile.set_status(task, self.context.args.get("status"))
-        if not set_status:
-            return self.context.logger.log_error("Invalid status provided")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
-
-    def set_description(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        task.description = ' '.join(self.context.args.get("description"))
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
-
-    def set_link(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        task.link = self.context.args.get("link")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
-
-    def set_priority(self, context: Context):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
-        if not passed:
-            return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-
-        task.priority = priority
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+    def ls_category(self):
+        return self.ls(self.context.args.get("status"))
 
     def add_tag(self):
         task = self.context.profile.get_task(self.context.args.get("task_id"))

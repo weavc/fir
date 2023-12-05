@@ -1,6 +1,6 @@
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 
 @dataclass
@@ -33,7 +33,7 @@ class Cmd:
     optionals: list[CmdArg] = field(default_factory=list[CmdArg])
     flags: list[CmdArg] = field(default_factory=list[CmdArg])
 
-    func: Any = None  # Look for a better way to define functions (like delegates in c#?)
+    func: Callable = None  # Look for a better way to define functions (like delegates in c#?)
 
 
 class CmdWrapper:
@@ -42,15 +42,15 @@ class CmdWrapper:
     def __init__(self, cmd: Cmd):
         self.cmd = cmd
 
-    def add_positional(self, *parameters: CmdArg):
+    def with_positional(self, *parameters: CmdArg):
         self.cmd.args.extend(parameters)
         return self
 
-    def add_optional(self, *parameters: CmdArg):
+    def with_optional(self, *parameters: CmdArg):
         self.cmd.optionals.extend(parameters)
         return self
 
-    def add_optional_flag(self, *parameters: CmdArg):
+    def with_flag(self, *parameters: CmdArg):
         self.cmd.flags.extend(parameters)
         return self
 
@@ -60,6 +60,11 @@ class CmdBuilder:
     aliases: list[str]
     cmds: dict[str, Cmd] = {}
 
+    def register(self, name: str, func: Callable, description: str = None, aliases: list[str] = []):
+        cmd = Cmd(name, description=description, aliases=aliases)
+        self.__register(cmd, func)
+        return CmdWrapper(self.cmds[cmd.func.__name__])
+
     def register_command(self, cmd: Cmd, func: Any = None):
         self.__register(cmd, func)
         return CmdWrapper(self.cmds[cmd.func.__name__])
@@ -68,7 +73,7 @@ class CmdBuilder:
         for c in cmd:
             self.__register(c)
 
-    def __register(self, cmd, func=None):
+    def __register(self, cmd, func: Callable = None):
         if func is not None:
             cmd.func = func
 

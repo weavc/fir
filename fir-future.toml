@@ -1,12 +1,14 @@
 name = "fir.future"
 description = ""
+statuses = [
+    { name = "done", color = "light_blue", priority = 400, hide_by_default = true },
+    { name = "maybe", color = "light_yellow", priority = 500, hide_by_default = false },
+    { name = "yes", color = "light_green", priority = 550, hide_by_default = false },
+    { name = "no", color = "red", priority = 850, hide_by_default = true },
+]
 
 [config]
 "status.default" = "maybe"
-"status.todo" = "no"
-"status.doing" = "maybe,yes"
-"status.done" = "done"
-"enable.ls.hide_done_tasks" = "1"
 "enable.log_task_post_modify" = "0"
 "enable.column.due" = "0"
 "enable.column.tags" = "0"
@@ -32,7 +34,7 @@ assigned_to = []
 id = "f1xscrhp"
 name = "'fir-cmd-builder', package up builder project"
 tags = []
-status = "maybe"
+status = "no"
 added = "2023-12-03 22:05:41"
 modified = "2023-12-03 22:05:41"
 due = ""
@@ -45,7 +47,7 @@ assigned_to = []
 id = "d3ra7b8b"
 name = "Add backlog feature"
 tags = []
-status = "yes"
+status = "done"
 added = "2023-12-03 22:06:38"
 modified = "2023-12-03 22:06:38"
 due = ""
@@ -58,7 +60,7 @@ assigned_to = []
 id = "dbudvny3"
 name = "Tracking dates for when work started & finished"
 tags = []
-status = "maybe"
+status = "yes"
 added = "2023-12-03 22:11:25"
 modified = "2023-12-03 22:11:25"
 due = ""
@@ -71,7 +73,7 @@ assigned_to = []
 id = "0ezroiwd"
 name = "Forth status for on hold"
 tags = []
-status = "yes"
+status = "done"
 added = "2023-12-03 22:15:33"
 modified = "2023-12-03 22:15:33"
 due = ""
@@ -87,6 +89,19 @@ tags = []
 status = "maybe"
 added = "2023-12-04 16:03:00"
 modified = "2023-12-04 16:03:00"
+due = ""
+link = ""
+description = ""
+priority = 100
+assigned_to = []
+
+[[tasks]]
+id = "1udvacyl"
+name = "Macros for ls"
+tags = []
+status = "maybe"
+added = "2023-12-05 21:55:52"
+modified = "2023-12-05 21:55:52"
 due = ""
 link = ""
 description = ""

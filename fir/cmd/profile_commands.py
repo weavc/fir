@@ -3,7 +3,7 @@ from tabulate import tabulate
 from termcolor import colored
 from slugify import slugify
 
-from fir.builder import CmdBuilder, Cmd
+from fir.cmd.builder import CmdBuilder, Cmd
 from fir.config import DATA_DIR
 from fir.context import Context
 from fir.data.defaults import default_profile

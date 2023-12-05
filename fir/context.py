@@ -2,12 +2,13 @@ from tabulate import tabulate
 from termcolor import colored
 from fir.data.profile import Profile
 from fir.data.settings import Settings
+from fir.helpers import truncate
 from fir.logger import Logger
 from fir.types.dtos import TaskDto
 
 
 class Context:
-    profile: Profile
+    __profile: Profile
     settings: Settings
     args: tuple[str, dict]
     logger: Logger
@@ -16,13 +17,19 @@ class Context:
         pass
 
     def setup(self, args: dict, profile: Profile, settings: Settings):
-        self.profile = profile
+        self.__profile = profile
         self.settings = settings
         self.args = args
         self.logger = Logger(verbose=args.get("verbose"),
                              pretty=args.get("pretty"),
                              silent=args.get("silent"),
                              debug=args.get("debug"))
+
+    @property
+    def profile(self):
+        if not self.__profile.has_read:
+            self.__profile.read()
+        return self.__profile
 
     def log_task_table_from_statuses(self, statuses: list):
         tasks = []
@@ -33,15 +40,12 @@ class Context:
         self.log_task_table(tasks)
 
     def sort_by_status_type(self, task: TaskDto):
-        is_type, index = self.profile.check_status_type(task.status)
-        if is_type == "todo":
-            return 30000 + task.priority + index
-        if is_type == "doing":
-            return 20000 + task.priority + index
-        if is_type == "done":
-            return 10000 + task.priority + index
+        p = 1000
+        status = self.profile.get_status_by_name(task.status)
+        if status is not None:
+            p = status.priority
 
-        return 100000 + task.priority
+        return p
 
     def log_task_table(self, tasks: list[TaskDto], order: bool = True):
 
@@ -55,7 +59,9 @@ class Context:
         for task in tasks:
             status = self.__get_status_colour(task.status)
 
-            values = [colored(task.id, 'light_grey'), task.name, status]
+            values = [colored(task.id, 'light_grey'),
+                      truncate(task.name, self.profile.try_get_config_value_int("name.truncate")),
+                      status]
             if enabled.get("description"):
                 values.append(task.description)
             if enabled.get("link"):
@@ -106,13 +112,13 @@ class Context:
         self.settings.save()
 
     def __get_status_colour(self, status: str):
-        is_type, _ = self.profile.check_status_type(status)
-        if is_type == "todo":
-            status = colored(status, 'light_red')
-        if is_type == "doing":
-            status = colored(status, 'light_yellow')
-        if is_type == "done":
-            status = colored(status, 'light_green')
+        s = self.profile.get_status_by_name(status)
+        color = None
+        if s is not None:
+            color = s.color
+
+        if color is not None:
+            return colored(status, color)
 
         return status
 

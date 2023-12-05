@@ -1,6 +1,6 @@
 
 import argparse
-from fir.builder import Cmd, CmdBuilder
+from fir.cmd.builder import Cmd, CmdBuilder
 
 
 class ArgParserSetup:

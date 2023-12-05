@@ -2,6 +2,7 @@
 def generate_task_id(not_in: list[str] = []):
     return __generate_id(not_in=not_in)
 
+
 def __generate_id(not_in: list[str] = [], i: int = 0):
     if i > 10000:
         raise Exception("Max iterations exceeded")
@@ -23,3 +24,10 @@ def str2bool(v, default=False):
         return False
     else:
         return default
+
+
+def truncate(s: str, length: int = 0):
+    if length == 0:
+        return s
+
+    return s[:length] + (s[length:] and '...')

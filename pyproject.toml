@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weavc-fir"
-version = "0.1.0-alpha.2"
+version = "0.1.0-alpha.3"
 description = ""
 authors = ["weavc <chrisweaver1@pm.me>"]
 license = "MIT"
@@ -32,7 +32,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.autopep8]
 max_line_length = 120
-# ignore = "E501,W6"  # or ["E501", "W6"]
+ignore = "E501,W6"  # or ["E501", "W6"]
 in-place = true
 recursive = true
 aggressive = 3

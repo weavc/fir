@@ -1,24 +1,27 @@
 import pytest
 from copy import copy
 
-from fir.builder import Cmd, CmdArg, CmdBuilder
+from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
+
 
 @pytest.fixture
 def default_cmd():
     def fn(): pass
     return Cmd(
-        "test_cmd", 
-        "test description", 
+        "test_cmd",
+        "test description",
         aliases=["test", "apple"],
         func=fn)
+
 
 @pytest.fixture
 def default_arg():
     return CmdArg(
-        "test_arg", 
-        "test arg description", 
+        "test_arg",
+        "test arg description",
         aliases=["test", "banana"],
         nargs="+")
+
 
 def test_cmd_builder_register(default_cmd):
     builder = CmdBuilder()
@@ -37,15 +40,16 @@ def test_cmd_builder_register(default_cmd):
     assert builder.cmds[override_fn.__name__] is not None
     assert builder.cmds[override_fn.__name__].func == override_fn
 
+
 def test_cmd_builder_wrapper(default_cmd, default_arg):
     builder = CmdBuilder()
     builder.register_command(default_cmd) \
-        .add_optional(
-            copy(default_arg).with_overrides("opt1"), 
-            copy(default_arg).with_overrides("opt2")) \
-        .add_optional_flag(copy(default_arg).with_overrides(name="flag1")) \
-        .add_positional(copy(default_arg).with_overrides(name="arg1"))
-    
+        .with_optional(
+            default_arg.with_overrides("opt1"),
+            default_arg.with_overrides("opt2")) \
+        .with_flag(default_arg.with_overrides(name="flag1")) \
+        .with_positional(default_arg.with_overrides(name="arg1"))
+
     cmd = builder.cmds.get("fn")
     assert len(cmd.optionals) == 2
     assert len(cmd.flags) == 1
@@ -54,4 +58,3 @@ def test_cmd_builder_wrapper(default_cmd, default_arg):
     assert cmd.args[0].name == "arg1"
     for o in cmd.optionals:
         assert o.name.startswith("opt")
-
