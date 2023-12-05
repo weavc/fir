@@ -5,8 +5,7 @@ from fir.data.defaults import default_profile
 from fir.helpers import str2bool
 from fir.types.config_options import ConfigOptions, ConfigOptionsMap
 from fir.types import StatusTypes
-from fir.types.dtos import TaskDto
-from fir.types.schemas import ProfileDto, ProfileSchema
+from fir.types.dtos import TaskDto, ProfileDto
 from fir.helpers.files import read_toml_file, write_toml_file
 
 
@@ -93,12 +92,12 @@ class Profile:
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)
-        self.data = ProfileSchema().load(d)
+        self.data = ProfileDto.Schema().load(d)
         self.has_read = True
 
     def __save(self):
         self.__check_dir()
-        s = ProfileSchema().dump(self.data)
+        s = ProfileDto.Schema().dump(self.data)
         write_toml_file(self.path, s)
 
     def __check_dir(self):

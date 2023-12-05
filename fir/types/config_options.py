@@ -3,10 +3,6 @@ from typing import Literal
 
 ConfigOptions = Literal[
     "status.default",
-    "status.todo",
-    "status.doing",
-    "status.done",
-    "status.hold",
     "enable.ls.hide_done_tasks",
     "enable.log_task_post_modify",
     "enable.column.due",
@@ -15,7 +11,7 @@ ConfigOptions = Literal[
     "enable.column.description",
     "enable.column.assigned",
     "enable.column.priority",
-    "name.truncate"
+    "name.truncate",
 ]
 
 
@@ -33,26 +29,6 @@ ConfigOptionsMap: dict[ConfigOptions, ConfigOptionsData] = {
         "Default status that will be used when tasks are created",
         "TODO",
         "todo"),
-    "status.todo": ConfigOptionsData(
-        "status.todo",
-        "Comma-seperated list of todo statuses",
-        "TODO,ONHOLD",
-        "todo,hold"),
-    "status.doing": ConfigOptionsData(
-        "status.doing",
-        "Comma-seperated list of doing or in progress statuses",
-        "PROG,PR",
-        "doing"),
-    "status.done": ConfigOptionsData(
-        "status.done",
-        "Comma-seperated list of done statuses",
-        "DONE,REJECTED",
-        "done,rejected"),
-    "status.hold": ConfigOptionsData(
-        "status.hold",
-        "Comma-seperated list of on hold statuses",
-        "HOLD",
-        "hold"),
     "enable.ls.hide_done_tasks": ConfigOptionsData(
         "enable.ls.hide_done_tasks",
         "1 to hide done tasks, 0 to show done tasks",
