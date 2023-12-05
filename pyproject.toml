@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weavc-fir"
-version = "0.1.0-alpha.2"
+version = "0.1.0-alpha.3"
 description = ""
 authors = ["weavc <chrisweaver1@pm.me>"]
 license = "MIT"
