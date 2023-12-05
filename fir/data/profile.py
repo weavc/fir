@@ -27,7 +27,7 @@ class Profile:
 
     def save(self):
         return self.__save()
-    
+
     def read(self):
         return self.__read()
 
@@ -76,7 +76,7 @@ class Profile:
     def check_status_type(self, status: str) -> (StatusTypes | None, int):
         todo = self.get_todo_statuses()
         if status in todo:
-            return "todo", todo.index(status) + 1 
+            return "todo", todo.index(status) + 1
         doing = self.get_doing_statuses()
         if status in doing:
             return "doing", doing.index(status) + 1

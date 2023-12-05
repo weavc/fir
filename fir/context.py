@@ -23,6 +23,7 @@ class Context:
                              pretty=args.get("pretty"),
                              silent=args.get("silent"),
                              debug=args.get("debug"))
+
     @property
     def profile(self):
         if not self.__profile.has_read:

@@ -2,6 +2,7 @@
 def generate_task_id(not_in: list[str] = []):
     return __generate_id(not_in=not_in)
 
+
 def __generate_id(not_in: list[str] = [], i: int = 0):
     if i > 10000:
         raise Exception("Max iterations exceeded")

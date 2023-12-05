@@ -60,7 +60,7 @@ class CmdBuilder:
     aliases: list[str]
     cmds: dict[str, Cmd] = {}
 
-    def register(self, name: str, func: Callable, description: str = None, aliases:list[str]=[]):
+    def register(self, name: str, func: Callable, description: str = None, aliases: list[str] = []):
         cmd = Cmd(name, description=description, aliases=aliases)
         self.__register(cmd, func)
         return CmdWrapper(self.cmds[cmd.func.__name__])
