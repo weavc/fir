@@ -38,9 +38,6 @@ class CommandHandlers(CmdBuilder):
         self.register("ls", self.ls, description="List tasks", aliases=["list"])\
             .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
 
-        self.register("status", self.set_status, description="Set the status of a task.")\
-            .with_positional(pm["task_id"], pm["status"])
-
         self.register("description", self.set_description, aliases=["desc"],
                       description="Add a description to a task.")\
             .with_positional(pm["task_id"], pm["description"].with_overrides(nargs="+"))
@@ -67,14 +64,8 @@ class CommandHandlers(CmdBuilder):
         self.register("unassign", self.rm_assigned, description="Remove person(s) from a task.")\
             .with_positional(pm["task_id"], pm["tags"].with_overrides(nargs="+"))
 
-        self.register("todo", self.ls_todo, description="List all todo tasks.")\
-            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
-
-        self.register("done", self.ls_done, description="List all completed tasks.")\
-            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
-
-        self.register("doing", self.ls_doing, description="List all todo tasks.", aliases=["prog"])\
-            .with_optional(pm["status"], pm["task_name"], pm["assignee"], pm["tags"])
+        self.register("", self.ls_category, description="List all tasks with the matching status", aliases=[])\
+            .with_optional(pm["task_name"], pm["assignee"], pm["tags"])
 
     def create_task(self):
         status = self.context.profile.data.config.get("status.default", "")
@@ -159,7 +150,7 @@ class CommandHandlers(CmdBuilder):
 
         self.context.log_task(task)
 
-    def ls(self, category: StatusTypes = None):
+    def ls(self, category: str = None):
         tasks = []
         for task in self.context.profile.data.tasks:
             if self.context.args.get("status") and task.status != self.context.args.get("status"):
@@ -172,40 +163,19 @@ class CommandHandlers(CmdBuilder):
             if self.context.args.get("tags") and self.context.args.get("tags") not in task.tags:
                 continue
 
-            c, _ = self.context.profile.check_status_type(task.status)
+            status = self.context.profile.get_status_by_name(task.status)
+            if status and not category and status.hide_by_default:
+                continue
 
-            if self.context.profile.try_get_config_value_bool("enable.ls.hide_done_tasks"):
-                if c == "done":
-                    continue
-            if category and category != c:
+            if category and category != task.status:
                 continue
 
             tasks.append(task)
 
         self.context.log_task_table(tasks)
 
-    def ls_todo(self):
-        return self.ls("todo")
-
-    def ls_doing(self):
-        return self.ls("doing")
-
-    def ls_done(self):
-        return self.ls("done")
-
-    def set_status(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error("Task not found")
-
-        set_status = self.context.profile.set_status(task, self.context.args.get("status"))
-        if not set_status:
-            return self.context.logger.log_error("Invalid status provided")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+    def ls_category(self):
+        return self.ls(self.context.args.get("status"))
 
     def set_description(self):
         task = self.context.profile.get_task(self.context.args.get("task_id"))

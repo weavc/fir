@@ -4,8 +4,7 @@ from fir.config import DATA_DIR
 from fir.data.defaults import default_profile
 from fir.helpers import str2bool
 from fir.types.config_options import ConfigOptions, ConfigOptionsMap
-from fir.types import StatusTypes
-from fir.types.dtos import TaskDto, ProfileDto
+from fir.types.dtos import StatusDto, TaskDto, ProfileDto
 from fir.helpers.files import read_toml_file, write_toml_file
 
 
@@ -35,7 +34,7 @@ class Profile:
         return next((x for x in self.data.tasks if x.id.startswith(id)), None)
 
     def set_status(self, task: TaskDto, status: str) -> bool:
-        if status not in self.get_valid_statuses():
+        if status not in self.get_status_names():
             return False
 
         task.status = status
@@ -60,35 +59,15 @@ class Profile:
             return None
         return [x.strip() for x in value.split(',')]
 
-    def get_valid_statuses(self):
-        statuses = []
-        statuses.extend(self.get_todo_statuses())
-        statuses.extend(self.get_doing_statuses())
-        statuses.extend(self.get_done_statuses())
-        return statuses
-
-    def get_todo_statuses(self):
-        return self.try_get_config_value_list("status.todo")
-
-    def get_doing_statuses(self):
-        return self.try_get_config_value_list("status.doing")
-
-    def get_done_statuses(self):
-        return self.try_get_config_value_list("status.done")
-
-    def check_status_type(self, status: str) -> (StatusTypes | None, int):
-        todo = self.get_todo_statuses()
-        if status in todo:
-            return "todo", todo.index(status) + 1
-        doing = self.get_doing_statuses()
-        if status in doing:
-            return "doing", doing.index(status) + 1
-        done = self.get_done_statuses()
-        if status in done:
-            return "done", done.index(status) + 1
-
+    def get_status_by_name(self, name: str) -> StatusDto | None:
+        for s in self.data.statuses:
+            if s.name == name:
+                return s
         return None
 
+    def get_status_names(self) -> list[str]:
+        return [s.name for s in self.data.statuses]
+    
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)

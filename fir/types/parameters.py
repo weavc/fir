@@ -18,6 +18,8 @@ Parameters = Literal[
     "profile_path",
     "profile_name",
     "force",
+    "color",
+    "hide_status"
 ]
 
 ParameterMap: dict[Parameters, CmdArg] = {
@@ -45,4 +47,6 @@ ParameterMap: dict[Parameters, CmdArg] = {
     "profile_path": CmdArg("profile_path", "Path to profile file or directory", aliases=["--path"]),
     "profile_name": CmdArg("profile_name", "Profile name", aliases=[]),
     "force": CmdArg("force", "Forces operation", aliases=["--force"]),
+    "hide_status": CmdArg("hide_status", "Hide tasks assigned to this status by default.", aliases=["--hide"]),
+    "color": CmdArg("color", "Set the color of a status", aliases=["--colour", "--color"]),
 }
