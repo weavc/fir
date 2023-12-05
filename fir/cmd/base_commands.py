@@ -20,16 +20,21 @@ class CommandHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
+
+        self.register("new", self.create_task, description="Add a new task.", aliases=["add"])\
+            .with_positional(pm["task_name"].with_overrides(nargs="+"))\
+            .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"])
+        
         self.register_commands(*[t for t in self.map()])
 
     def map(self) -> list[Cmd]:
         return [
-            Cmd("new",
-                "Add a new task.",
-                aliases=["add"],
-                args=[pm["task_name"].with_overrides(nargs="+")],
-                optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"]],
-                func=self.create_task),
+            # Cmd("new",
+            #     "Add a new task.",
+            #     aliases=["add"],
+            #     args=[pm["task_name"].with_overrides(nargs="+")],
+            #     optionals=[pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"]],
+            #     func=self.create_task),
             Cmd("mod",
                 "Modify a task.",
                 aliases=["edit"],

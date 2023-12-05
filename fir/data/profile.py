@@ -12,6 +12,7 @@ from fir.helpers.files import read_toml_file, write_toml_file
 class Profile:
     path: str
     data: ProfileDto
+    has_read: bool = False
 
     def __init__(self, path: str = None, read: bool = True):
         self.path = path
@@ -26,6 +27,9 @@ class Profile:
 
     def save(self):
         return self.__save()
+    
+    def read(self):
+        return self.__read()
 
     def get_task(self, id: str) -> TaskDto | None:
         return next((x for x in self.data.tasks if x.id.startswith(id)), None)
@@ -71,12 +75,12 @@ class Profile:
 
     def check_status_type(self, status: str) -> (StatusTypes | None, int):
         todo = self.get_todo_statuses()
-        doing = self.get_doing_statuses()
-        done = self.get_done_statuses()
         if status in todo:
             return "todo", todo.index(status) + 1 
+        doing = self.get_doing_statuses()
         if status in doing:
             return "doing", doing.index(status) + 1
+        done = self.get_done_statuses()
         if status in done:
             return "done", done.index(status) + 1
 
@@ -86,6 +90,7 @@ class Profile:
         self.__check_dir()
         d = read_toml_file(self.path)
         self.data = ProfileSchema().load(d)
+        self.has_read = True
 
     def __save(self):
         self.__check_dir()

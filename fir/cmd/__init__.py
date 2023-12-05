@@ -44,8 +44,7 @@ def cmd():
         scope = args.get("scope")
 
     _, profile_path = s.get_profile(scope)
-
-    p = Profile(profile_path)
+    p = Profile(profile_path, read=False)
     c.setup(args, p, s)
 
     c.logger.log_debug(f"Args: {c.args}")

@@ -7,7 +7,7 @@ from fir.types.dtos import TaskDto
 
 
 class Context:
-    profile: Profile
+    __profile: Profile
     settings: Settings
     args: tuple[str, dict]
     logger: Logger
@@ -16,13 +16,18 @@ class Context:
         pass
 
     def setup(self, args: dict, profile: Profile, settings: Settings):
-        self.profile = profile
+        self.__profile = profile
         self.settings = settings
         self.args = args
         self.logger = Logger(verbose=args.get("verbose"),
                              pretty=args.get("pretty"),
                              silent=args.get("silent"),
                              debug=args.get("debug"))
+    @property
+    def profile(self):
+        if not self.__profile.has_read:
+            self.__profile.read()
+        return self.__profile
 
     def log_task_table_from_statuses(self, statuses: list):
         tasks = []
