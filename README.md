@@ -13,11 +13,11 @@ Configurable command line task management tool inspired by emacs org mode & web 
 
 View tasks with `fir ls` to see all ongoing tasks:
 
-![ls](./.github/screenshots/1143d8c55c079e3e19ecdaf5221eeb68b57c5e73.png)
+![ls](https://raw.githubusercontent.com/weavc/fir/main/.github/screenshots/1143d8c55c079e3e19ecdaf5221eeb68b57c5e73.png)
 
 ### Creating/Modifying tasks:
 
-![Adding a new task](./.github/screenshots/bd79c6bc12c8a755e056e1a1fe85de7dc5e88ca5.png)
+![Adding a new task](https://raw.githubusercontent.com/weavc/fir/main/.github/screenshots/bd79c6bc12c8a755e056e1a1fe85de7dc5e88ca5.png)
 
 ### Upcoming features ideas
 - Backlog for tasks that don't show in the regular task lists, but exist in the background ready to be pulled forward.
