@@ -25,8 +25,9 @@ def str2bool(v, default=False):
     else:
         return default
 
+
 def truncate(s: str, length: int = 0):
-    if length is 0:
+    if length == 0:
         return s
-    
+
     return s[:length] + (s[length:] and '...')

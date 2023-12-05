@@ -139,7 +139,7 @@ class CommandHandlers(CmdBuilder):
             if self.context.args.get("status") and task.status != self.context.args.get("status"):
                 continue
             if self.context.args.get("task_name") and not \
-                self.context.args.get("task_name").lower() in task.name.lower():
+                    self.context.args.get("task_name").lower() in task.name.lower():
                 continue
             if self.context.args.get("assignee") and self.context.args.get("assignee") not in task.assigned_to:
                 continue

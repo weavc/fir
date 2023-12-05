@@ -17,10 +17,10 @@ class SetHandlers(CmdBuilder):
 
         self.register("status", self.set_status, description="Set the status of a task.")\
             .with_positional(pm["task_id"], pm["status"])
-        
+
         self.register("priority", self.set_priority, description="Set priority level of a task (1-999). Default: 100.")\
             .with_positional(pm["task_id"], pm["priority"])
-        
+
         self.register("description", self.set_description, aliases=["desc"],
                       description="Add a description to a task.")\
             .with_positional(pm["task_id"], pm["description"].with_overrides(nargs="+"))
@@ -31,7 +31,6 @@ class SetHandlers(CmdBuilder):
             aliases=[],
             description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1")\
             .with_positional(pm["task_id"], pm["link"])
-
 
     def set_status(self):
         task = self.context.profile.get_task(self.context.args.get("task_id"))

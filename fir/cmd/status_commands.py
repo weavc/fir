@@ -5,6 +5,7 @@ from fir.helpers.parse import parse_priority_from_arg
 from fir.types.dtos import StatusDto
 from fir.types.parameters import ParameterMap as pm
 
+
 class StatusHandlers(CmdBuilder):
     name = "status"
     aliases = []
@@ -14,12 +15,12 @@ class StatusHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
-        
+
         self.register("new", self.new_status, description="Set the status of a task.")\
             .with_positional(pm["status"])\
             .with_optional(pm["color"], pm["priority"])\
             .with_flag(pm["hide_status"])
-    
+
         self.register("hide", self.hide_status, description="Hide or show tasks with this status.")\
             .with_positional(pm["status"])
 

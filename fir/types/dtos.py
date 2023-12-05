@@ -41,13 +41,14 @@ class TaskDto:
         def make_task(self, data, **kwargs):
             return TaskDto(**data)
 
+
 @dataclass
 class StatusDto:
     name: str
     color: str
     priority: int = 100
     hide_by_default: bool = False
-    
+
     class Schema(Schema):
         class Meta:
             unknown = EXCLUDE

@@ -67,7 +67,7 @@ class Profile:
 
     def get_status_names(self) -> list[str]:
         return [s.name for s in self.data.statuses]
-    
+
     def __read(self):
         self.__check_dir()
         d = read_toml_file(self.path)
