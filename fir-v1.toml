@@ -17,7 +17,7 @@ statuses = [
 "enable.column.assigned" = "1"
 
 [[tasks]]
-id = "FpB5CDGv"
+id = "FNt5CDGv"
 name = "Toml for config"
 tags = []
 status = "done"
@@ -465,7 +465,7 @@ assigned_to = []
 id = "bsgvhrsc"
 name = "If theres multiple matches on an id, error"
 tags = []
-status = "todo"
+status = "done"
 added = "2023-12-04 16:06:51"
 modified = "2023-12-04 16:06:51"
 due = ""
