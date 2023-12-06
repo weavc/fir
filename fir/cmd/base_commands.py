@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-from fir.cmd.builder import Cmd, CmdBuilder
+from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
@@ -14,7 +14,6 @@ class CommandHandlers(CmdBuilder):
     name = None
     aliases = []
     cmds: dict[str, Cmd] = {}
-
     context: Context
 
     def __init__(self, context: Context):

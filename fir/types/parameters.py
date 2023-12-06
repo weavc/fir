@@ -20,7 +20,8 @@ Parameters = Literal[
     "force",
     "color",
     "hide_status",
-    "all"
+    "all",
+    "order"
 ]
 
 ParameterMap: dict[Parameters, CmdArg] = {
@@ -40,6 +41,7 @@ ParameterMap: dict[Parameters, CmdArg] = {
     "due": CmdArg("due", "Set the due date of task.", aliases=["--due"]),
     "link": CmdArg("link", "Add a link to the task.", aliases=["--link"]),
     "priority": CmdArg("priority", "Set the priority of the task.", aliases=["--priority"]),
+    "order": CmdArg("order", "Ordering value, lower values show first in lists. 0 - 999.", aliases=["--order", "-o"]),
     "tags": CmdArg("tags", "Name(s) of tags against a task.", aliases=["--tag", "-t"]),
     "assignee": CmdArg("assignee", "Name(s) of people to assign to a task.", aliases=["--assigned"]),
     "config_name": CmdArg("config_name", "Name of config property.", aliases=[]),

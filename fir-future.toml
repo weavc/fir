@@ -1,10 +1,10 @@
 name = "fir.future"
 description = ""
 statuses = [
-    { name = "done", color = "light_blue", priority = 400, hide_by_default = true },
-    { name = "maybe", color = "light_yellow", priority = 500, hide_by_default = false },
-    { name = "yes", color = "light_green", priority = 550, hide_by_default = false },
-    { name = "no", color = "red", priority = 850, hide_by_default = true },
+    { name = "done", color = "light_blue", order = 400, hide_by_default = true },
+    { name = "maybe", color = "light_yellow", order = 500, hide_by_default = false },
+    { name = "yes", color = "light_green", order = 550, hide_by_default = false },
+    { name = "no", color = "red", order = 850, hide_by_default = true },
 ]
 
 [config]
