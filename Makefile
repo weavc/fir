@@ -8,4 +8,4 @@ shell:
 	poetry shell
 
 format:
-	autopep8 .
+	autopep8 . && flake8 .
