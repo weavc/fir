@@ -12,19 +12,15 @@ from fir.cmd.config_commands import ConfigHandlers
 from fir.data.profile import Profile
 from fir.data.settings import Settings
 
-
 class FirParser(argparse.ArgumentParser):
     def error(self, message):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(2)
 
-
-def cmd():
-    s = Settings()
-
+def get_parser():
     parser = FirParser(description="Fir, command line task tracking")
-    c = Context()
+
     parser.add_argument("--verbose", "-v", action="store_true",
                         dest="verbose", help="Prints more information", default=False)
     parser.add_argument("--pretty", "-p", action="store_true",
@@ -35,8 +31,22 @@ def cmd():
                         dest="silent", default=False, help="Don't print anything")
     parser.add_argument("--scope", action="store",
                         dest="scope", help="Use a specific profile to run this action")
+    
+    return parser
 
-    setup = ArgParserSetup(CommandHandlers(c), ConfigHandlers(c), ProfileHandlers(c), StatusHandlers(c), SetHandlers(c))
+
+def cmd():
+    s = Settings()
+    c = Context()
+    parser = get_parser()
+
+    setup = ArgParserSetup(
+        CommandHandlers(c), 
+        ConfigHandlers(c), 
+        ProfileHandlers(c), 
+        StatusHandlers(c), 
+        SetHandlers(c))
+    
     setup.configure_argparser(parser)
 
     args = vars(parser.parse_args())
@@ -49,10 +59,10 @@ def cmd():
     p = Profile(profile_path, read=False)
     c.setup(args, p, s)
 
-    c.logger.log_debug(f"Args: {c.args}")
+    c.logger.log_debug(f"Args: {c.args.as_dict()}")
     c.logger.log_debug(f"Env: {config.ENV}")
 
-    command = setup.get_command(args)
+    command = setup.get_command(c.args.as_dict())
     if command is not None:
         c.logger.log_info(f"Running command: {command.name}")
         command.func()

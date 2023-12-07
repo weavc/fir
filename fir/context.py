@@ -1,5 +1,6 @@
 from tabulate import tabulate
 from termcolor import colored
+from fir.args import Args
 from fir.data.profile import Profile
 from fir.data.settings import Settings
 from fir.helpers import truncate
@@ -9,8 +10,8 @@ from fir.types.dtos import TaskDto
 
 class Context:
     __profile: Profile
+    __args: dict
     settings: Settings
-    args: dict
     logger: Logger
 
     def __init__(self):
@@ -19,7 +20,7 @@ class Context:
     def setup(self, args: dict, profile: Profile, settings: Settings):
         self.__profile = profile
         self.settings = settings
-        self.args = args
+        self.__args = args
         self.logger = Logger(verbose=args.get("verbose"),
                              pretty=args.get("pretty"),
                              silent=args.get("silent"),
@@ -30,6 +31,10 @@ class Context:
         if not self.__profile.has_read:
             self.__profile.read()
         return self.__profile
+    
+    @property
+    def args(self) -> Args:
+        return Args(self.__args)
 
     def log_task_table_from_statuses(self, statuses: list):
         tasks = []
@@ -110,12 +115,6 @@ class Context:
 
         self.settings.data.profiles[name] = path
         self.settings.save()
-
-    def get_arg(self, arg: str, default = None):
-        val = self.args.get(arg, default)
-        if val is None:
-            return default
-        return val
 
     def __get_status_colour(self, status: str):
         s = self.profile.get_status_by_name(status)
