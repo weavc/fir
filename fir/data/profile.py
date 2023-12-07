@@ -30,8 +30,14 @@ class Profile:
     def read(self):
         return self.__read()
 
-    def get_task(self, id: str) -> TaskDto | None:
-        return next((x for x in self.data.tasks if x.id.startswith(id)), None)
+    def get_task(self, id: str) -> (TaskDto | None, str):
+        vals = [x for x in self.data.tasks if x.id.startswith(id)]
+        if len(vals) > 1:
+            return None, "Conflicting tasks found, use full id value"            
+        n = next((v for v in vals), None)
+        if n is None:
+            return None, "Task not found"
+        return n, None
 
     def set_status(self, task: TaskDto, status: str) -> bool:
         if status not in self.get_status_names():

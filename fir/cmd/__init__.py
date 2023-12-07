@@ -52,7 +52,7 @@ def cmd():
     c.logger.log_debug(f"Args: {c.args}")
     c.logger.log_debug(f"Env: {config.ENV}")
 
-    command = setup.get_command(args, parser)
+    command = setup.get_command(args)
     if command is not None:
         c.logger.log_info(f"Running command: {command.name}")
         command.func()

@@ -10,7 +10,7 @@ from fir.types.dtos import TaskDto
 class Context:
     __profile: Profile
     settings: Settings
-    args: tuple[str, dict]
+    args: dict
     logger: Logger
 
     def __init__(self):
@@ -43,7 +43,7 @@ class Context:
         p = 1000
         status = self.profile.get_status_by_name(task.status)
         if status is not None:
-            p = status.priority
+            p = status.order
 
         return p
 
@@ -110,6 +110,12 @@ class Context:
 
         self.settings.data.profiles[name] = path
         self.settings.save()
+
+    def get_arg(self, arg: str, default = None):
+        val = self.args.get(arg, default)
+        if val is None:
+            return default
+        return val
 
     def __get_status_colour(self, status: str):
         s = self.profile.get_status_by_name(status)

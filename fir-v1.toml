@@ -1,13 +1,13 @@
 name = "Fir V1 Todo List"
 description = ""
 statuses = [
-    { name = "todo", color = "light_red", priority = 750, hide_by_default = false },
-    { name = "hold", color = "red", priority = 800, hide_by_default = false },
-    { name = "prog", color = "light_blue", priority = 600, hide_by_default = false },
-    { name = "pr", color = "light_yellow", priority = 550, hide_by_default = false },
-    { name = "done", color = "light_green", priority = 500, hide_by_default = true },
-    { name = "rejected", color = "red", priority = 850, hide_by_default = true },
-    { name = "backlog", color = "light_cyan", priority = 900, hide_by_default = true },
+    { name = "todo", color = "light_magenta", order = 750, hide_by_default = false },
+    { name = "hold", color = "red", order = 800, hide_by_default = false },
+    { name = "prog", color = "light_blue", order = 600, hide_by_default = false },
+    { name = "pr", color = "light_yellow", order = 550, hide_by_default = false },
+    { name = "done", color = "light_green", order = 499, hide_by_default = true },
+    { name = "rejected", color = "light_red", order = 850, hide_by_default = true },
+    { name = "backlog", color = "light_cyan", order = 900, hide_by_default = true },
 ]
 
 [config]
@@ -17,7 +17,7 @@ statuses = [
 "enable.column.assigned" = "1"
 
 [[tasks]]
-id = "FpB5CDGv"
+id = "FNt5CDGv"
 name = "Toml for config"
 tags = []
 status = "done"
@@ -465,7 +465,7 @@ assigned_to = []
 id = "bsgvhrsc"
 name = "If theres multiple matches on an id, error"
 tags = []
-status = "todo"
+status = "done"
 added = "2023-12-04 16:06:51"
 modified = "2023-12-04 16:06:51"
 due = ""
@@ -478,7 +478,7 @@ assigned_to = []
 id = "2y7lcaa9"
 name = "Reassign task with a new id"
 tags = []
-status = "todo"
+status = "hold"
 added = "2023-12-04 16:07:27"
 modified = "2023-12-04 16:07:27"
 due = ""

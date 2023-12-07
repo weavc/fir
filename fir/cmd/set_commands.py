@@ -33,9 +33,9 @@ class SetHandlers(CmdBuilder):
             .with_positional(pm["task_id"], pm["link"])
 
     def set_status(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         set_status = self.context.profile.set_status(task, self.context.args.get("status"))
         if not set_status:
@@ -47,9 +47,9 @@ class SetHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def set_link(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         task.link = self.context.args.get("link")
 
@@ -59,9 +59,9 @@ class SetHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def set_priority(self, context: Context):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
         if not passed:
@@ -75,9 +75,9 @@ class SetHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def set_description(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         task.description = ' '.join(self.context.args.get("description"))
 

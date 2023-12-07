@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-from fir.cmd.builder import Cmd, CmdBuilder
+from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
 from fir.context import Context
 from fir.helpers import generate_task_id
 from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
@@ -14,7 +14,6 @@ class CommandHandlers(CmdBuilder):
     name = None
     aliases = []
     cmds: dict[str, Cmd] = {}
-
     context: Context
 
     def __init__(self, context: Context):
@@ -85,9 +84,9 @@ class CommandHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def modify_task(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         if self.context.args.get("status") is not None:
             set_status = self.context.profile.set_status(task, self.context.args.get("status"))
@@ -117,9 +116,9 @@ class CommandHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def remove_task(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         self.context.profile.data.tasks.remove(task)
         self.context.profile.save()
@@ -127,9 +126,9 @@ class CommandHandlers(CmdBuilder):
         return self.context.logger.log_success(f"Removed task {task.name} [{task.id}]")
 
     def task_info(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         self.context.log_task(task)
 
@@ -159,9 +158,9 @@ class CommandHandlers(CmdBuilder):
         return self.ls(self.context.args.get("status"))
 
     def add_tag(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         tags = self.context.args.get("tags")
 
@@ -175,9 +174,9 @@ class CommandHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def rm_tag(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         tags = self.context.args.get("tags")
 
@@ -191,9 +190,9 @@ class CommandHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def add_assigned(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         assignees = self.context.args.get("assignee")
 
@@ -207,9 +206,9 @@ class CommandHandlers(CmdBuilder):
             self.context.log_task(task)
 
     def rm_assigned(self):
-        task = self.context.profile.get_task(self.context.args.get("task_id"))
+        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
         if task is None:
-            return self.context.logger.log_error("Task not found")
+            return self.context.logger.log_error(err)
 
         assignees = self.context.args.get("assignee")
 
