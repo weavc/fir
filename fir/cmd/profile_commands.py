@@ -20,37 +20,23 @@ class ProfileHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
-        self.register_commands(*[t for t in self.map()])
 
-    def map(self) -> list[Cmd]:
-        return [
-            Cmd("link",
-                description="Link an existing fir profile file.",
-                args=[pm["profile_name"], pm["profile_path"]],
-                optionals=[pm["profile_set"]],
-                func=self.link),
-            Cmd("set",
-                aliases=["set"],
-                description="Set scope to target profile. See available profiles using 'fir profile ls'.",
-                args=[pm["profile_name"]],
-                func=self.set),
-            Cmd("create",
-                aliases=["c", "new"],
-                description="Create a new fir profile.",
-                args=[pm["profile_name"]],
-                optionals=[pm["description"], pm["profile_path"]],
-                flags=[pm["profile_set"], pm["force"]],
-                func=self.create),
-            Cmd("remove",
-                aliases=["rm"],
-                description="Remove fir profile. Does not remove the file.",
-                args=[pm["profile_name"]],
-                func=self.remove),
-            Cmd("list",
-                aliases=["ls"],
-                description="List linked profiles.",
-                func=self.ls)
-        ]
+        self.register("link", self.link, description="Link an existing fir profile.")\
+            .with_positional(pm["profile_name"], pm["profile_path"])\
+            .with_optional(pm["profile_set"])
+        
+        self.register("set", self.set, description="Set scope to target profile. See available profiles using 'fir profile ls'.")\
+            .with_positional(pm["profile_name"])
+        
+        self.register("create", self.create, aliases=["new"], description="Create a new fir profile.")\
+            .with_positional(pm["profile_name"])\
+            .with_optional(pm["description"], pm["profile_path"])\
+            .with_flag(pm["profile_set"], pm["force"])
+        
+        self.register("remove", self.remove, description="Remove a fir profile. Does not remove the file.", aliases=["rm"])\
+            .with_positional(pm["profile_name"])
+        
+        self.register("list", self.ls, description="List linked profiles.", aliases=["ls"])
 
     def link(self):
         name = self.context.args.get("profile_name")

@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from fir import config
-from fir.cmd.builder.arg_parser import ArgParserSetup
+from fir.cmd.builder.arg_parser import ArgParserSetup, get_parser
 from fir.cmd.set_commands import SetHandlers
 from fir.cmd.status_commands import StatusHandlers
 from fir.context import Context
@@ -12,42 +12,19 @@ from fir.cmd.config_commands import ConfigHandlers
 from fir.data.profile import Profile
 from fir.data.settings import Settings
 
-class FirParser(argparse.ArgumentParser):
-    def error(self, message):
-        sys.stderr.write('error: %s\n' % message)
-        self.print_help()
-        sys.exit(2)
-
-def get_parser():
-    parser = FirParser(description="Fir, command line task tracking")
-
-    parser.add_argument("--verbose", "-v", action="store_true",
-                        dest="verbose", help="Prints more information", default=False)
-    parser.add_argument("--pretty", "-p", action="store_true",
-                        dest="pretty", default=False)
-    parser.add_argument("--debug", "-d", action="store_true",
-                        dest="debug", default=False, help="Prints dedug info")
-    parser.add_argument("--silent", action="store_true",
-                        dest="silent", default=False, help="Don't print anything")
-    parser.add_argument("--scope", action="store",
-                        dest="scope", help="Use a specific profile to run this action")
-    
-    return parser
-
 
 def cmd():
     s = Settings()
     c = Context()
-    parser = get_parser()
 
     setup = ArgParserSetup(
-        CommandHandlers(c), 
-        ConfigHandlers(c), 
-        ProfileHandlers(c), 
-        StatusHandlers(c), 
+        CommandHandlers(c),
+        ConfigHandlers(c),
+        ProfileHandlers(c),
+        StatusHandlers(c),
         SetHandlers(c))
     
-    setup.configure_argparser(parser)
+    parser = setup.configure_argparser(parser)
 
     args = vars(parser.parse_args())
     scope = s.data.scope
