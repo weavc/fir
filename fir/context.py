@@ -1,11 +1,7 @@
-from tabulate import tabulate
-from termcolor import colored
 from fir.utils.args import Args
 from fir.data.profile import Profile
 from fir.data.settings import Settings
-from fir.utils import truncate
 from fir.utils.logging.logger import Logger
-from fir.types.dtos import TaskDto
 from fir.utils.logging.profile_logging import ProfileLoggingExtensions
 
 
@@ -32,11 +28,11 @@ class Context:
         if not self.__profile.has_read:
             self.__profile.read()
         return self.__profile
-    
+
     @property
     def args(self) -> Args:
         return Args(self.__args)
-    
+
     @property
     def logging(self):
         class LoggingExtensions:

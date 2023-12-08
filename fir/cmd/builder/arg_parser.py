@@ -3,11 +3,13 @@ import sys
 
 from fir.cmd.builder import Cmd, CmdBuilder
 
+
 class FirParser(argparse.ArgumentParser):
     def error(self, message):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(2)
+
 
 class ArgParserSetup:
 
@@ -36,12 +38,12 @@ class ArgParserSetup:
         handler = self.__handler_or_default(command)
         if handler is None:
             return
-        
+
         if handler.name is None:
             sub_command = command
         else:
             sub_command = args.get("sub_command")
-    
+
         for c in handler.cmds:
             cmd: Cmd = handler.cmds.get(c)
             aliases = cmd.aliases + [cmd.name]
@@ -52,7 +54,7 @@ class ArgParserSetup:
 
     def __handler_or_default(self, c: str):
         h = None
-        none_handlers = [h for h in self.handlers if h.name == None]
+        none_handlers = [h for h in self.handlers if h.name is None]
         if len(none_handlers) > 0:
             h = none_handlers.pop()
 
@@ -61,7 +63,7 @@ class ArgParserSetup:
             h = handlers.pop()
 
         return h
-    
+
     def __new_parser(self):
         parser = FirParser(description="Fir, command line task tracking")
 
@@ -75,10 +77,10 @@ class ArgParserSetup:
                             dest="silent", default=False, help="Don't print anything")
         parser.add_argument("--scope", action="store",
                             dest="scope", help="Use a specific profile to run this action")
-        
+
         return parser
-    
-    def __setup_handlers(self, command: Cmd, sub: argparse.ArgumentParser, parser = None):
+
+    def __setup_handlers(self, command: Cmd, sub: argparse.ArgumentParser, parser=None):
         if parser is None:
             parser = sub.add_parser(command.name, aliases=command.aliases, help=command.description)
 

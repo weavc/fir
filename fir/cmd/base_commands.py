@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
+from fir.cmd.builder import Cmd, CmdBuilder
 from fir.context import Context
 from fir.utils import generate_task_id
 from fir.utils.parse import parse_date_from_arg, parse_priority_from_arg

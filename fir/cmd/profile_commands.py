@@ -24,18 +24,21 @@ class ProfileHandlers(CmdBuilder):
         self.register("link", self.link, description="Link an existing fir profile.")\
             .with_positional(pm["profile_name"], pm["profile_path"])\
             .with_optional(pm["profile_set"])
-        
-        self.register("set", self.set, description="Set scope to target profile. See available profiles using 'fir profile ls'.")\
+
+        self.register(
+            "set",
+            self.set,
+            description="Set scope to target profile. See available profiles using 'fir profile ls'.")\
             .with_positional(pm["profile_name"])
-        
+
         self.register("create", self.create, aliases=["new"], description="Create a new fir profile.")\
             .with_positional(pm["profile_name"])\
             .with_optional(pm["description"], pm["profile_path"])\
             .with_flag(pm["profile_set"], pm["force"])
-        
+
         self.register("remove", self.remove, description="Remove a fir profile. Does not remove the file.", aliases=["rm"])\
             .with_positional(pm["profile_name"])
-        
+
         self.register("list", self.ls, description="List linked profiles.", aliases=["ls"])
 
     def link(self):

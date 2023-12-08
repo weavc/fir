@@ -33,7 +33,7 @@ class Profile:
     def get_task(self, id: str) -> (TaskDto | None, str):
         vals = [x for x in self.data.tasks if x.id.startswith(id)]
         if len(vals) > 1:
-            return None, "Conflicting tasks found, use full id value"            
+            return None, "Conflicting tasks found, use full id value"
         n = next((v for v in vals), None)
         if n is None:
             return None, "Task not found"

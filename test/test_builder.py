@@ -1,5 +1,4 @@
 import pytest
-from copy import copy
 
 from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
 

@@ -1,8 +1,5 @@
-import argparse
-import sys
-
 from fir import config
-from fir.cmd.builder.arg_parser import ArgParserSetup, get_parser
+from fir.cmd.builder.arg_parser import ArgParserSetup
 from fir.cmd.set_commands import SetHandlers
 from fir.cmd.status_commands import StatusHandlers
 from fir.context import Context
@@ -23,8 +20,8 @@ def cmd():
         ProfileHandlers(c),
         StatusHandlers(c),
         SetHandlers(c))
-    
-    parser = setup.configure_argparser(parser)
+
+    parser = setup.configure_argparser()
 
     args = vars(parser.parse_args())
     scope = s.data.scope

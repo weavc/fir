@@ -22,13 +22,17 @@ class ConfigHandlers(CmdBuilder):
 
         self.register("set", self.set_config_value, description="Set value for config options.")\
             .with_positional(pm["config_name"], pm["config_value"])
-        
+
         self.register("rm", self.remove_config_value, description="Remove value for config options.")\
             .with_positional(pm["config_name"])
-        
+
         self.register("list", self.list_config_values, description="List all set config options.", aliases=["ls"])
 
-        self.register("options", self.list_config_options, description="List all available config options.", aliases=["opts", "opt"])
+        self.register(
+            "options",
+            self.list_config_options,
+            description="List all available config options.",
+            aliases=["opts", "opt"])
 
     def get_config_value(self):
         if self.context.args.get("config_name") not in get_args(ConfigOptions):

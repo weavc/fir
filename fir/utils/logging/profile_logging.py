@@ -15,7 +15,6 @@ class ProfileLoggingExtensions:
         self.profile = profile
         self.logger = logger
 
-    
     def log_task_table(self, tasks: list[TaskDto], order: bool = True):
         table = []
         if order:
