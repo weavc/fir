@@ -1,4 +1,4 @@
-from fir.helpers.dates import str_to_date_string
+from fir.utils.dates import str_to_date_string
 
 
 def parse_date_from_arg(date: str) -> (bool, str):

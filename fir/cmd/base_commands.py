@@ -1,11 +1,11 @@
 from datetime import datetime
 
 
-from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
+from fir.cmd.builder import Cmd, CmdBuilder
 from fir.context import Context
-from fir.helpers import generate_task_id
-from fir.helpers.parse import parse_date_from_arg, parse_priority_from_arg
-from fir.helpers.dates import datetime_to_date_string
+from fir.utils import generate_task_id
+from fir.utils.parse import parse_date_from_arg, parse_priority_from_arg
+from fir.utils.dates import datetime_to_date_string
 from fir.types.dtos import TaskDto
 from fir.types.parameters import ParameterMap as pm
 
@@ -81,7 +81,7 @@ class CommandHandlers(CmdBuilder):
         self.context.logger.log_success(f"Added task \"{task.name}\" [{task.id}]")
 
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def modify_task(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -113,7 +113,7 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task \"{task.name}\" [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def remove_task(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -130,7 +130,7 @@ class CommandHandlers(CmdBuilder):
         if task is None:
             return self.context.logger.log_error(err)
 
-        self.context.log_task(task)
+        self.context.logging.profile.log_task(task)
 
     def ls(self):
         tasks = []
@@ -152,7 +152,7 @@ class CommandHandlers(CmdBuilder):
 
             tasks.append(task)
 
-        self.context.log_task_table(tasks)
+        self.context.logging.profile.log_task_table(tasks)
 
     def ls_category(self):
         return self.ls(self.context.args.get("status"))
@@ -171,7 +171,7 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def rm_tag(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -187,7 +187,7 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def add_assigned(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -203,7 +203,7 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def rm_assigned(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -219,4 +219,4 @@ class CommandHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)

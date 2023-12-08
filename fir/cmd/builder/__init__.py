@@ -1,6 +1,6 @@
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Callable
 
 
 @dataclass
@@ -33,7 +33,7 @@ class Cmd:
     optionals: list[CmdArg] = field(default_factory=list[CmdArg])
     flags: list[CmdArg] = field(default_factory=list[CmdArg])
 
-    func: Callable = None  # Look for a better way to define functions (like delegates in c#?)
+    func: Callable = None
 
 
 class CmdWrapper:
@@ -64,14 +64,6 @@ class CmdBuilder:
         cmd = Cmd(name, description=description, aliases=aliases)
         self.__register(cmd, func)
         return CmdWrapper(self.cmds[cmd.func.__name__])
-
-    def register_command(self, cmd: Cmd, func: Any = None):
-        self.__register(cmd, func)
-        return CmdWrapper(self.cmds[cmd.func.__name__])
-
-    def register_commands(self, *cmd: Cmd):
-        for c in cmd:
-            self.__register(c)
 
     def __register(self, cmd, func: Callable = None):
         if func is not None:

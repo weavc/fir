@@ -17,33 +17,22 @@ class ConfigHandlers(CmdBuilder):
 
     def __init__(self, context: Context):
         self.context = context
-        self.register_commands(*[t for t in self.map()])
+        self.register("get", self.get_config_value, description="Get value for config option.")\
+            .with_positional(pm["config_name"])
 
-    def map(self) -> list[Cmd]:
-        return [
-            Cmd("get",
-                aliases=["g"],
-                description="Get value for config option.",
-                args=[pm["config_name"]],
-                func=self.get_config_value),
-            Cmd("set",
-                aliases=["s"],
-                description="Set value for config option.",
-                args=[pm["config_name"], pm["config_value"]],
-                func=self.set_config_value),
-            Cmd("rm",
-                description="Remove value for a config option.",
-                args=[pm["config_name"]],
-                func=self.remove_config_value),
-            Cmd("ls",
-                aliases=["list"],
-                description="List all set config options.",
-                func=self.list_config_values),
-            Cmd("options",
-                aliases=["opt", "opts"],
-                description="List all available config options.",
-                func=self.list_config_options)
-        ]
+        self.register("set", self.set_config_value, description="Set value for config options.")\
+            .with_positional(pm["config_name"], pm["config_value"])
+
+        self.register("rm", self.remove_config_value, description="Remove value for config options.")\
+            .with_positional(pm["config_name"])
+
+        self.register("list", self.list_config_values, description="List all set config options.", aliases=["ls"])
+
+        self.register(
+            "options",
+            self.list_config_options,
+            description="List all available config options.",
+            aliases=["opts", "opt"])
 
     def get_config_value(self):
         if self.context.args.get("config_name") not in get_args(ConfigOptions):

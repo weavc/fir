@@ -3,7 +3,7 @@ from datetime import datetime
 
 from marshmallow import Schema, fields, post_load, validate, EXCLUDE
 
-from fir.helpers.dates import datetime_to_date_string
+from fir.utils.dates import datetime_to_date_string
 from fir.types.config_options import ConfigOptions
 
 

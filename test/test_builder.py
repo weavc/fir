@@ -1,18 +1,11 @@
 import pytest
-from copy import copy
 
 from fir.cmd.builder import Cmd, CmdArg, CmdBuilder
 
 
-@pytest.fixture
-def default_cmd():
-    def fn(): pass
-    return Cmd(
-        "test_cmd",
-        "test description",
-        aliases=["test", "apple"],
-        func=fn)
-
+default_name = "test_cmd"
+default_description = "test description"
+aliases = ["test", "apple"]
 
 @pytest.fixture
 def default_arg():
@@ -23,27 +16,29 @@ def default_arg():
         nargs="+")
 
 
-def test_cmd_builder_register(default_cmd):
+def test_cmd_builder_register():
+    def fn(): pass
     builder = CmdBuilder()
-    builder.register_command(default_cmd)
+    builder.register(default_name, fn, description=default_description, aliases=aliases)
 
     assert len(builder.cmds.keys()) == 1
     assert builder.cmds["fn"] is not None
-    assert builder.cmds.get("fn").name == default_cmd.name
-    assert builder.cmds.get("fn").description == default_cmd.description
-    assert builder.cmds.get("fn").aliases == default_cmd.aliases
-    assert builder.cmds.get("fn").func == default_cmd.func
+    assert builder.cmds.get("fn").name == default_name
+    assert builder.cmds.get("fn").description == default_description
+    assert builder.cmds.get("fn").aliases == aliases
+    assert builder.cmds.get("fn").func == fn
 
     def override_fn(): pass
-    builder.register_command(default_cmd, func=override_fn)
+    builder.register(default_name, override_fn, description=default_description, aliases=aliases)
     assert len(builder.cmds.keys()) == 2
     assert builder.cmds[override_fn.__name__] is not None
     assert builder.cmds[override_fn.__name__].func == override_fn
 
 
-def test_cmd_builder_wrapper(default_cmd, default_arg):
+def test_cmd_builder_wrapper(default_arg):
+    def fn(): pass
     builder = CmdBuilder()
-    builder.register_command(default_cmd) \
+    builder.register(default_name, fn, description=default_description, aliases=aliases) \
         .with_optional(
             default_arg.with_overrides("opt1"),
             default_arg.with_overrides("opt2")) \

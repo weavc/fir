@@ -3,7 +3,7 @@ import os
 from fir.config import DATA_DIR
 from fir.data.defaults import default_settings
 from fir.types.dtos import SettingsDto
-from fir.helpers.files import read_toml_file, write_toml_file
+from fir.utils.files import read_toml_file, write_toml_file
 
 
 class Settings:

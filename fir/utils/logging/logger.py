@@ -26,7 +26,7 @@ class Logger:
     def log_debug(self, message: str):
         if not self.debug:
             return
-        self.log(f'{colored("[Dedug]:", "blue", attrs=["bold"])} {message}')
+        self.log(f'{colored("[Debug]:", "blue", attrs=["bold"])} {message}')
 
     def log_dict(self, obj: dict):
         if self.pretty:
