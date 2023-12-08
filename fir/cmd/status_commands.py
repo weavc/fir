@@ -4,7 +4,7 @@ import tabulate
 from termcolor import colored
 from fir.cmd.builder import CmdBuilder
 from fir.context import Context
-from fir.helpers.parse import parse_priority_from_arg
+from fir.utils.parse import parse_priority_from_arg
 from fir.types.dtos import StatusDto
 from fir.types.parameters import ParameterMap as pm
 

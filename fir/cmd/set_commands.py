@@ -1,7 +1,7 @@
 from cmd import Cmd
 from fir.cmd.builder import CmdBuilder
 from fir.context import Context
-from fir.helpers.parse import parse_priority_from_arg
+from fir.utils.parse import parse_priority_from_arg
 from fir.types.parameters import ParameterMap as pm
 
 
@@ -44,7 +44,7 @@ class SetHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def set_link(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -56,7 +56,7 @@ class SetHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def set_priority(self, context: Context):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -72,7 +72,7 @@ class SetHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
 
     def set_description(self):
         task, err = self.context.profile.get_task(self.context.args.get("task_id"))
@@ -84,4 +84,4 @@ class SetHandlers(CmdBuilder):
         self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.log_task(task)
+            self.context.logging.profile.log_task(task)
