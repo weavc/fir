@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weavc-fir"
-version = "0.1.0-alpha.5"
+version = "0.1.0-beta.1"
 description = ""
 authors = ["weavc <chrisweaver1@pm.me>"]
 license = "MIT"
@@ -21,7 +21,6 @@ python-slugify = "^8.0.1"
 pytest = "^6.0.0"
 flake8 = "^6.1.0"
 autopep8 = "2.0.4"
-tox = "4.11.4"
 
 [tool.poetry.scripts]
 fir = 'fir.cmd:cmd'

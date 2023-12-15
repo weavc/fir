@@ -43,9 +43,9 @@ class StatusHandlers(CmdBuilder):
         self.register("list", self.list_status, description="List avaiable statuses.", aliases=["ls"])
 
     def new_status(self):
-        color = self.context.get_arg("color", "light_blue")
-        hide_status = self.context.get_arg("hide_status", True)
-        passed, order = parse_priority_from_arg(self.context.get_arg("order"), 600)
+        color = self.context.args.get("color", "light_blue")
+        hide_status = self.context.args.get("hide_status", True)
+        passed, order = parse_priority_from_arg(self.context.args.get("order"), 600)
         if not passed:
             return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
 
@@ -60,7 +60,7 @@ class StatusHandlers(CmdBuilder):
         if status is None:
             return self.context.logger.log_error("Could not find status.")
 
-        status.color = self.context.get_arg("color", "light_blue")
+        status.color = self.context.args.get("color", "light_blue")
 
         self.context.profile.save()
         self.context.logger.log_success(f"Set color of status to \"{status.color}\"")
@@ -70,7 +70,7 @@ class StatusHandlers(CmdBuilder):
         if status is None:
             return self.context.logger.log_error("Could not find status.")
 
-        passed, order = parse_priority_from_arg(self.context.get_arg("order"), 600)
+        passed, order = parse_priority_from_arg(self.context.args.get("order"), 600)
         if not passed:
             return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
 

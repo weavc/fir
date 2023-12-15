@@ -12,9 +12,12 @@ class SetHandlers(CmdBuilder):
 
     context: Context
 
-    def __init__(self, context: Context):
+    def __init__(self, context: Context, register = True):
         self.context = context
 
+        if not register:
+            return
+        
         self.register("status", self.set_status, description="Set the status of a task.")\
             .with_positional(pm["task_id"], pm["status"])
 
