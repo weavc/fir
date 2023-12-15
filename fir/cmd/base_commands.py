@@ -1,7 +1,9 @@
 from datetime import datetime
+from fir.cmd import status_commands
 
 
 from fir.cmd.builder import Cmd, CmdBuilder
+from fir.cmd.set_commands import SetHandlers
 from fir.context import Context
 from fir.utils import generate_task_id
 from fir.utils.parse import parse_date_from_arg, parse_priority_from_arg
@@ -26,7 +28,10 @@ class CommandHandlers(CmdBuilder):
         self.register("modify", self.modify_task, description="Modify a task.", aliases=["edit", "mod"])\
             .with_positional(pm["task_id"])\
             .with_optional(pm["status"], pm["due"], pm["link"], pm["priority"], pm["description"], pm["task_name"])
-
+        
+        self.register("mods", SetHandlers(context, register=False).set_status, description="Update the status of a task.", aliases=["ms"])\
+            .with_positional(pm["task_id"], pm["status"])
+        
         self.register("remove", self.remove_task, description="Remove a task.", aliases=["rm"])\
             .with_positional(pm["task_id"])
 
