@@ -53,6 +53,10 @@ class CommandHandlers(CmdBuilder):
 
         self.register("unassign", self.rm_assigned, description="Remove person(s) from a task.")\
             .with_positional(pm["task_id"], pm["assignee"].with_overrides(nargs="+"))
+        
+        self.register("set-status", self.set_status, description="Set the status of a task.", aliases=["ss"])\
+            .with_positional(pm["task_id"], pm["status"])
+
 
     def create_task(self):
         status = self.context.profile.data.config.get("status.default", "")
@@ -225,3 +229,7 @@ class CommandHandlers(CmdBuilder):
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
+
+    def set_status(self):
+        sh = SetHandlers(self.context, register=False)
+        return sh.set_status()
