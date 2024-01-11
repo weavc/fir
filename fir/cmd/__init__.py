@@ -1,3 +1,4 @@
+import os
 from fir import config
 from fir.cmd.builder.arg_parser import ArgParserSetup
 from fir.cmd.set_commands import SetHandlers
@@ -28,6 +29,9 @@ def cmd():
 
     if args.get("scope"):
         scope = args.get("scope")
+
+    if args.get("pretty") == True:
+        os.environ["FORCE_COLOR"] = "1"
 
     _, profile_path = s.get_profile(scope)
     p = Profile(profile_path, read=False)
