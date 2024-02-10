@@ -1,3 +1,4 @@
+from ast import Tuple
 import os
 
 from fir.config import DATA_DIR
@@ -30,7 +31,7 @@ class Profile:
     def read(self):
         return self.__read()
 
-    def get_task(self, id: str) -> (TaskDto | None, str):
+    def get_task(self, id: str) -> Tuple[TaskDto | None, str]:
         vals = [x for x in self.data.tasks if x.id.startswith(id)]
         if len(vals) > 1:
             return None, "Conflicting tasks found, use full id value"
