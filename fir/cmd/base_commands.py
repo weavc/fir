@@ -1,9 +1,8 @@
 from datetime import datetime
 from fir.cmd import status_commands
-
-
 from fir.cmd.builder import Cmd, CmdBuilder
 from fir.cmd.set_commands import SetHandlers
+from fir.handlers import set, base
 from fir.context import Context
 from fir.utils import generate_task_id
 from fir.utils.parse import parse_date_from_arg, parse_priority_from_arg
@@ -57,35 +56,10 @@ class CommandHandlers(CmdBuilder):
         self.register("set-status", self.set_status, description="Set the status of a task.", aliases=["ss"])\
             .with_positional(pm["task_id"], pm["status"])
 
-
     def create_task(self):
-        status = self.context.profile.data.config.get("status.default", "")
-        if self.context.args.get("status"):
-            status = self.context.args.get("status")
-
-        success, due = parse_date_from_arg(self.context.args.get("due"))
-        if not success:
-            return self.context.logger.log_error("Unable to parse date from due date")
-
-        task_name = ' '.join(self.context.args.get("task_name"))
-        task = TaskDto(generate_task_id(not_in=[t.id for t in self.context.profile.data.tasks]), task_name, due=due)
-
-        set_status = self.context.profile.set_status(task, status)
-        if not set_status:
-            return self.context.logger.log_error("Invalid status provided")
-
-        if (self.context.args.get("priority")):
-            passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
-            if not passed:
-                return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-            task.priority = priority
-        if self.context.args.get("description"):
-            task.description = self.context.args.get("description")
-        if self.context.args.get("link"):
-            task.link = self.context.args.get("link")
-
-        self.context.profile.data.tasks.append(task)
-        self.context.profile.save()
+        task, err = base.add_assigned(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
 
         self.context.logger.log_success(f"Added task \"{task.name}\" [{task.id}]")
 
@@ -93,45 +67,19 @@ class CommandHandlers(CmdBuilder):
             self.context.logging.profile.log_task(task)
 
     def modify_task(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.modify_task(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        if self.context.args.get("status") is not None:
-            set_status = self.context.profile.set_status(task, self.context.args.get("status"))
-            if not set_status:
-                return self.context.logger.log_error("Invalid status provided")
-        if self.context.args.get("task_name") is not None:
-            task.name = self.context.args.get("task_name")
-        if self.context.args.get("due"):
-            success, due = parse_date_from_arg(self.context.args.get("due"))
-            if not success:
-                return self.context.logger.log_error("Unable to parse date from due date")
-            task.due = due
-        if (self.context.args.get("priority")):
-            passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
-            if not passed:
-                return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-            task.priority = priority
-        if self.context.args.get("description"):
-            task.description = self.context.args.get("description")
-        if self.context.args.get("link"):
-            task.link = self.context.args.get("link")
-
-        task.modified = datetime_to_date_string(datetime.now())
-        self.context.profile.save()
+        
         self.context.logger.log_success(f"Updated task \"{task.name}\" [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
 
     def remove_task(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.add_assigned(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        self.context.profile.data.tasks.remove(task)
-        self.context.profile.save()
-
+        
         return self.context.logger.log_success(f"Removed task {task.name} [{task.id}]")
 
     def task_info(self):
@@ -167,69 +115,39 @@ class CommandHandlers(CmdBuilder):
         return self.ls(self.context.args.get("status"))
 
     def add_tag(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.add_tag(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        tags = self.context.args.get("tags")
-
-        for t in tags:
-            if t not in task.tags:
-                task.tags.append(t)
-
-        self.context.profile.save()
+        
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
 
     def rm_tag(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.rm_tag(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        tags = self.context.args.get("tags")
-
-        for t in tags:
-            if t in task.tags:
-                task.tags.remove(t)
-
-        self.context.profile.save()
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
 
     def add_assigned(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.add_assigned(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        assignees = self.context.args.get("assignee")
-
-        for a in assignees:
-            if a not in task.assigned_to:
-                task.assigned_to.append(a)
-
-        self.context.profile.save()
+         
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
 
     def rm_assigned(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
+        task, err = base.rm_assigned(self.context)
+        if err is not None:
             return self.context.logger.log_error(err)
-
-        assignees = self.context.args.get("assignee")
-
-        for a in assignees:
-            if a in task.assigned_to:
-                task.assigned_to.remove(a)
-
-        self.context.profile.save()
+        
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
 
     def set_status(self):
-        sh = SetHandlers(self.context, register=False)
-        return sh.set_status()
+        set.status(self.context)

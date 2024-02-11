@@ -7,7 +7,7 @@ from fir.context import Context
 from fir.utils.parse import parse_priority_from_arg
 from fir.types.dtos import StatusDto
 from fir.types.parameters import ParameterMap as pm
-
+from fir.handlers import status, set
 
 class StatusHandlers(CmdBuilder):
     name = "status"
@@ -43,61 +43,39 @@ class StatusHandlers(CmdBuilder):
         self.register("list", self.list_status, description="List avaiable statuses.", aliases=["ls"])
 
     def new_status(self):
-        color = self.context.args.get("color", "light_blue")
-        hide_status = self.context.args.get("hide_status", True)
-        passed, order = parse_priority_from_arg(self.context.args.get("order"), 600)
-        if not passed:
-            return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-
-        status = StatusDto(self.context.args.get("status"), color, order=order, hide_by_default=hide_status)
-        self.context.profile.data.statuses.append(status)
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Added status \"{status.name}\"")
+        s, err = s.new(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
+        
+        self.context.logger.log_success(f"Added status \"{s.name}\"")
 
     def set_colour_status(self):
-        status = self.context.profile.get_status_by_name(self.context.args.get("status"))
-        if status is None:
-            return self.context.logger.log_error("Could not find status.")
-
-        status.color = self.context.args.get("color", "light_blue")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Set color of status to \"{status.color}\"")
+        s, err = status.colour(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
+        
+        self.context.logger.log_success(f"Set color of status to \"{s.color}\"")
 
     def set_order(self):
-        status = self.context.profile.get_status_by_name(self.context.args.get("status"))
-        if status is None:
-            return self.context.logger.log_error("Could not find status.")
-
-        passed, order = parse_priority_from_arg(self.context.args.get("order"), 600)
-        if not passed:
-            return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-
-        status.order = order
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Set order value of status \"{status.name}\" to {status.order}.")
+        s, err = status.order(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
+        
+        self.context.logger.log_success(f"Set order value of status \"{s.name}\" to {s.order}.")
 
     def hide_status(self):
-        status = self.context.profile.get_status_by_name(self.context.args.get("status"))
-        if status is None:
-            return self.context.logger.log_error("Could not find status.")
-
-        status.hide_by_default = not status.hide_by_default
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Set hide status to \"{status.hide_by_default}\"")
+        s, err = status.hide(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
+        
+        self.context.logger.log_success(f"Set hide status to \"{s.hide_by_default}\"")
 
     def rm_status(self):
-        status = self.context.profile.get_status_by_name(self.context.args.get("status"))
-        if status is None:
-            return self.context.logger.log_error("Could not find status.")
-
-        self.context.profile.data.statuses.remove(status)
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Removed status \"{status.name}\"")
+        s, err = status.rm(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err)
+        
+        self.context.logger.log_success(f"Removed status \"{s.name}\"")
 
     def list_status(self):
         table = []

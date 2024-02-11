@@ -1,7 +1,7 @@
-from cmd import Cmd
+ so rather than like json or whatever you can use that.from cmd import Cmd
 from fir.cmd.builder import CmdBuilder
 from fir.context import Context
-from fir.utils.parse import parse_priority_from_arg
+from fir.handlers import SetHandlers as set
 from fir.types.parameters import ParameterMap as pm
 
 
@@ -35,56 +35,36 @@ class SetHandlers(CmdBuilder):
             description="Add a link to a task. i.e. https://github.com/weavc/fir/issues/1")\
             .with_positional(pm["task_id"], pm["link"])
 
-    def set_status(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error(err)
-
-        set_status = self.context.profile.set_status(task, self.context.args.get("status"))
-        if not set_status:
-            return self.context.logger.log_error("Invalid status provided")
-
-        self.context.profile.save()
+    def log_updated(self, task):
         self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
         if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
             self.context.logging.profile.log_task(task)
+
+
+    def set_status(self):
+        task, err = set.status(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err.message)
+
+        self.log_updated(task)
 
     def set_link(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error(err)
-
-        task.link = self.context.args.get("link")
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.logging.profile.log_task(task)
-
-    def set_priority(self, context: Context):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error(err)
-
-        passed, priority = parse_priority_from_arg(self.context.args.get("priority"))
-        if not passed:
-            return self.context.logger.log_error("Invalid priorty value. Must be an integer and between 1 - 999.")
-
-        task.priority = priority
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.logging.profile.log_task(task)
+        task, err = set.link(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err.message)
+        
+        self.log_updated(task)
+        
+    def set_priority(self):
+        task, err = set.priority(self.context.args.get("task_id"))
+        if err is not None:
+            return self.context.logger.log_error(err.message)
+        
+        self.log_updated(task)
 
     def set_description(self):
-        task, err = self.context.profile.get_task(self.context.args.get("task_id"))
-        if task is None:
-            return self.context.logger.log_error(err)
-
-        task.description = ' '.join(self.context.args.get("description"))
-
-        self.context.profile.save()
-        self.context.logger.log_success(f"Updated task {task.name} [{task.id}]")
-        if self.context.profile.try_get_config_value_bool("enable.log_task_post_modify"):
-            self.context.logging.profile.log_task(task)
+        task, err = set.description(self.context)
+        if err is not None:
+            return self.context.logger.log_error(err.message)
+        
+        self.log_updated(task)
