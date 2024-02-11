@@ -6,6 +6,14 @@ from marshmallow import Schema, fields, post_load, validate, EXCLUDE
 from fir.utils.dates import datetime_to_date_string
 from fir.types.config_options import ConfigOptions
 
+@dataclass
+class Error:
+    message: str
+    code: int
+
+    def __init__(self, message: str, code: int = 400):
+        self.message = message
+        self.code = code
 
 @dataclass
 class TaskDto:
